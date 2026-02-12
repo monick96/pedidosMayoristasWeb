@@ -1,0 +1,33 @@
+/* ============================================
+   BÚSQUEDA CORREGIDO
+   ============================================ */
+.search-box {
+  width: 100%;
+  /* box-sizing para que el padding no sume al width */
+  box-sizing: border-box;
+  /* Padding reducido: arriba derecha abajo izquierda */
+  /*padding: 10px 15px;*/
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.search-box input {
+  width: 100%;
+  /* box-sizing para el input también */
+  box-sizing: border-box;
+  padding: 12px 15px; /* Un poco más compacto */
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #eee;
+  transition: border-color 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--primary-mustard);
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: #999;
+  font-size: 0.95rem;
+}

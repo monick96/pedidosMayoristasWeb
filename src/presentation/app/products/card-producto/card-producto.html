@@ -1,0 +1,55 @@
+<div class="card">
+  
+  <div class="gallery-wrapper">
+    
+    <div class="image-container" #carrusel>
+      @for (img of item.images; track img.url) {
+        <img
+          [src]="img.url" 
+          [attr.srcset]="(img.small ? img.small + ' 300w, ' : '') + 
+                        (img.medium ? img.medium + ' 600w, ' : '') + 
+                        (img.large ? img.large + ' 1000w' : '')"
+          sizes="(max-width: 600px) 300px, 600px"
+          [alt]="img.alt || item.descripcion"
+          class="product-image"
+        />
+        
+      }
+      @if (item.images && item.images.length > 1) {
+        <button class="nav-btn prev" 
+          (click)="carrusel.scrollLeft <= 0 ? carrusel.scrollLeft = carrusel.scrollWidth : carrusel.scrollLeft -= carrusel.offsetWidth">
+          &#10094;
+        </button>
+
+        <button class="nav-btn next" 
+          (click)="carrusel.scrollLeft + carrusel.offsetWidth >= carrusel.scrollWidth - 5 ? carrusel.scrollLeft = 0 : carrusel.scrollLeft += carrusel.offsetWidth">
+          &#10095;
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="content">
+    <h3>{{ item.descripcion }}</h3>
+
+    <p class="sabor">{{ item.sabor }}</p> 
+
+    <div class="price">
+      @if (item.tienePromo) {
+        <span class="old">
+          {{ item.precioNormal | currency }}
+        </span>
+      }
+
+      <span class="final">
+        {{ item.precioFinal | currency }}
+      </span>
+
+      @if (item.tienePromo) {
+        <span class="badge">
+          PROMO
+        </span>
+      }
+    </div>
+  </div>
+</div>

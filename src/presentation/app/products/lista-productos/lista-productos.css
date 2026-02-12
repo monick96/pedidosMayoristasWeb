@@ -1,0 +1,67 @@
+.brands-filter {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto; /* Scroll horizontal en móvil */
+  padding: 15px 10px; 
+  
+  background: var(--bg-white);
+  scrollbar-width: none; /* Ocultar scroll en Firefox */
+  border-bottom: 2px solid var(--bg-gray);
+}
+
+.brands-filter::-webkit-scrollbar {
+  display: none; /* Ocultar scroll en Chrome */
+}
+
+/* Botones base (Chips) */
+.brand-chip, .brands-filter button {
+  padding: 10px 20px;
+  border-radius: 8px; /* Menos redondeado para verse más profesional */
+  border: 1px solid #ddd;
+  background: white;
+  white-space: nowrap;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Estilos de botones activos */
+  .brand-chip.active, .brands-filter button.active, .news-chip.active, .combo-chip.active{
+  background: var(--secondary-black);
+  color: var(--bg-white);
+  border-color: var(--secondary-black);
+}
+
+/* Grid responsivo */
+.grid {
+  display: grid;
+  padding: 0;
+  /* Define el tamaño de las cards según la pantalla */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Media query para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr; /* Una sola columna en celulares chicos */
+    padding: 10px;
+  }
+}
+
+app-buscador {
+  display: block;
+  margin-top: 10px;
+}
+
+/* Contenedor principal*/
+.page-container {
+  padding: 15px; /* Mismo padding para todos los lados */
+  max-width: 1400px; /* limitar ancho en pantallas grandes */
+  margin: 0 auto; /* Centrar el contenido */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espacio ENTRE todos los elementos hijos */
+}

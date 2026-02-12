@@ -1,0 +1,16 @@
+/*declaramos los colores a utilizar como variables alcanze global*/
+:root {
+  --primary-mustard: #E1B000; /* Amarillo Mostaza */
+  --secondary-black: #1A1A1A;
+  --bg-white: #FFFFFF;
+  --bg-gray: #F5F5F5;
+  --text-main: #333333;
+  --accent-green: #22c55e; /* verde para promos/precios/exito */
+}
+
+body {
+  background-color: var(--bg-gray);
+  color: var(--text-main);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+}

@@ -1,0 +1,45 @@
+<div class="page-container">
+  <app-buscador (onSearch)="facade.updateFilter($event)" />
+
+  <div class="brands-filter">
+  
+    <button
+      class="brand-chip"
+      [class.active]="facade.isAllMode()"
+      (click)="facade.resetFilters()">
+      Todos
+    </button>
+
+    <button
+      class="brand-chip news-chip"
+      [class.active]="facade.showOnlyNews()"
+      (click)="facade.activateNews()">
+      Novedades
+    </button>
+
+    <button
+      class="brand-chip combo-chip"
+      [class.active]="facade.showOnlyCombos()"
+      (click)="facade.activateCombos()">
+      Combos
+    </button>
+
+    @for (marca of facade.marcasDisponibles(); track marca) {
+      <button 
+        class="brand-chip"
+        [class.active]="facade.selectedBrand() === marca"
+        (click)="facade.selectBrand(marca)">
+        {{ marca }}
+      </button>
+    }
+
+  </div>
+
+  <div class="grid">
+    
+    @for (item of facade.filteredItems(); track item.codigo) {
+      <app-card-producto [item]="item"></app-card-producto>
+    }
+  </div>
+</div>
+
