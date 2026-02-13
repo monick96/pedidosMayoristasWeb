@@ -1,12 +1,12 @@
 import { signal, Injectable, computed } from '@angular/core';
 import { Producto } from '../../../domain/entities/Producto';
 import { productComposition } from '../../../composition/ProductoComposition';
-import { ProductoVM } from './models/productoVm';
+import {ProductoVM } from './models/productoVm'; 
 import { productoToVM } from './mappers/productoMapper';
 import { ProductoListadoVM } from './models/productoListadoVm';
 import { comboComposition } from '../../../composition/ComboComposition';
 import { comboToVM } from './mappers/comboMapper';
-import { PRODUCTO } from './models/tipoProducto';
+import { PRODUCTO } from '../../../domain/value-objects/TipoProducto';
 
 @Injectable({ providedIn: 'root' })
 export class ProductFacade {
@@ -29,19 +29,33 @@ export class ProductFacade {
   //solo combos
   readonly showOnlyCombos = signal<boolean>(false);
 
-  // Método para alternar los filtros
- /* toggleNews() {
-    this.showOnlyNews.update(v => !v);
-    if (this.showOnlyNews()) this.showOnlyCombos.set(false); 
-  }*/
+  readonly selectedGalleryItem = signal<ProductoListadoVM | null>(null);
+  readonly currentImageIndex = signal<number>(0);
 
-  /*toggleCombos() {
-    this.showOnlyCombos.update(v => !v);
-    if (this.showOnlyCombos()) {
-      this.showOnlyNews.set(false);
-      
-    }
-  }*/
+  // Métodos para controlar el Lightbox
+  openLightbox(item: ProductoListadoVM, index: number = 0) {
+    this.selectedGalleryItem.set(item);
+    this.currentImageIndex.set(index);
+  }
+
+  closeLightbox() {
+    this.selectedGalleryItem.set(null);
+  }
+
+  nextImage() {
+    const item = this.selectedGalleryItem();
+    if (!item || !item.images) return;
+    const next = (this.currentImageIndex() + 1) % item.images.length;
+    this.currentImageIndex.set(next);
+  }
+
+  prevImage() {
+    const item = this.selectedGalleryItem();
+    if (!item || !item.images) return;
+    const total = item.images.length;
+    const prev = (this.currentImageIndex() - 1 + total) % total;
+    this.currentImageIndex.set(prev);
+  }
 
   // Extrae marcas únicas de los items cargados(ambos tipos tienen marca)
   readonly marcasDisponibles = computed(() => {
@@ -52,33 +66,11 @@ export class ProductFacade {
     return [...new Set(todasLasMarcas)];
   });
 
-  /*selectBrand(marca: string | null) {
-    this.selectedBrand.set(marca);
-  }*/
-
   selectBrand(marca: string | null) {
     this.selectedBrand.set(marca);
     if (marca) {
       this.showOnlyNews.set(false);
       this.showOnlyCombos.set(false);
-    }
-  }
-
-  toggleNews() {
-    const newValue = !this.showOnlyNews();
-    this.showOnlyNews.set(newValue);
-    if (newValue) {
-      this.selectedBrand.set(null);
-      this.showOnlyCombos.set(false);
-    }
-  }
-
-  toggleCombos() {
-    const newValue = !this.showOnlyCombos();
-    this.showOnlyCombos.set(newValue);
-    if (newValue) {
-      this.selectedBrand.set(null);
-      this.showOnlyNews.set(false);
     }
   }
 
@@ -106,43 +98,6 @@ export class ProductFacade {
   }
 
   //Creamos un 'computed' que se actualiza solo cuando cambia items o filterText
-  
-  /*readonly filteredItems = computed(() => {
-    const query = this.filterText().toLowerCase().trim();
-    const brand = this.selectedBrand();
-    const onlyNews = this.showOnlyNews();
-    const onlyCombos = this.showOnlyCombos();
-    const allItems = this.items();
-
-    return allItems.filter(item => {
-      // Filtro de Combos
-      if (onlyCombos && item.tipo !== 'COMBO') return false;
-
-      // Filtro de Novedades (Solo aplica a Productos, a menos que el Combo también tenga esa propiedad)
-      if (onlyNews && (item.tipo !== 'PRODUCTO' || !(item as any).esNovedad)) return false;
-
-      // Filtro de Marca (Solo si no estamos filtrando solo combos)
-      if (!onlyCombos && brand && item.marcaId !== brand) return false;
-
-      // Filtro de Texto (ej: Star Choco)
-      if (!query) return true;
-      //const tokens = query.split(' ').filter(t => t.length > 0);
-      //const superString = `${item.descripcion} ${item.titulo || ''} ${item.marcaId || ''}`.toLowerCase();
-
-      // Tokenización (Star Choco)
-      const palabras = query.split(' ').filter(p => p.length > 0);
-
-      // Creamos un string con todo, asegurando que no haya undefined
-      const desc = (item.descripcion || '').toLowerCase();
-      const marc = (item.marcaId || '').toLowerCase();
-      const sab = (item.tipo === PRODUCTO) ? (item as ProductoVM).sabor?.toLowerCase() || '' : '';
-
-      const superTexto = `${desc} ${marc} ${sab}`;
-      
-      return palabras.every(p => superTexto.includes(p));
-    });
-  });*/
-  
   readonly filteredItems = computed(() => {
     const query = this.filterText().toLowerCase().trim();
     const brand = this.selectedBrand();

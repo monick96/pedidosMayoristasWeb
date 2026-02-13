@@ -1,11 +1,9 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 # Firebase
-.firebase/
+.firebase/*
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
-.firebaserc
-firebase.json
 
 # Compiled output
 /dist
@@ -28,6 +26,7 @@ yarn-error.log
 .settings/
 *.sublime-workspace
 repomix-output.xml
+.repomixignore
 
 # Visual Studio Code
 .vscode/*

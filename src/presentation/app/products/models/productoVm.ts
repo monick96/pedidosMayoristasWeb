@@ -1,4 +1,4 @@
-import { tipoProducto } from "./tipoProducto";
+import { tipoProducto } from "../../../../domain/value-objects/TipoProducto";
 
 export interface ProductoVM {
   codigo: string;

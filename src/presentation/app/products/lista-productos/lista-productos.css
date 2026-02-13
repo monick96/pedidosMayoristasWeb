@@ -40,6 +40,7 @@
   padding: 0;
   /* Define el tamaño de las cards según la pantalla */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-auto-rows: 1fr; /* <--- TODAS las filas de la grilla medirán lo mismo */
   gap: 20px;
 }
 
@@ -64,4 +65,78 @@ app-buscador {
   display: flex;
   flex-direction: column;
   gap: 20px; /* Espacio ENTRE todos los elementos hijos */
+}
+
+/*NUEVOO*/
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.img-large {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border: 3px solid var(--primary-mustard); /* Detalle en mostaza */
+  border-radius: 8px;
+  background: white;
+}
+
+.nav-btn-large {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--primary-mustard);
+  color: black;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 2100;
+}
+
+.prev { left: -60px; }
+.next { right: -60px; }
+
+@media (max-width: 768px) {
+  .prev { left: 10px; }
+  .next { right: 10px; }
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.lightbox-info {
+  color: white;
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 600;
 }

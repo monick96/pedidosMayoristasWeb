@@ -1,5 +1,5 @@
 import { ImagenProductoVM } from "./productoVm";
-import { tipoProducto } from "./tipoProducto";
+import { tipoProducto } from "../../../../domain/value-objects/TipoProducto";
 
 export interface ComboVM {
   codigo: string;

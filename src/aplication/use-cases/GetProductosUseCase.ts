@@ -1,4 +1,3 @@
-import {inject } from '@angular/core';
 import { ProductoRepositoryPort } from '../ports/ProductoRepositorioPort';
 import { Result } from '../../shared/Result';
 import { Producto } from '../../domain/entities/Producto';

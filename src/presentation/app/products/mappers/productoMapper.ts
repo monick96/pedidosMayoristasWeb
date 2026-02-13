@@ -2,7 +2,7 @@ import { Producto } from "../../../../domain/entities/Producto";
 import { CalculadorPrecioProducto } from "../../../../domain/services/CalculadorPrecioProducto";
 import { ImagenProducto } from "../../../../domain/value-objects/ImagenProducto";
 import { ImagenProductoVM, ProductoVM } from "../models/productoVm";
-import { PRODUCTO} from "../models/tipoProducto";
+import { PRODUCTO} from "../../../../domain/value-objects/TipoProducto";
 
 export function productoToVM(p: Producto): ProductoVM {
  

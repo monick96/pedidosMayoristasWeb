@@ -1,7 +1,7 @@
 import { Combo } from "../../../../domain/entities/Combo";
 import { ComboCalculador } from "../../../../domain/services/ComboCalculador";
 import { ComboVM } from "../models/comboVm";
-import { COMBO } from "../models/tipoProducto";
+import { COMBO } from "../../../../domain/value-objects/TipoProducto";
 
 import { imagenProductoToVM } from "./productoMapper";
 

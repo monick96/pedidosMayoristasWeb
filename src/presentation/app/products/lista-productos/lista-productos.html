@@ -41,5 +41,28 @@
       <app-card-producto [item]="item"></app-card-producto>
     }
   </div>
+
+  @if (facade.selectedGalleryItem(); as item) {
+    <div class="lightbox-overlay" (click)="facade.closeLightbox()">
+      <button class="close-btn" (click)="facade.closeLightbox()">✕</button>
+      
+      <div class="lightbox-content" (click)="$event.stopPropagation()">
+        @if (item.images && item.images.length > 1) {
+          <button class="nav-btn-large prev" (click)="facade.prevImage()">❮</button>
+        }
+
+        <img [src]="item.images![facade.currentImageIndex()].url" class="img-large">
+
+        @if (item.images && item.images.length > 1) {
+          <button class="nav-btn-large next" (click)="facade.nextImage()">❯</button>
+        }
+        
+        <div class="lightbox-info">
+          <p>{{ item.descripcion }}</p>
+          <span>{{ facade.currentImageIndex() + 1 }} / {{ item.images?.length }}</span>
+        </div>
+      </div>
+    </div>
+  }
 </div>
 
