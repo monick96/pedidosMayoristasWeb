@@ -60,9 +60,22 @@
 
     </div>
     
-    <button class="add-btn" (click)="agregarAlCarrito($event)">
-        Agregar
-    </button>
+    <div class="actions-container">
+
+      @if (cantidadEnCarrito() === 0) {
+        <button class="add-btn" (click)="agregarAlCarrito($event)">
+          Agregar
+        </button>
+      } @else {
+        <div class="quantity-control" (click)="$event.stopPropagation()">
+          <button class="qty-btn minus" (click)="restar($event)">−</button>
+          <span class="qty-value">{{ cantidadEnCarrito() }}</span>
+          <button class="qty-btn plus" (click)="agregarAlCarrito($event)">+</button>
+        </div>
+      }
+      
+    </div>
+    
     
   </div>
 </div>

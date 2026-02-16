@@ -178,19 +178,6 @@
    BOTÓN AGREGAR 
    ============================================ */
 
-.add-btn {
-  background-color: var(--primary-mustard);
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.1s, background-color 0.2s;
-  width: 100%; /* Ocupa todo el ancho disponible */
-  font-size: 0.95rem;
-}
-
 .add-btn:hover {
   background-color: #ffd700;
   transform: scale(1.02);
@@ -200,8 +187,75 @@
   transform: scale(0.98);
 }
 
-/*NUEVOOOO**/
+.add-btn {
+  background-color: var(--primary-mustard);
+  color: #000;
+  border: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
 
+.add-btn:active { transform: scale(0.98); }
+
+/* Contenedor para asegurar que los botones ocupen el mismo espacio */
+.actions-container {
+  margin-top: auto; /* Empuja al fondo */
+  width: 100%;
+  height: 40px; /* Altura fija para evitar saltos al cambiar de botón a control */
+}
+
+/* Control de Cantidad */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  background-color: #505050;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.qty-btn {
+  width: 40px;
+  height: 100%;
+  border: none;
+  background-color: #505050;
+  color: var(--primary-mustard); /* Signos en Mostaza */
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  padding-bottom: 4px; /* Pequeño ajuste visual para centrar el signo */
+}
+
+.qty-btn:hover {
+  background-color: #333;
+}
+
+.qty-btn:active {
+  background-color: #000;
+}
+
+.qty-value {
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-grow: 1;
+  text-align: center;
+  user-select: none;
+}
+
+/*NUEVOOOO**/
 
 
 

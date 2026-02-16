@@ -12,9 +12,25 @@ export class CartFacade {
   readonly total = computed(() => CartCalculator.calculateTotal(this.items()));
   readonly count = computed(() => CartCalculator.calculateTotalItems(this.items()));
 
+  //Signal de Estado Visual
+  readonly isOpen = signal<boolean>(false);
+
   constructor() {
     // Al iniciar, cargamos del storage
     this.loadFromStorage();
+  }
+
+  // Métodos de control
+  toggleSidebar() {
+    this.isOpen.update(v => !v);
+  }
+
+  closeSidebar() {
+    this.isOpen.set(false);
+  }
+  
+  openSidebar() {
+    this.isOpen.set(true);
   }
 
   addToCart(producto: ProductoVM, cantidad: number = 1) {
@@ -46,8 +62,6 @@ export class CartFacade {
     this.saveToStorage();
   }
   
-  // ... métodos removeFromCart, updateQuantity, etc.
-
   private saveToStorage() {
     // Aquí llamarímos al repositorio o useCase de guardar
     localStorage.setItem('cart', JSON.stringify(this.items()));
@@ -58,5 +72,28 @@ export class CartFacade {
     if (data) {
       this.items.set(JSON.parse(data));
     }
+  }
+
+  // Método para restar cantidad
+  decreaseQuantity(productoId: string) {
+    this.items.update(current => {
+      const existing = current.find(i => i.productoId === productoId);
+      
+      if (!existing) return current; // Si no existe, no hacemos nada
+
+      if (existing.cantidad > 1) {
+        // Si hay más de 1, restamos
+        return current.map(i => 
+          i.productoId === productoId 
+            ? { ...i, cantidad: i.cantidad - 1 }
+            : i
+        );
+      } else {
+        // Si es 1 y restamos, lo eliminamos del carrito
+        return current.filter(i => i.productoId !== productoId);
+      }
+    });
+    
+    this.saveToStorage();
   }
 }
