@@ -1,1 +1,54 @@
-<p>side-cart works!</p>
+<div class="sidebar-overlay" 
+     [class.visible]="facade.isOpen()" 
+     (click)="facade.closeSidebar()">
+</div>
+
+<aside class="sidebar" [class.open]="facade.isOpen()">
+  
+  <div class="sidebar-header">
+    <h2>Mi Pedido ({{ facade.count() }})</h2>
+    <button class="close-btn" (click)="facade.closeSidebar()">✕</button>
+  </div>
+
+  <div class="sidebar-body">
+    @if (facade.items().length === 0) {
+      <div class="empty-state">
+        <p>Tu carrito está vacío</p>
+        <button class="action-btn" (click)="facade.closeSidebar()">Ir a comprar</button>
+      </div>
+    } @else {
+      <div class="items-list">
+        @for (item of facade.items(); track item.productoId) {
+          <div class="cart-item">
+            <img [src]="item.imagen" [alt]="item.nombre">
+            <div class="item-details">
+              <h4>{{ item.nombre }}</h4>
+              <span class="unit-price">{{ item.precioUnitario | currency }}</span>
+              
+              <div class="mini-qty-control">
+                <button (click)="facade.decreaseQuantity(item.productoId)">−</button>
+                <span>{{ item.cantidad }}</span>
+                <button (click)="facade.incrementQuantity(item.productoId)">+</button> </div>
+            </div>
+            <div class="item-total">
+              {{ item.precioUnitario * item.cantidad | currency }}
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (facade.items().length > 0) {
+    <div class="sidebar-footer">
+      <div class="total-row">
+        <span>Total Final:</span>
+        <span class="total-amount">{{ facade.total() | currency }}</span>
+      </div>
+      
+      <button class="checkout-btn" (click)="generarPedidoWhatsapp()">
+        Confirmar Pedido por WhatsApp
+      </button>
+    </div>
+  }
+</aside>

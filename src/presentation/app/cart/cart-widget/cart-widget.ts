@@ -6,7 +6,7 @@ import { CartFacade } from '../cart.facade';
   standalone: true,
   template: `
     @if (facade.count() > 0) {
-      <button class="cart-fab">
+      <button class="cart-fab" (click)="facade.toggleSidebar()">
         🛒
         <span class="badge">{{ facade.count() }}</span>
       </button>

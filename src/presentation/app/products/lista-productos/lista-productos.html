@@ -11,6 +11,13 @@
     </button>
 
     <button
+      class="brand-chip offers-chip"
+      [class.active]="facade.showOnlyOffers()"
+      (click)="facade.activateOffers()">
+      🔥 Ofertas
+    </button>
+
+    <button
       class="brand-chip news-chip"
       [class.active]="facade.showOnlyNews()"
       (click)="facade.activateNews()">

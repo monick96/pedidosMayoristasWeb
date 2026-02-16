@@ -32,6 +32,8 @@ export class ProductFacade {
   readonly selectedGalleryItem = signal<ProductoListadoVM | null>(null);
   readonly currentImageIndex = signal<number>(0);
 
+  readonly showOnlyOffers = signal<boolean>(false);
+
   // Métodos para controlar el Lightbox
   openLightbox(item: ProductoListadoVM, index: number = 0) {
     this.selectedGalleryItem.set(item);
@@ -71,6 +73,7 @@ export class ProductFacade {
     if (marca) {
       this.showOnlyNews.set(false);
       this.showOnlyCombos.set(false);
+      this.showOnlyOffers.set(false);
     }
   }
 
@@ -78,11 +81,20 @@ export class ProductFacade {
     this.showOnlyNews.set(true);
     this.showOnlyCombos.set(false);
     this.selectedBrand.set(null);
+    this.showOnlyOffers.set(false);
   }
 
   activateCombos() {
     this.showOnlyCombos.set(true);
     this.showOnlyNews.set(false);
+    this.selectedBrand.set(null);
+    this.showOnlyOffers.set(false);
+  }
+
+  activateOffers() {
+    this.showOnlyOffers.set(true);
+    this.showOnlyNews.set(false);
+    this.showOnlyCombos.set(false);
     this.selectedBrand.set(null);
   }
 
@@ -90,11 +102,15 @@ export class ProductFacade {
     this.showOnlyNews.set(false);
     this.showOnlyCombos.set(false);
     this.selectedBrand.set(null);
+    this.showOnlyOffers.set(false);
   }
 
   // para el class.active de "Todos"
   isAllMode() {
-    return this.selectedBrand() === null && !this.showOnlyNews() && !this.showOnlyCombos();
+    return this.selectedBrand() === null && 
+    !this.showOnlyNews() && 
+    !this.showOnlyCombos() && 
+    !this.showOnlyOffers();
   }
 
   //Creamos un 'computed' que se actualiza solo cuando cambia items o filterText
@@ -103,10 +119,11 @@ export class ProductFacade {
     const brand = this.selectedBrand();
     const onlyNews = this.showOnlyNews();
     const onlyCombos = this.showOnlyCombos();
+    const onlyOffers = this.showOnlyOffers();
     const allItems = this.items();
 
     return allItems.filter(item => {
-      // 1. FILTROS DE BOTONES (Mutuamente excluyentes)
+      // FILTROS DE BOTONES (Mutuamente excluyentes)
       // Si hay marca, filtramos por marca
       if (brand && item.marcaId !== brand) return false;
       
@@ -115,6 +132,11 @@ export class ProductFacade {
       
       // Si hay combos, filtramos por tipo
       if (onlyCombos && item.tipo !== 'COMBO') return false;
+
+      if (onlyOffers) {
+        if (item.tipo !== 'PRODUCTO') return false; 
+        if (!(item as ProductoVM).tienePromo) return false;
+      }
 
       // 2. FILTRO DE TEXTO (Siempre combina con el botón activo)
       if (!query) return true;

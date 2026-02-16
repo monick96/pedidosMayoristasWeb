@@ -61,6 +61,18 @@ export class CartFacade {
     
     this.saveToStorage();
   }
+
+  // Solo busca por ID y suma 1. No necesita el objeto entero.
+  incrementQuantity(productoId: string) {
+    this.items.update(current => {
+      return current.map(i => 
+        i.productoId === productoId 
+          ? { ...i, cantidad: i.cantidad + 1 }
+          : i
+      );
+    });
+    this.saveToStorage();
+  }
   
   private saveToStorage() {
     // Aquí llamarímos al repositorio o useCase de guardar
