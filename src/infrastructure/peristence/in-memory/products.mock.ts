@@ -5,6 +5,7 @@ export const PRODUCTS_MOCK: Producto[] = [
     codigo: 'S1',
     marcaId: 'STAR NUTRITION',
     sabor: 'Chocolate',
+    esNovedad: true,
     descripcion: 'Platinum Whey Protein 2 lb',
     precioBase: 19842,
     porcentajePrecioSugerido: 60,

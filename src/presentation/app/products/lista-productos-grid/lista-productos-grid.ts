@@ -2,12 +2,14 @@ import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ProductFacade } from '../product.facade';
 import { CardProducto } from '../card-producto/card-producto';
 import { Buscador } from '../buscador/buscador';
+import { NgClass } from '@angular/common';
+import { ListaProductosLista } from '../lista-productos-lista/lista-productos-lista';
 
 @Component({
   selector: 'app-lista-productos',
-  imports: [CardProducto, Buscador],
-  templateUrl: './lista-productos.html',
-  styleUrl: './lista-productos.css',
+  imports: [CardProducto, Buscador, NgClass, ListaProductosLista],
+  templateUrl: './lista-productos-grid.html',
+  styleUrl: './lista-productos-grid.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 

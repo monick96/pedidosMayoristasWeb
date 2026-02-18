@@ -43,18 +43,24 @@
 
     <div class="price">
       @if (item.tienePromo) {
-        <span class="old">
+        <span class="price-old">
           {{ item.precioNormal | currency }}
         </span>
       }
 
-      <span class="final">
+      <span class="price price-final">
         {{ item.precioFinal | currency }}
       </span>
 
       @if (item.tienePromo) {
-        <span class="badge">
+        <span class="badge badge-promo">
           OFERTA
+        </span>
+      }
+
+      @if (item.esNovedad) {
+        <span class="badge badge-new">
+          NUEVO
         </span>
       }
 
@@ -63,11 +69,11 @@
     <div class="actions-container">
 
       @if (cantidadEnCarrito() === 0) {
-        <button class="add-btn" (click)="agregarAlCarrito($event)">
+        <button class=" btn-primary add-btn" (click)="agregarAlCarrito($event)">
           Agregar
         </button>
       } @else {
-        <div class="quantity-control" (click)="$event.stopPropagation()">
+        <div class="qty-selector qty-card" (click)="$event.stopPropagation()">
           <button class="qty-btn minus" (click)="restar($event)">−</button>
           <span class="qty-value">{{ cantidadEnCarrito() }}</span>
           <button class="qty-btn plus" (click)="agregarAlCarrito($event)">+</button>

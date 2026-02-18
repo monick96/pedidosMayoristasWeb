@@ -1,0 +1,82 @@
+<div class="page-container">
+  <!-- <app-buscador (onSearch)="facade.updateFilter($event)" /> -->
+  <div class="sticky-header">
+
+    <div class="header-controls">
+      <app-buscador (onSearch)="facade.updateFilter($event)" class="flex-grow" />
+
+      <div class="view-toggles">
+        <button [class.active]="facade.viewMode() === 'grid'" (click)="facade.setViewMode('grid')"
+          title="Vista de Grilla">
+          ⊞ </button>
+        <button [class.active]="facade.viewMode() === 'list'" (click)="facade.setViewMode('list')"
+          title="Vista de Lista">
+          ☰ </button>
+      </div>
+    </div>
+
+    <div class="brands-filter">
+
+      <button class="all chip" [class.active]="facade.isAllMode()" (click)="facade.resetFilters()">
+        Todos
+      </button>
+
+      <button class="offers chip" [class.active]="facade.showOnlyOffers()" (click)="facade.activateOffers()">
+        🔥 Ofertas
+      </button>
+
+      <button class="news chip" [class.active]="facade.showOnlyNews()" (click)="facade.activateNews()">
+        Novedades
+      </button>
+
+      <button class="combo chip" [class.active]="facade.showOnlyCombos()" (click)="facade.activateCombos()">
+        Combos
+      </button>
+
+      @for (marca of facade.marcasDisponibles(); track marca) {
+      <button class="chip" [class.active]="facade.selectedBrand() === marca" (click)="facade.selectBrand(marca)">
+        {{ marca }}
+      </button>
+      }
+    </div>
+
+  </div>
+
+  <div [ngClass]="facade.viewMode() === 'grid' ? 'grid' : 'list-layout'">
+
+    @for (item of facade.filteredItems(); track item.codigo) {
+
+    @if (facade.viewMode() === 'grid') {
+    <app-card-producto [item]="item"></app-card-producto>
+    } @else {
+    <app-lista-productos-lista [item]="item"></app-lista-productos-lista>
+    }
+
+    }
+  </div>
+
+
+  @if (facade.selectedGalleryItem(); as item) {
+  <div class="lightbox-overlay" (click)="facade.closeLightbox()">
+    <button class="close-btn" (click)="facade.closeLightbox()">✕</button>
+
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      @if (item.images && item.images.length > 1) {
+      <button class="nav-btn-large prev" (click)="facade.prevImage()">❮</button>
+      }
+
+      <img [src]="item.images![facade.currentImageIndex()].url" class="img-large">
+
+      @if (item.images && item.images.length > 1) {
+      <button class="nav-btn-large next" (click)="facade.nextImage()">❯</button>
+      }
+
+      <div class="lightbox-info">
+        <p>{{ item.descripcion }}</p>
+        <span>{{ facade.currentImageIndex() + 1 }} / {{ item.images?.length }}</span>
+      </div>
+    </div>
+  </div>
+  }
+
+</div>

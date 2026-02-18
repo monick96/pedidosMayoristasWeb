@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CartFacade } from '../cart.facade';
 import { CurrencyPipe } from '@angular/common';
+import { TELEFONO_DESTINO } from '../../../../environment/telefono';
 
 @Component({
   selector: 'app-side-cart',

@@ -7,6 +7,8 @@ import { ProductoListadoVM } from './models/productoListadoVm';
 import { comboComposition } from '../../../composition/ComboComposition';
 import { comboToVM } from './mappers/comboMapper';
 import { PRODUCTO } from '../../../domain/value-objects/TipoProducto';
+import { ViewMode } from './models/viewType';
+
 
 @Injectable({ providedIn: 'root' })
 export class ProductFacade {
@@ -33,8 +35,19 @@ export class ProductFacade {
   readonly currentImageIndex = signal<number>(0);
 
   readonly showOnlyOffers = signal<boolean>(false);
+  //Signal para el modo de vista (por defecto 'grid')
+  readonly viewMode = signal<ViewMode>('list');
 
-  // Métodos para controlar el Lightbox
+  //Métodos para cambiar la vista
+  setViewMode(mode: ViewMode) {
+    this.viewMode.set(mode);
+  }
+  
+  toggleViewMode() {
+    this.viewMode.update(current => current === 'grid' ? 'list' : 'grid');
+  }
+
+  // Métodos para controlar el Lightbox(ver imagen en grande)
   openLightbox(item: ProductoListadoVM, index: number = 0) {
     this.selectedGalleryItem.set(item);
     this.currentImageIndex.set(index);
