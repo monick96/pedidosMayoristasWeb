@@ -19,6 +19,7 @@
           sizes="(max-width: 600px) 300px, 600px"
           [alt]="img.alt || item.descripcion"
           class="product-image zoomable" 
+          [class.img-out-of-stock]="!item.estaDisponible"
           (click)="facade.openLightbox(item, i)"
         />
 
@@ -74,17 +75,26 @@
     </div>
 
     <div class="actions-container">
+      @if (!item.estaDisponible) {
 
-      @if (cantidadEnCarrito() === 0) {
+        <button class="btn-primary add-btn" disabled>
+          Sin Stock
+        </button>
+
+      }@else if (cantidadEnCarrito() === 0) {
+
         <button class=" btn-primary add-btn" (click)="agregarAlCarrito($event)">
           Agregar
         </button>
+
       } @else {
+
         <div class="qty-selector qty-card" (click)="$event.stopPropagation()">
           <button class="qty-btn minus" (click)="restar($event)">−</button>
           <span class="qty-value">{{ cantidadEnCarrito() }}</span>
           <button class="qty-btn plus" (click)="agregarAlCarrito($event)">+</button>
         </div>
+        
       }
       
     </div>

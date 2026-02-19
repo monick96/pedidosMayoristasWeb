@@ -237,3 +237,29 @@ body {
   -webkit-mask: var(--icon-caja) no-repeat center / contain;
   mask: var(--icon-caja) no-repeat center / contain;
 }
+
+/* ── ELEMENTOS SIN STOCK ─── */
+
+/* Atenuar imagen y quitar color */
+.img-out-of-stock {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+/* Texto de agotado para modo lista */
+.text-out-of-stock {
+  color: #ef4444; /* Rojo  */
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Asegurar que cualquier botón deshabilitado se vea inactivo */
+button:disabled {
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}

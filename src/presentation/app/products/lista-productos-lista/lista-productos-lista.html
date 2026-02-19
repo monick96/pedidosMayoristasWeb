@@ -9,7 +9,10 @@
     @if (item.images && item.images.length > 0) {
       <img [src]="item.images[0].small || item.images[0].url" 
            [alt]="item.descripcion" 
-           class="thumb zoomable">
+           class="thumb zoomable"
+           [class.img-out-of-stock]="!item.estaDisponible"
+           >
+           
     }
   </div>
 
@@ -32,16 +35,26 @@
     </div>
 
     <div class="controls">
-      @if (cantidadEnCarrito() === 0) {
+      @if (!item.estaDisponible) {
+
+        <button class="btn-primary add-btn" disabled>
+          Sin Stock
+        </button>
+
+      }@else if (cantidadEnCarrito() === 0) {
+
         <button class="btn-primary btn-add-mini" (click)="agregarAlCarrito($event)">
           +
         </button>
+
       } @else {
+
         <div class="qty-selector qty-mini" (click)="$event.stopPropagation()">
           <button (click)="restar($event)">−</button>
           <span>{{ cantidadEnCarrito() }}</span>
           <button (click)="agregarAlCarrito($event)">+</button>
         </div>
+        
       }
     </div>
   </div>

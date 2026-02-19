@@ -15,9 +15,28 @@ export class CartFacade {
   //Signal de Estado Visual
   readonly isOpen = signal<boolean>(false);
 
+  //Signal para el nombre del cliente
+  readonly clienteNombre = signal<string>('');
+
   constructor() {
     // Al iniciar, cargamos del storage
     this.loadFromStorage();
+    //cargar nombre cliente
+    this.loadNameFromStorage();
+  }
+
+  // Método para actualizar y guardar el nombre
+  setClienteNombre(nombre: string) {
+    this.clienteNombre.set(nombre);
+    localStorage.setItem('mayorista_cliente_nombre', nombre);
+  }
+
+  //Método para cargar el nombre guardado
+  private loadNameFromStorage() {
+    const savedName = localStorage.getItem('mayorista_cliente_nombre');
+    if (savedName) {
+      this.clienteNombre.set(savedName);
+    }
   }
 
   // Métodos de control

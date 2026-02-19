@@ -48,6 +48,16 @@
         <span>Total:</span>
         <span class="total-amount">{{ facade.total() | currency }}</span>
       </div>
+
+      <div class="customer-info">
+        <input 
+          type="text" 
+          placeholder="Tu Nombre / Local *" 
+          [value]="facade.clienteNombre()" 
+          (input)="updateNombre($event)"
+          class="customer-input"
+        >
+      </div>
       
       <button class="checkout-btn" (click)="generarPedidoWhatsapp()">
         Confirmar Pedido por WhatsApp
