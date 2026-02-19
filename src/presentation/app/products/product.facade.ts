@@ -35,8 +35,12 @@ export class ProductFacade {
   readonly currentImageIndex = signal<number>(0);
 
   readonly showOnlyOffers = signal<boolean>(false);
-  //Signal para el modo de vista (por defecto 'grid')
+
+  //Signal para el modo de vista (por defecto 'list')
   readonly viewMode = signal<ViewMode>('list');
+
+  //solo disponibles
+  readonly showOnlyAvailable = signal<boolean>(true);
 
   //Métodos para cambiar la vista
   setViewMode(mode: ViewMode) {
@@ -133,10 +137,15 @@ export class ProductFacade {
     const onlyNews = this.showOnlyNews();
     const onlyCombos = this.showOnlyCombos();
     const onlyOffers = this.showOnlyOffers();
+    const onlyAvailable = this.showOnlyAvailable();
     const allItems = this.items();
 
     return allItems.filter(item => {
       // FILTROS DE BOTONES (Mutuamente excluyentes)
+
+      // FILTRO Disponibilidad
+      if (onlyAvailable && !item.estaDisponible) return false;
+
       // Si hay marca, filtramos por marca
       if (brand && item.marcaId !== brand) return false;
       

@@ -16,4 +16,6 @@ export interface ComboVM {
   tipo: tipoProducto;
 
   images?: ImagenProductoVM[];
+  
+  estaDisponible: boolean;
 }

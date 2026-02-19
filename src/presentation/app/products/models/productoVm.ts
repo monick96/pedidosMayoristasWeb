@@ -13,6 +13,8 @@ export interface ProductoVM {
   tipo: tipoProducto;
   images?: ImagenProductoVM[];
   esNovedad?: boolean; 
+  estaDisponible: boolean;
+  unidadesPorCaja?: number;
 }
 
 export interface ImagenProductoVM {

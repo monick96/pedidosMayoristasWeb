@@ -1,6 +1,11 @@
 <div class="card-list">
   
   <div class="img-wrapper" (click)="abrirLightbox($event)">
+    @if (item.unidadesPorCaja) {
+      <div class="box-badge">
+        <span class="box-icon"></span> {{ item.unidadesPorCaja }}
+      </div>
+    }
     @if (item.images && item.images.length > 0) {
       <img [src]="item.images[0].small || item.images[0].url" 
            [alt]="item.descripcion" 

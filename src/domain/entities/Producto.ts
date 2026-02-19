@@ -25,6 +25,10 @@ export interface Producto {
   preciosMayorista: MayoristaPrecio[];
 
   images?: ImagenProducto[];
+
+  estaDisponible?: boolean; 
+
+  unidadesPorCaja?: number;
 }
 
 //ejemplo vista en json

@@ -50,6 +50,7 @@ export class CartFacade {
       const newItem: CartItem = {
         productoId: producto.codigo,
         tipo: producto.tipo,
+        sabor: producto.sabor,
         nombre: producto.descripcion,
         imagen: producto.images?.[0]?.url || '',
         precioUnitario: producto.precioFinal,

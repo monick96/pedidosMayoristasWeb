@@ -17,12 +17,13 @@
 
 /* --- IMAGEN --- */
 .img-wrapper {
-  flex: 0 0 60px; /* Tamaño fijo */
-  height: 60px;
+  flex: 0 0 90px; /* Tamaño fijo */
+  height: 90px;
   cursor: zoom-in;
   overflow: hidden;
   border-radius: 4px;
   border: 1px solid #f0f0f0;
+  position: relative;
 }
 
 .thumb {
@@ -149,9 +150,10 @@
 
   /* 1. IMAGEN: Más grande */
   .img-wrapper {
-    flex: 0 0 75px; /* Aumentamos de 50px a 75px */
-    height: 75px;
-    border: none; /* Quitamos borde para que se vea más limpio */
+    flex: 0 0 70px; 
+    height: 70px;
+    border: none; 
+    position: relative;
   }
 
   /* 2. INFO: Ocupa el espacio central */
@@ -242,8 +244,8 @@
 
   /* Imagen: un poco más grande para que se vea */
   .img-wrapper {
-    flex: 0 0 50px; 
-    height: 50px;
+    flex: 0 0 70px; 
+    height: 70px;
   }
 
   /* Títulos: TAMAÑOS CORREGIDOS (no 0.60rem, es ilegible) */
@@ -309,6 +311,28 @@
     height: 32px;
     font-size: 1.2rem;
   }
+
+  .box-badge {
+    /* Lo miniaturizamos */
+    font-size: 0.6rem;
+    padding: 1px 4px;
+  }
+
+  /* Achicamos el ícono de la cajita proporcionalmente */
+  .box-badge::before {
+    width: 11px;
+    height: 11px;
+  }
 }
 
 /****nuevo****/
+/* ============================================
+   AJUSTE DEL BADGE DE CAJA (Solo para Modo Lista)
+   ============================================ */
+.box-badge {
+  left: -2px;
+  /* Sombra más suave*/
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  gap: 2px;
+}
+

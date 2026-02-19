@@ -4,14 +4,28 @@
 
     <div class="header-controls">
       <app-buscador (onSearch)="facade.updateFilter($event)" class="flex-grow" />
+      
+      <div class="controls-row">
+    
+        <label class="checkbox-disponibles">
+          <input 
+            type="checkbox" 
+            #chkDisponible
+            [checked]="facade.showOnlyAvailable()"
+            (change)="facade.showOnlyAvailable.set(chkDisponible.checked)">
+          <span class="checkmark"></span>
+          Disponibles
+        </label>
 
-      <div class="view-toggles">
-        <button [class.active]="facade.viewMode() === 'grid'" (click)="facade.setViewMode('grid')"
-          title="Vista de Grilla">
-          ⊞ </button>
-        <button [class.active]="facade.viewMode() === 'list'" (click)="facade.setViewMode('list')"
-          title="Vista de Lista">
-          ☰ </button>
+        <div class="view-toggles">
+          <button [class.active]="facade.viewMode() === 'grid'" (click)="facade.setViewMode('grid')"
+            title="Vista de Grilla">
+            ⊞ </button>
+          <button [class.active]="facade.viewMode() === 'list'" (click)="facade.setViewMode('list')"
+            title="Vista de Lista">
+            ☰ </button>
+        </div>
+
       </div>
     </div>
 

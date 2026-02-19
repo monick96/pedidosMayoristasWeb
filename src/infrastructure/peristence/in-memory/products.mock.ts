@@ -36,6 +36,8 @@ export const PRODUCTS_MOCK: Producto[] = [
     // sin descuento
     pesoGramos: 930,
     pesoKg: 0.93,
+    unidadesPorCaja: 12,
+    estaDisponible: true,
     preciosMayorista: [
       { tipo: 'MAYORISTA_1', porcentaje: 30 },
       { tipo: 'MAYORISTA_2', porcentaje: 25 },
@@ -68,6 +70,34 @@ export const PRODUCTS_MOCK: Producto[] = [
     porcentajeDescuento: 5,
     pesoGramos: 930,
     pesoKg: 0.93,
+    unidadesPorCaja: 12,
+    estaDisponible: true,
+    preciosMayorista: [
+      { tipo: 'MAYORISTA_1', porcentaje: 28 },
+      { tipo: 'MAYORISTA_2', porcentaje: 22 },
+      { tipo: 'MAYORISTA_3', porcentaje: 18 },
+      { tipo: 'MAYORISTA_4', porcentaje: 12 }
+    ],
+    images: [
+      {
+        url: 'https://acdn-us.mitiendanube.com/stores/002/956/718/products/frutilla-a4c08de90c2e1e898d17062143259929-640-0.webp',
+        alt: 'Platinum Whey Protein Frutilla'
+      }
+    ]
+  }
+  ,
+  {
+    codigo: 'S4',
+    marcaId: 'STAR NUTRITION',
+    sabor: 'Banana',
+    descripcion: 'Platinum Whey Protein 2 lb',
+    precioBase: 21000,
+    porcentajePrecioSugerido: 60,
+    porcentajeDescuento: 5,
+    pesoGramos: 930,
+    pesoKg: 0.93,
+    unidadesPorCaja: 12,
+    estaDisponible: false,
     preciosMayorista: [
       { tipo: 'MAYORISTA_1', porcentaje: 28 },
       { tipo: 'MAYORISTA_2', porcentaje: 22 },

@@ -12,6 +12,10 @@
   /* Tamaños base */
   --radius-std: 8px;
   --radius-pill: 50px;
+
+  /* Icono caja SVG guardado en variable */
+  --icon-caja: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5.46,7.85L12,11.55L18.54,7.85L12,4.15M4.5,9.13V15.65L11.25,19.45V12.93L4.5,9.13M19.5,9.13L12.75,12.93V19.45L19.5,15.65V9.13Z'/%3E%3C/svg%3E");
+
 }
 
 /* === 1. TIPOGRAFÍA Y ESCALADO MÓVIL === */
@@ -200,4 +204,36 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+}
+
+/* === BADGE DE CAJA (Flotante sobre la imagen) === */
+.box-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: var(--secondary-black); /* Fondo negro*/
+  color: var(--primary-mustard); /* Icono y texto mostaza */
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 20px; /* Redondeado tipo píldora */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 10;
+}
+
+.box-badge::before {
+  content: ''; 
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  
+  /* Aquí le damos el color de la caja (mismo que el texto) */
+  background-color: currentColor; 
+  
+  /* Aplicamos la máscara desde la variable */
+  -webkit-mask: var(--icon-caja) no-repeat center / contain;
+  mask: var(--icon-caja) no-repeat center / contain;
 }

@@ -16,7 +16,8 @@ export function comboToVM(combo: Combo): ComboVM {
     pesoGramos: ComboCalculador.pesoTotalGramos(combo),
     tipo:COMBO,
     esNovedad: combo.esNovedad || false,
-    images: combo.images?.map(imagenProductoToVM)
+    images: combo.images?.map(imagenProductoToVM),
+    estaDisponible: combo.estaDisponible || false
   };
 }
 

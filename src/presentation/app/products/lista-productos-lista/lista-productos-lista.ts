@@ -4,6 +4,7 @@ import { ProductoVM } from '../models/productoVm';
 import { ProductFacade } from '../product.facade';
 import { CartFacade } from '../../cart/cart.facade';
 
+
 @Component({
   selector: 'app-lista-productos-lista',
   imports: [CurrencyPipe],

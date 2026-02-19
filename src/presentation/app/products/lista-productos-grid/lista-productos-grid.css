@@ -203,11 +203,45 @@ app-buscador {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
-  /* --- SOLUCIÓN AL SOLAPAMIENTO --- */
   /* Agregamos un colchón al final igual a la altura del botón + margen */
   /* Botón (60px) + Bottom (30px) + Aire extra (30px) = 120px */
   padding-bottom: 120px; 
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Estilo personalizado para el checkbox */
+.checkbox-disponibles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--secondary-black);
+  cursor: pointer;
+}
+
+/* Checkbox con color mostaza al estar activo */
+.checkbox-disponibles input[type="checkbox"] {
+  accent-color: var(--primary-mustard); 
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Ajuste móvil*/
+@media (max-width: 768px) {
+  .header-controls {
+    flex-wrap: wrap; /* Permite que caiga a la siguiente línea si no entra */
+  }
+  .controls-row {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 /*NUEVOO*/

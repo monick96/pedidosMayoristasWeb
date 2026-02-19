@@ -7,6 +7,7 @@ export interface CartItem {
   imagen: string;
   precioUnitario: number;
   cantidad: number;
+  sabor?: string;
   observacion?: string; //para notas en pedidos mayoristas, si no hay stock cambiar por otro sabor o algo asi
 }
 

@@ -1,45 +1,45 @@
-/* El fondo oscuro */
+/* ============================================
+   SIDE CART 
+   ============================================ */
+
+/* ── OVERLAY ─────────────────────────────────────────────────────────────── */
 .sidebar-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 2000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s;
   backdrop-filter: blur(2px);
 }
-
 .sidebar-overlay.visible {
   opacity: 1;
   visibility: visible;
 }
 
-/* El panel lateral */
+/* ── PANEL LATERAL ───────────────────────────────────────────────────────── */
 .sidebar {
   position: fixed;
   top: 0;
   right: 0;
   width: 100%;
-  max-width: 400px; /* Ancho máximo en PC */
+  max-width: 400px;
   height: 100vh;
+  height: 100dvh;
   background: white;
   z-index: 2001;
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
 }
-
 .sidebar.open {
   transform: translateX(0);
 }
 
-/* Header */
+/* ── HEADER ──────────────────────────────────────────────────────────────── */
 .sidebar-header {
   padding: 20px;
   background: var(--secondary-black);
@@ -48,71 +48,133 @@
   justify-content: space-between;
   align-items: center;
 }
-
+.sidebar-header h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
 .close-btn {
   background: none;
   border: none;
   color: var(--primary-mustard);
-  font-size: 1.5rem;
+  font-size: 0.5rem;
   cursor: pointer;
+  line-height: 1;
 }
 
-/* Body */
+/* ── BODY ────────────────────────────────────────────────────────────────── */
 .sidebar-body {
   flex: 1;
   overflow-y: auto;
   padding: 15px;
 }
 
+/* ── ITEM DEL CARRITO ────────────────────────────────────────────────────── */
 .cart-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  grid-template-rows: auto auto;
   gap: 10px;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  align-items: start;
   border-bottom: 1px solid #eee;
 }
 
 .cart-item img {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
   border-radius: 4px;
   border: 1px solid #eee;
+  grid-row: 1 / 3;
+  align-self: center;
 }
 
 .item-details {
-  flex: 1;
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-
 .item-details h4 {
-  margin: 0 0 5px 0;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  margin: 0;
   color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.item-flavor {
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.unit-price {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+.unit-price::before {
+  content: "Precio: ";
+  color: #999;
 }
 
-/* Mini controles +/- */
+/* Controles +/- */
 .mini-qty-control {
+  grid-column: 2;
+  grid-row: 2;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 5px;
+  gap: 12px;
+  margin-top: 0;
 }
-
 .mini-qty-control button {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+  font-weight: bold;
   background: #eee;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
+}
+.mini-qty-control button:hover { background: #ddd; }
+.mini-qty-control span {
+  
+  font-weight: 600;
+  min-width: 28px;
+  text-align: center;
 }
 
-.mini-qty-control button:hover { background: #ddd; }
+/* Subtotal por item */
+.item-total {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  align-self: center;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--secondary-black);
+}
+.item-total::before {
+  content: "Subtotal";
+  font-size: 1rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
-/* Footer */
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
 .sidebar-footer {
   padding: 20px;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
   border-top: 2px solid #eee;
   background: #f9f9f9;
 }
@@ -120,16 +182,29 @@
 .total-row {
   display: flex;
   justify-content: space-between;
-  font-size: 1.2rem;
-  font-weight: bold;
+  align-items: baseline;
   margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #ddd;
+}
+.total-row span:first-child {
+  font-size: 1.2rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.total-amount {
+  font-size: 1.2rem;
+  font-weight: 800;
   color: var(--secondary-black);
 }
 
 .checkout-btn {
   width: 100%;
   padding: 15px;
-  background: var(--primary-mustard); /* Botón de acción principal */
+  background: var(--primary-mustard);
   color: black;
   border: none;
   border-radius: 8px;
@@ -138,11 +213,11 @@
   cursor: pointer;
   text-transform: uppercase;
   transition: transform 0.1s;
+  min-height: 50px;
 }
-
 .checkout-btn:hover { transform: scale(1.02); }
 
-/* ESTILO DEL MENSAJE VACÍO */
+/* ── ESTADO VACÍO ────────────────────────────────────────────────────────── */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -152,281 +227,103 @@
   text-align: center;
   color: #666;
   gap: 15px;
+  padding: 40px 20px;
 }
-
 .empty-state p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
 }
-
-/* EL BOTÓN "IR A COMPRAR" RECARGADO */
 .action-btn {
-  background-color: var(--primary-mustard); /* Amarillo Mostaza */
-  color: #1a1a1a; /* Negro Intenso */
+  background-color: var(--primary-mustard);
+  color: #1a1a1a;
   border: none;
-  padding: 15px 40px; /* Más ancho para dar importancia */
-  font-size: 1rem;
-  font-weight: 900; /* Letra bien gruesa */
+  padding: 15px 40px;
+  font-size: var(--text-base);
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1px;
-  border-radius: 50px; /* Forma de píldora moderna */
+  border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(225, 176, 0, 0.4); /* Glow mostaza */
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote */
+  box-shadow: 0 4px 15px rgba(225, 176, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
-/* Efecto al pasar el mouse: Flota un poco y brilla más */
 .action-btn:hover {
   transform: translateY(-3px) scale(1.05);
   box-shadow: 0 8px 25px rgba(225, 176, 0, 0.6);
   background-color: #ffd000;
 }
-
-/* Efecto al hacer click: Se hunde */
 .action-btn:active {
   transform: translateY(1px);
   box-shadow: 0 2px 10px rgba(225, 176, 0, 0.3);
 }
 
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  max-width: 400px;
-  
-  height: 100vh; /* Fallback para navegadores viejos */
-  height: 100dvh; /* Dynamic Viewport Height: se ajusta a las barras del navegador */
-  
-  background: white;
-  z-index: 2001;
-  transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  /* Flexbox para empujar el footer abajo */
-  display: flex;
-  flex-direction: column; 
-  box-shadow: -5px 0 25px rgba(0,0,0,0.2);
-}
-
-.sidebar-footer {
-  padding: 20px;
-  border-top: 2px solid #eee;
-  background: #f9f9f9;
-  
-  /* Respetar el 'notch' inferior de los iPhone */
-  padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-}
-
-
-/******nuevo****/
 /* ============================================
-   SIDEBAR CART - RESPONSIVE MÓVIL
+   MÓVIL (≤ 480px) — solo lo que CAMBIA
+   Todo lo que no aparece acá hereda el base
    ============================================ */
-
 @media (max-width: 480px) {
-  
-  /* Sidebar ocupa todo el ancho en móvil */
-  .sidebar {
-    max-width: 100%;
-    width: 100%;
-  }
+
+  /* Sidebar ocupa toda la pantalla */
+  .sidebar { max-width: 100%; }
 
   /* Header más compacto */
-  .sidebar-header {
-    padding: 15px;
-  }
+  .sidebar-header { padding: 12px 15px; }
+  .sidebar-header h2 { font-size: 0.85rem; }
 
-  .sidebar-header h2 {
-    font-size: 1.1rem;
-  }
+  /* Body con menos aire */
+  .sidebar-body { padding: 10px; }
 
-  /* Body con padding reducido pero táctil */
-  .sidebar-body {
-    padding: 10px;
-  }
-
-  /* ============================================
-     ITEM DEL CARRITO REORGANIZADO
-     ============================================ */
-  .cart-item {
-    display: grid;
-    grid-template-columns: 70px 1fr auto; /* Imagen | Info | Total */
-    grid-template-rows: auto auto;
-    gap: 10px;
-    padding: 12px 0;
-    margin-bottom: 12px;
-    align-items: start;
-  }
-
-  .cart-item img {
-    width: 70px;
-    height: 70px;
-    grid-row: 1 / 3; /* Ocupa 2 filas */
-    align-self: center;
-  }
-
-  /* Info principal: nombre + precio unitario */
-  .item-details {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .item-details h4 {
-    font-size: 0.9rem;
-    line-height: 1.3;
-    margin: 0;
-    /* Limitar a 2 líneas */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Precio unitario con label explícito */
-  .unit-price {
-    font-size: 0.75rem;
-    color: #666;
-    font-weight: 500;
-  }
-
-  .unit-price::before {
-    content: "Precio: ";
-    color: #999;
-  }
-
-  /* Controles de cantidad en fila 2 */
-  .mini-qty-control {
-    grid-column: 2;
-    grid-row: 2;
-    margin-top: 0;
-    gap: 12px;
-    justify-content: flex-start;
-  }
-
-  .mini-qty-control button {
-    width: 32px;  /* Más táctil */
-    height: 32px;
-    font-size: 1.1rem;
-    background: var(--bg-gray);
-    border-radius: 6px;
-  }
-
-  .mini-qty-control span {
-    font-size: 0.8rem;
-    font-weight: 600;
-    min-width: 28px;
-    text-align: center;
-  }
-
-  /* Subtotal destacado a la derecha */
-  .item-total {
-    grid-column: 3;
-    grid-row: 1 / 3; /* Ocupa 2 filas, centrado vertical */
-    align-self: center;
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  /* Label "Subtotal" arriba del precio */
-  .item-total::before {
-    content: "Subtotal";
-    font-size: 0.7rem;
-    color: #999;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .item-total {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--secondary-black);
-  }
-
-  /* ============================================
-     FOOTER CON TOTAL CLARO
-     ============================================ */
-  .sidebar-footer {
-    padding: 15px;
-    padding-bottom: calc(15px + env(safe-area-inset-bottom));
-  }
-
-  .total-row {
-    /* flex-direction: column; */
-    align-items: flex-start;
-    gap: 5px;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px dashed #ddd;
-  }
-
-  /* Label "Total Final" más visible */
-  .total-row span:first-child {
-    font-size: 0.85rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
-
-  .total-amount {
-    font-size: 1.2rem; /* Grande y claro */
-    font-weight: 800;
-    color: var(--secondary-black);
-    align-self: flex-end;
-  }
-
-  /* Botón de checkout más grande para dedos */
-  .checkout-btn {
-    padding: 12px;
-    font-size: 0.7rem;
-    min-height: 50px; 
-  }
-
-  /* ============================================
-     ESTADO VACÍO
-     ============================================ */
-  .empty-state {
-    padding: 40px 20px;
-  }
-
-  .empty-state p {
-    font-size: 1.1rem;
-  }
-
-  .action-btn {
-    padding: 14px 30px;
-    font-size: 0.65rem;
-    width: 100%; 
-    max-width: 280px;
-  }
-}
-
-/* ============================================
-   EXTRA PEQUEÑO (max-width: 360px)
-   ============================================ */
-@media (max-width: 360px) {
-  
+  /* Item: imagen un poco más chica */
   .cart-item {
     grid-template-columns: 60px 1fr auto;
     gap: 8px;
   }
+  .cart-item img { width: 60px; height: 60px; }
 
-  .cart-item img {
-    width: 60px;
-    height: 60px;
+  /* Botones más compactos */
+  .mini-qty-control button { width: 28px; height: 28px; }
+
+  /* Footer */
+  .sidebar-footer {
+    padding: 12px 15px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
   }
 
+  /* Botones de acción */
+  .checkout-btn {
+    padding: 10px;
+    font-size: 0.7rem;
+  }
+  .action-btn {
+    padding: 14px 30px;
+    font-size: 0.8rem;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* Detalles del item */
   .item-details h4 {
     font-size: 0.85rem;
   }
 
   .total-amount {
+    font-size: 1rem;
+  }
+
+  .unit-price {
+    font-size: 0.75rem;
+  }
+
+  /* Label "Subtotal" arriba del precio */
+  .item-total::before {
+    font-size: 0.7rem; 
+  }
+
+  .item-total {
+    font-size: 1rem;
+  }
+
+  .total-row span:first-child {
     font-size: 1rem;
   }
 }

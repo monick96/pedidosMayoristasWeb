@@ -3,6 +3,13 @@
   <div class="gallery-wrapper">
     
     <div class="image-container" #carrusel>
+      
+      @if (item.unidadesPorCaja) {
+        <div class="box-badge">
+          <span class="box-icon"></span> {{ item.unidadesPorCaja }}
+        </div>
+      }
+
       @for (img of item.images; track img.url; let i = $index) {
         <img
           [src]="img.url" 

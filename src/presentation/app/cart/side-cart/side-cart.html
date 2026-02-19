@@ -23,6 +23,9 @@
             <img [src]="item.imagen" [alt]="item.nombre">
             <div class="item-details">
               <h4>{{ item.nombre }}</h4>
+              @if (item.sabor) {
+                <span class="item-flavor">{{ item.sabor }}</span>
+              }
               <span class="unit-price">{{ item.precioUnitario | currency }}</span>
               
               <div class="mini-qty-control">
@@ -42,7 +45,7 @@
   @if (facade.items().length > 0) {
     <div class="sidebar-footer">
       <div class="total-row">
-        <span>Total Final:</span>
+        <span>Total:</span>
         <span class="total-amount">{{ facade.total() | currency }}</span>
       </div>
       

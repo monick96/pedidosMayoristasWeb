@@ -14,6 +14,7 @@ import { ListaProductosLista } from '../lista-productos-lista/lista-productos-li
 })
 
 export class ListaProductos {
+
   facade =  inject(ProductFacade);
 
   ngOnInit() {
