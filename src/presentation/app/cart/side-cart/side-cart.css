@@ -189,6 +189,7 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
+  touch-action: manipulation;
 }
 
 .mini-qty-control button:hover {
@@ -199,6 +200,7 @@
   font-weight: 600;
   min-width: 28px;
   text-align: center;
+  touch-action: manipulation;
 }
 
 /* ── Botón Eliminar ── */
@@ -393,6 +395,7 @@
     width: 28px;
     height: 28px;
     font-size: 16px;
+    touch-action: manipulation;
   }
 
   .item-details h4 {
@@ -436,7 +439,7 @@
 
   .checkout-btn {
     padding: 10px;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 
   .action-btn {

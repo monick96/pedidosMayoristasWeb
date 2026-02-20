@@ -268,11 +268,14 @@ button:disabled {
    Esto lo evita forzando 16px en móviles. */
 @media (max-width: 768px) {
   input, select, textarea, 
-  .qty-selector button,  /* Añade estos selectores */
+  .qty-selector button,  
   .qty-selector span,
   .qty-mini button,
-  .qty-mini span {
+  .qty-mini span,
+  [class*="qty"] button,      /* Cualquier clase con "qty" */
+  [class*="qty"] span{
     font-size: 16px !important; 
     touch-action: manipulation; /* Prevenir gestos de zoom */
+    -webkit-text-size-adjust: 100%; /* Prevenir ajuste de texto iOS */
   }
 }
