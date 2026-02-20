@@ -3,9 +3,44 @@ import { CartItem } from '../../../domain/entities/CartItem';
 import { CartCalculator } from '../../../domain/services/CartCalculator';
 import { ProductoVM } from '../products/models/productoVm';
 import { AlertService } from '../shared/alert-service';
+import { APP_CONFIG } from '../../../infrastructure/peristence/in-memory/appConfigMock';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
+  // LÓGICA DE NEGOCIO COMPUTADA (Reacciona  a los cambios)
+  
+  // Total usando el "Precio 1" (Para calcular en qué escala estamos sin romper el sistema)
+  readonly subtotalNominal = computed(() => CartCalculator.calculateTotal(this.items()));
+  readonly count = computed(() => CartCalculator.calculateTotalItems(this.items()));
+
+  // ¿Hay algún combo en el carrito?
+  readonly tieneCombos = computed(() => this.items().some(i => i.tipo === 'COMBO'));
+
+  // Define el mínimo a pagar dinámicamente
+  readonly minimoRequerido = computed(() => {
+    return this.tieneCombos() ? APP_CONFIG.minimoConCombos : APP_CONFIG.minimoGeneral;
+  });
+
+  // Calcula cuánto falta para poder comprar
+  readonly faltaParaMinimo = computed(() => {
+    const falta = this.minimoRequerido() - this.subtotalNominal();
+    return falta > 0 ? falta : 0;
+  });
+
+  // Calcula en qué escala de precios está el cliente basado en su volumen
+  readonly escalaActiva = computed(() => {
+    const total = this.subtotalNominal();
+    // Reversamos el array para chequear desde la más alta a la más baja
+    const escala = [...APP_CONFIG.escalas].reverse().find(e => total >= e.montoMinimo);
+    return escala || APP_CONFIG.escalas[0];
+  });
+
+  // El Total Real (Aquí aplicaremos los descuentos de la Escala 2 y 3 más adelante)
+  readonly total = computed(() => {
+    // POR AHORA: Retorna el nominal. Cuando modifiquemos los Mappers para traer 
+    // los preciosMayorista, aquí haremos la magia de cambiar el precio final.
+    return this.subtotalNominal();
+  });
 
   private alertService = inject(AlertService);
 
@@ -13,8 +48,8 @@ export class CartFacade {
   readonly items = signal<CartItem[]>([]);
   
   // Computed values (se actualizan solos)
-  readonly total = computed(() => CartCalculator.calculateTotal(this.items()));
-  readonly count = computed(() => CartCalculator.calculateTotalItems(this.items()));
+  //readonly total = computed(() => CartCalculator.calculateTotal(this.items()));
+  //readonly count = computed(() => CartCalculator.calculateTotalItems(this.items()));
 
   //Signal de Estado Visual
   readonly isOpen = signal<boolean>(false);

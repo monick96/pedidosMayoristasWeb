@@ -14,6 +14,11 @@
   </div>
 
   <div class="sidebar-body">
+    
+    <div class="rule-text">
+      <strong>Mínimo requerido: {{ facade.minimoRequerido() | currency }}</strong>       
+    </div>
+
     @if (facade.items().length === 0) {
       <div class="empty-state">
         <p>Tu carrito está vacío</p>
@@ -64,7 +69,7 @@
     }
   </div>
 
-  @if (facade.items().length > 0) {
+  <!-- @if (facade.items().length > 0) {
     <div class="sidebar-footer">
       <div class="total-row">
         <span>Total:</span>
@@ -82,6 +87,52 @@
       </div>
       
       <button class="checkout-btn" (click)="generarPedidoWhatsapp()">
+        Confirmar Pedido por WhatsApp
+      </button>
+    </div>
+  } -->
+  @if (facade.items().length > 0) {
+    <div class="sidebar-footer">
+      
+      <div class="business-rules-panel">
+        
+        @if (facade.faltaParaMinimo() > 0) {
+          <div class="rule-alert warning">
+            <span class="rule-icon">⚠️</span>
+            <div class="rule-text">
+              <span>Te faltan {{ facade.faltaParaMinimo() | currency }} para poder comprar.</span>
+            </div>
+          </div>
+        } @else {
+          <div class="rule-alert success">
+            <span class="rule-icon">✅</span>
+            <div class="rule-text">
+              <strong>¡Mínimo de compra alcanzado!</strong>
+              <span>Ya puedes confirmar tu pedido.</span>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <div class="total-row">
+        <span>Total a Pagar:</span>
+        <span class="total-amount">{{ facade.total() | currency }}</span>
+      </div>
+
+      <div class="customer-info">
+        <input 
+          type="text" 
+          placeholder="Tu Nombre / Local *" 
+          [value]="facade.clienteNombre()" 
+          (input)="updateNombre($event)"
+          class="customer-input"
+        >
+      </div>
+      
+      <button class="checkout-btn" 
+              [disabled]="facade.faltaParaMinimo() > 0 || !facade.clienteNombre().trim()"
+              (click)="generarPedidoWhatsapp()">
         Confirmar Pedido por WhatsApp
       </button>
     </div>
