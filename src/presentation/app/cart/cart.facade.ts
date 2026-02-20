@@ -1,10 +1,14 @@
-import { signal, Injectable, computed } from '@angular/core';
+import { signal, Injectable, computed, inject } from '@angular/core';
 import { CartItem } from '../../../domain/entities/CartItem';
 import { CartCalculator } from '../../../domain/services/CartCalculator';
 import { ProductoVM } from '../products/models/productoVm';
+import { AlertService } from '../shared/alert-service';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
+
+  private alertService = inject(AlertService);
+
   // Signal principal del estado del carrito
   readonly items = signal<CartItem[]>([]);
   
@@ -128,4 +132,20 @@ export class CartFacade {
     
     this.saveToStorage();
   }
+
+  //Eliminar un producto específico completamente
+  removeItem(productoId: string) {
+    this.items.update(current => current.filter(i => i.productoId !== productoId));
+    this.saveToStorage();
+  }
+
+  //Vaciar el carrito
+  clearCart() {
+    // Pedimos confirmación con alert personalizado por seguridad
+    this.alertService.confirm('¿Estás seguro de que deseas vaciar todo el pedido?', () => {
+      this.items.set([]);
+      this.saveToStorage();
+    });
+  }
+
 }

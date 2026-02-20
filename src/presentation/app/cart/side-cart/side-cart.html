@@ -7,6 +7,9 @@
   
   <div class="sidebar-header">
     <h2>Mi Pedido ({{ facade.count() }})</h2>
+    @if (facade.items().length > 0) {
+        <button class="clear-cart-btn" (click)="facade.clearCart()">Vaciar</button>
+    }
     <button class="close-btn" (click)="facade.closeSidebar()">✕</button>
   </div>
 
@@ -20,22 +23,41 @@
       <div class="items-list">
         @for (item of facade.items(); track item.productoId) {
           <div class="cart-item">
+           
             <img [src]="item.imagen" [alt]="item.nombre">
+            
+
             <div class="item-details">
+              
               <h4>{{ item.nombre }}</h4>
+
               @if (item.sabor) {
                 <span class="item-flavor">{{ item.sabor }}</span>
               }
+
               <span class="unit-price">{{ item.precioUnitario | currency }}</span>
               
-              <div class="mini-qty-control">
-                <button (click)="facade.decreaseQuantity(item.productoId)">−</button>
-                <span>{{ item.cantidad }}</span>
-                <button (click)="facade.incrementQuantity(item.productoId)">+</button> </div>
             </div>
+
             <div class="item-total">
               {{ item.precioUnitario * item.cantidad | currency }}
+
             </div>
+
+            <div class="mini-qty-control">
+
+                <button (click)="facade.decreaseQuantity(item.productoId)">−</button>
+
+                <span>{{ item.cantidad }}</span>
+
+                <button (click)="facade.incrementQuantity(item.productoId)">+</button> 
+ 
+            </div>
+
+            <button class="delete-item-btn " (click)="facade.removeItem(item.productoId)" 
+                    title="Eliminar producto"> 
+            </button>
+
           </div>
         }
       </div>

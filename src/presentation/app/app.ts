@@ -2,10 +2,12 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CartWidget } from './cart/cart-widget/cart-widget';
 import { SideCart } from './cart/side-cart/side-cart';
+import { AlertServiceComponent } from './shared/alert-service-component/alert-service-component';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CartWidget, SideCart],
+  imports: [RouterOutlet, CartWidget, SideCart, AlertServiceComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

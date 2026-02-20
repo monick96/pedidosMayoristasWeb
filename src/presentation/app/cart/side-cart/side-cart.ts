@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CartFacade } from '../cart.facade';
 import { CurrencyPipe } from '@angular/common';
 import { TELEFONO_DESTINO } from '../../../../environment/telefono';
+import { AlertService } from '../../shared/alert-service';
 
 @Component({
   selector: 'app-side-cart',
@@ -13,7 +14,8 @@ export class SideCart {
 
   facade = inject(CartFacade);
 
-  
+  private alertService = inject(AlertService);
+
   updateNombre(event: Event) {
     const input = event.target as HTMLInputElement;
     this.facade.setClienteNombre(input.value); 
@@ -26,7 +28,7 @@ export class SideCart {
     const nombre = this.facade.clienteNombre().trim();
     
     if (!nombre) {
-      alert('Por favor, ingresa tu nombre para confirmar el pedido.');
+      this.alertService.show('Por favor, ingresa tu nombre / local para confirmar el pedido.', 'warning');
       return;
     }
 

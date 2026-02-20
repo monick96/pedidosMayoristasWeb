@@ -1,0 +1,107 @@
+.alert-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Por encima del carrito y de todo */
+    animation: fadeIn 0.2s ease-out;
+}
+
+.alert-box {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 80%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border-top: 5px solid var(--primary-mustard);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.alert-icon { font-size: 3rem; margin-bottom: 10px; }
+
+.alert-message {
+    font-size: 1.1rem;
+    color: var(--secondary-black);
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.alert-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+.alert-actions button:active { transform: scale(0.95); }
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-confirm {
+    background: var(--primary-mustard);
+    color: var(--secondary-black);
+}
+
+.full-width { width: 80%; flex: none; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { 
+    from { opacity: 0; transform: scale(0.8) translateY(20px); } 
+    to { opacity: 1; transform: scale(1) translateY(0); } 
+}
+
+/* ============================================
+   ALERTAS - RESPONSIVE MÓVIL (≤ 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .alert-box {
+        /* Usamos más porcentaje de la pantalla  */
+        width: 90%; 
+        padding: 20px 15px; /* Reducimos un poco el padding interno */
+    }
+
+    .alert-icon {
+        font-size: 2.5rem; /* Icono más pequeño */
+        margin-bottom: 5px;
+    }
+
+    .alert-message {
+        font-size: 1rem; /* Letra  más chica */
+        margin-bottom: 15px;
+    }
+
+    .alert-actions {
+        /*Apilamos los botones uno arriba del otro 
+           para que el usuario no toque el equivocado por error */
+        flex-direction: column-reverse; /* El botón principal queda arriba, Cancelar abajo */
+        gap: 8px;
+    }
+
+    .alert-actions button {
+        width: 100%; /* Que ocupen todo el ancho de la tarjeta */
+        padding: 14px; /* Un poco más altos (44px-48px) ideal para el dedo */
+        font-size: 0.95rem;
+    }
+
+    .full-width { 
+        width: 100%; /* Corregimos el 80% que tenías en PC para que en móvil ocupe todo */
+    }
+}
