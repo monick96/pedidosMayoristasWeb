@@ -2,6 +2,7 @@ import { Producto } from "../entities/Producto";
 import { MayoristaPrecio } from "../value-objects/PrecioMayorista";
 
 export class CalculadorPrecioProducto{
+  //el negocio hasta ahora nunca uso numeros negativos para decuentos o porcentajes
 
   static calcularPrecioMayorista(
     producto: Producto,
