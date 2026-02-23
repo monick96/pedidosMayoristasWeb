@@ -16,7 +16,8 @@
   <div class="sidebar-body">
     
     <div class="rule-text">
-      <strong>Mínimo requerido: {{ facade.minimoRequerido() | currency }}</strong>       
+      <app-niveles-modal />
+      <strong>Mínimo requerido: {{ facade.minimoRequerido() | pesoArg}}</strong>       
     </div>
 
     @if (facade.items().length === 0) {
@@ -40,12 +41,12 @@
                 <span class="item-flavor">{{ item.sabor }}</span>
               }
 
-              <span class="unit-price">{{ item.precioUnitario | currency }}</span>
+              <span class="unit-price">{{ item.precioUnitario | pesoArg }}</span>
               
             </div>
 
             <div class="item-total">
-              {{ item.precioUnitario * item.cantidad | currency }}
+              {{ item.precioUnitario * item.cantidad | pesoArg }}
 
             </div>
 
@@ -73,7 +74,7 @@
     <div class="sidebar-footer">
       <div class="total-row">
         <span>Total:</span>
-        <span class="total-amount">{{ facade.total() | currency }}</span>
+        <span class="total-amount">{{ facade.total() | pesoArg }}</span>
       </div>
 
       <div class="customer-info">
@@ -100,7 +101,7 @@
           <div class="rule-alert warning">
             <span class="rule-icon">⚠️</span>
             <div class="rule-text">
-              <span>Te faltan {{ facade.faltaParaMinimo() | currency }} para poder comprar.</span>
+              <span>Te faltan {{ facade.faltaParaMinimo() | pesoArg }} para poder comprar.</span>
             </div>
           </div>
         } @else {
@@ -117,7 +118,7 @@
 
       <div class="total-row">
         <span>Total a Pagar:</span>
-        <span class="total-amount">{{ facade.total() | currency }}</span>
+        <span class="total-amount">{{ facade.total() | pesoArg }}</span>
       </div>
 
       <div class="customer-info">

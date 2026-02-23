@@ -52,12 +52,12 @@
     <div class="price">
       @if (item.tienePromo) {
         <span class="price-old">
-          {{ item.precioNormal | currency }}
+          {{ item.precioNormal | pesoArg}}
         </span>
       }
 
       <span class="price price-final">
-        {{ item.precioFinal | currency }}
+        {{ item.precioFinal | pesoArg}}
       </span>
 
       @if (item.tienePromo) {

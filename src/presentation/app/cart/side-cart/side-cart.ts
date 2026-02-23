@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { CartFacade } from '../cart.facade';
-import { CurrencyPipe } from '@angular/common';
 import { TELEFONO_DESTINO } from '../../../../environment/telefono';
 import { AlertService } from '../../shared/alert-service';
+import { NivelesModal } from '../../shared/niveles-modal/niveles-modal';
+import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 
 @Component({
   selector: 'app-side-cart',
-  imports: [CurrencyPipe],
+  imports: [PesoArgPipe, NivelesModal],
   templateUrl: './side-cart.html',
   styleUrl: './side-cart.css',
 })

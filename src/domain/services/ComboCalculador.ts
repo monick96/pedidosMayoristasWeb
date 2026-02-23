@@ -16,4 +16,17 @@ export class ComboCalculador {
       0
     );
   }
+
+  static calcularPreciosPorEscala(combo: Combo): { nivel: number, precio: number }[] {
+    // Calculamos el precio único del combo
+    const precioUnico = ComboCalculador.precioTotal(combo);
+    
+    // Devolvemos el mismo precio para los 3 niveles
+    return [
+      { nivel: 1, precio: precioUnico },
+      { nivel: 2, precio: precioUnico },
+      { nivel: 3, precio: precioUnico }
+    ];
+  }
+  
 }

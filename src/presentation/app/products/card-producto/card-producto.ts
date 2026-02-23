@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, Input, inject, computed } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
 import { ProductoVM } from '../models/productoVm';
 import { ProductFacade } from '../product.facade';
 import { CartFacade } from '../../cart/cart.facade';
+import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 
 @Component({
   selector: 'app-card-producto',
-  imports: [CurrencyPipe],
+  imports: [PesoArgPipe],
   templateUrl: './card-producto.html',
   styleUrl: './card-producto.css',
   changeDetection: ChangeDetectionStrategy.OnPush

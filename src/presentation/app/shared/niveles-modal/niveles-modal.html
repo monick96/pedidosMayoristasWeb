@@ -1,0 +1,65 @@
+<!-- Botón trigger — va en lista-productos-grid.html -->
+<button class="niveles-btn" (click)="open()">
+  <span class="niveles-icon">ℹ️</span>
+  <span class="niveles-label">Montos de compra</span>
+</button>
+
+<!-- Overlay + Modal -->
+@if (isOpen()) {
+  <div class="modal-overlay" (click)="close()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <h2>Mínimos de compra</h2>
+        <button class="modal-close" (click)="close()">✕</button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Mínimos de compra -->
+        <div class="seccion">
+          <!-- <h3 class="seccion-titulo">Mínimos de compra</h3> -->
+          <div class="minimos-grid">
+            <div class="minimo-card">
+              <span class="minimo-label">Sin combos</span>
+              <span class="minimo-valor">{{ (minimoGeneral | pesoArg)}}</span>
+            </div>
+            <div class="minimo-card destacado">
+              <span class="minimo-label">Con combos</span>
+              <span class="minimo-valor">{{ minimoConCombos | pesoArg }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Escalas de precio esto deberia verse de otra manera ver como hacer -->
+        <!-- <div class="seccion">
+          <h3 class="seccion-titulo">Escalas de descuento</h3>
+          <div class="escalas-list">
+            @for (escala of escalas; track escala.nivel; let last = $last) {
+              <div class="escala-row" [class.ultima]="last">
+                <div class="escala-nivel">
+                  <span class="nivel-badge">{{ escala.nombre }}</span>
+                </div>
+                <div class="escala-info">
+                  @if (escala.montoMinimo === 0) {
+                    <span class="escala-desc">Precio base — todos los pedidos</span>
+                  } @else {
+                    <span class="escala-desc">Desde {{ escala.montoMinimo | pesoArg }}</span>
+                  }
+                </div>
+              </div>
+              @if (!last) {
+                <div class="escala-flecha">↓</div>
+              }
+            }
+          </div>
+        </div>
+
+        <p class="modal-nota">
+          Los precios se aplican automáticamente según el total de tu pedido.
+        </p> -->
+      </div>
+
+    </div>
+  </div>
+}

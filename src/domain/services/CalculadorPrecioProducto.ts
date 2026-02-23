@@ -30,13 +30,28 @@ export class CalculadorPrecioProducto{
 
   static calcularPrecioNormal(producto:Producto) {
     return producto.precioBase +
-        (producto.precioBase * producto.preciosMayorista[0].porcentaje) / 100;
+        (producto.precioBase * producto.preciosMayorista[0].porcentaje) / 100;// ej: MAYORISTA_1
   }
 
   static tienePromocion(producto:Producto) {
     return !!producto.porcentajeDescuento && producto.porcentajeDescuento > 0;
     
   }
+
+  static calcularPreciosPorEscala(producto: Producto): { nivel: number, precio: number }[] {
+    // Tomamos solo los primeros 3 precios mayoristas (Nivel 1, 2 y 3)
+    // Usamos map para transformar cada MayoristaPrecio en un objeto { nivel, precio }
+    return producto.preciosMayorista.slice(0, 3).map((mayorista, index) => {
+      return {
+        nivel: index + 1, // index 0 es nivel 1, index 1 es nivel 2...
+        
+        // Reutilizamos el métodoque ya sabe manejar descuentos y porcentajes
+        precio: CalculadorPrecioProducto.calcularPrecioMayorista(producto, mayorista)
+      };
+    });
+  }
+
+
 
 }
 

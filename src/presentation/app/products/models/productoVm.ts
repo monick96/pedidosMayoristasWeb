@@ -15,6 +15,7 @@ export interface ProductoVM {
   esNovedad?: boolean; 
   estaDisponible: boolean;
   unidadesPorCaja?: number;
+  preciosPorEscala?: { nivel: string; precio: number }[];
 }
 
 export interface ImagenProductoVM {

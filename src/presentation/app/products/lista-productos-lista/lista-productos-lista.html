@@ -29,9 +29,9 @@
   <div class="action-wrapper">
     <div class="prices">
       @if (item.tienePromo) {
-        <span class="price-old">{{ item.precioNormal | currency }}</span>
+        <span class="price-old">{{ item.precioNormal | pesoArg }}</span>
       }
-      <span class="price-final">{{ item.precioFinal | currency }}</span>
+      <span class="price-final">{{ item.precioFinal | pesoArg }}</span>
     </div>
 
     <div class="controls">

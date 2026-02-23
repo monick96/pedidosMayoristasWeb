@@ -18,4 +18,6 @@ export interface ComboVM {
   images?: ImagenProductoVM[];
   
   estaDisponible: boolean;
+
+  preciosPorEscala?: { nivel: string; precio: number }[];
 }
