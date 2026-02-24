@@ -38,13 +38,13 @@ export class CalculadorPrecioProducto{
     
   }
 
-  static calcularPreciosPorEscala(producto: Producto): { nivel: number, precio: number }[] {
+  static calcularPreciosPorEscala(producto: Producto): { nivel: string, precio: number }[] {
     // Tomamos solo los primeros 3 precios mayoristas (Nivel 1, 2 y 3)
     // Usamos map para transformar cada MayoristaPrecio en un objeto { nivel, precio }
     return producto.preciosMayorista.slice(0, 3).map((mayorista, index) => {
+      let nivelNumber = index + 1; 
       return {
-        nivel: index + 1, // index 0 es nivel 1, index 1 es nivel 2...
-        
+        nivel: "nivel " + nivelNumber, // index 0 es nivel 1, index 1 es nivel 2..
         // Reutilizamos el métodoque ya sabe manejar descuentos y porcentajes
         precio: CalculadorPrecioProducto.calcularPrecioMayorista(producto, mayorista)
       };

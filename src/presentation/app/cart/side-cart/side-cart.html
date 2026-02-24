@@ -41,7 +41,14 @@
                 <span class="item-flavor">{{ item.sabor }}</span>
               }
 
-              <span class="unit-price">{{ item.precioUnitario | pesoArg }}</span>
+              @if (item.preciosPorEscala && !item.tienePromocion) {
+                <app-visor-precios 
+                      [precios]="item.preciosPorEscala" 
+                      [nivelActivo]="facade.escalaActiva().nivel">
+                </app-visor-precios>
+              }@else {
+                <span class="unit-price">{{ item.precioUnitario | pesoArg }}</span>
+              }
               
             </div>
 
@@ -49,6 +56,7 @@
               {{ item.precioUnitario * item.cantidad | pesoArg }}
 
             </div>
+
 
             <div class="mini-qty-control">
 

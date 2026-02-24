@@ -407,6 +407,17 @@
   color: #666;
 }
 
+/* ── Ajustes del Visor de Precios dentro del carrito ── */
+.item-details app-visor-precios {
+  --visor-size: 0.68rem;        
+  --visor-size-activo: 0.80rem; 
+  
+  /* NUEVO: Apilamos y centramos */
+  --visor-dir: column;
+  --visor-align: right;
+  --visor-gap: 2px; /* Bien juntitos para que no ocupe tanto alto */
+}
+
 /* ============================================
    RESPONSIVE MÓVIL (≤ 480px)
    ============================================ */
@@ -495,4 +506,16 @@
     width: 100%;
     max-width: 280px;
   }
+
+  /* ── Ajustes del Visor de Precios dentro del carrito ── */
+  .item-details app-visor-precios {
+    --visor-size: 0.48rem;        
+    --visor-size-activo: 0.60rem; 
+    
+    /* NUEVO: Apilamos y centramos */
+  
+    --visor-align: center;
+    --visor-gap: 1px; /* Bien juntitos para que no ocupe tanto alto */
+  }
 }
+

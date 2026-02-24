@@ -27,12 +27,26 @@
   </div>
 
   <div class="action-wrapper">
-    <div class="prices">
-      @if (item.tienePromo) {
-        <span class="price-old">{{ item.precioNormal | pesoArg }}</span>
+    @if (item.preciosPorEscala && !item.tienePromo) {
+
+        <app-visor-precios 
+              [precios]="item.preciosPorEscala" 
+              [nivelActivo]="cartFacade.escalaActiva().nivel">
+        </app-visor-precios>
+
+      }@else {
+
+        <div class="prices">
+
+          @if (item.tienePromo) {
+            <span class="price-old">{{ item.precioNormal | pesoArg }}</span>
+          }
+
+          <span class="price-final">{{ item.precioFinal | pesoArg }}</span>
+          
+        </div>
       }
-      <span class="price-final">{{ item.precioFinal | pesoArg }}</span>
-    </div>
+    
 
     <div class="controls">
       @if (!item.estaDisponible) {

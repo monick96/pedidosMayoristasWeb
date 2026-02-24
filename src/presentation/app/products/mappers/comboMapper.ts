@@ -18,6 +18,7 @@ export function comboToVM(combo: Combo): ComboVM {
     esNovedad: combo.esNovedad || false,
     images: combo.images?.map(imagenProductoToVM),
     estaDisponible: combo.estaDisponible || false
+    //preciosPorEscala: ComboCalculador.calcularPreciosPorEscala(combo)
   };
 }
 

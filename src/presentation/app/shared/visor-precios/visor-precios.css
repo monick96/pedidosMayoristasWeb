@@ -1,0 +1,52 @@
+.visor-precios-container {
+  display: flex;
+  /* si le pasan --visor-dir, lo usa (ej. column). Si no, usa 'row' (horizontal) */
+  flex-direction: var(--visor-dir, row);
+  
+  /* Si le pasan --visor-align, lo usa (ej. center). Si no, usa 'center' */
+  align-items: var(--visor-align, center);
+  
+  /* Gap dinámico: Si está en columna igual queremos que estén más pegaditos */
+  gap: var(--visor-gap, 8px); 
+  
+  flex-wrap: wrap;
+}
+
+.precio-item {
+  /* Le decimos: usa la variable --visor-size, y si no existe, usa 0.9rem */
+  font-size: var(--visor-size, 0.9rem);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.precio-item.inactivo {
+  color: #999999; /* Gris */
+}
+
+.precio-item.activo {
+  color: var(--secondary-black); /* Negro */
+  font-size: var(--visor-size-activo, 1.2rem);
+  font-weight: 800;
+  /* Reducimos un poco el scale para que no empuje tanto a los otros elementos */
+  transform: scale(1.02);
+}
+
+/* ============================================
+   AJUSTES RESPONSIVE MÓVIL (≤ 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  .visor-precios-container {
+    /* Si están en el carrito lateral (que ya es estrecho) o en pantallas muy chicas,
+       el flex-wrap hará su trabajo. Pero ajustamos el gap para móvil. */
+    gap: 6px; 
+  }
+
+  .precio-item {
+    /* Podemos hacer las fuentes un poquito más pequeñas en móvil por defecto */
+    font-size: var(--size-inactivo, 0.8rem);
+  }
+
+  .precio-item.activo {
+    font-size: var(--size-activo, 1.1rem);
+  }
+}

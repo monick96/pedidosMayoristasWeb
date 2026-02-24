@@ -20,6 +20,8 @@ export function productoToVM(p: Producto): ProductoVM {
     tipo:PRODUCTO,
     estaDisponible: p.estaDisponible || false,
     unidadesPorCaja: p.unidadesPorCaja,
+    // NUEVO: Llamamos a nuestro nuevo método
+    preciosPorEscala: CalculadorPrecioProducto.calcularPreciosPorEscala(p),
     // Ordenamos por el campo 'order' si existe antes de mapear
     images: p.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM)
   };

@@ -55,10 +55,17 @@
           {{ item.precioNormal | pesoArg}}
         </span>
       }
-
-      <span class="price price-final">
-        {{ item.precioFinal | pesoArg}}
-      </span>
+      
+      @if (item.preciosPorEscala && !item.tienePromo) {
+        <app-visor-precios 
+              [precios]="item.preciosPorEscala" 
+              [nivelActivo]="cartFacade.escalaActiva().nivel">
+        </app-visor-precios>
+      }@else {
+        <span class="price price-final">
+          {{ item.precioFinal | pesoArg}}
+        </span>
+      }
 
       @if (item.tienePromo) {
         <span class="badge badge-promo">

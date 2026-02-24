@@ -4,10 +4,11 @@ import { TELEFONO_DESTINO } from '../../../../environment/telefono';
 import { AlertService } from '../../shared/alert-service';
 import { NivelesModal } from '../../shared/niveles-modal/niveles-modal';
 import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
+import { VisorPrecios } from '../../shared/visor-precios/visor-precios';
 
 @Component({
   selector: 'app-side-cart',
-  imports: [PesoArgPipe, NivelesModal],
+  imports: [PesoArgPipe, NivelesModal, VisorPrecios],
   templateUrl: './side-cart.html',
   styleUrl: './side-cart.css',
 })

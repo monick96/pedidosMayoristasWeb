@@ -112,7 +112,9 @@ export class CartFacade {
         nombre: producto.descripcion,
         imagen: producto.images?.[0]?.url || '',
         precioUnitario: producto.precioFinal,
-        cantidad: cantidad
+        cantidad: cantidad,
+        preciosPorEscala: producto.preciosPorEscala ,
+        tienePromocion: producto.tienePromo
       };
       
       return [...current, newItem];
