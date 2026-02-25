@@ -4,11 +4,12 @@ import { ProductFacade } from '../product.facade';
 import { CartFacade } from '../../cart/cart.facade';
 import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 import { VisorPrecios } from '../../shared/visor-precios/visor-precios';
+import { QtySelector } from '../../shared/qty-selector/qty-selector';
 
 
 @Component({
   selector: 'app-lista-productos-lista',
-  imports: [PesoArgPipe, VisorPrecios],
+  imports: [PesoArgPipe, VisorPrecios, QtySelector],
   templateUrl: './lista-productos-lista.html',
   styleUrl: './lista-productos-lista.css',
 })
@@ -20,21 +21,10 @@ export class ListaProductosLista {
   facade = inject(ProductFacade);
   cartFacade = inject(CartFacade);
 
-  // Si cambia el carrito, este número se actualiza solo.
+  // Si cambia el carrito, este número se actualiza.
   readonly cantidadEnCarrito = computed(() => {
-    const itemEnCarrito = this.cartFacade.items().find(i => i.productoId === this.item.codigo);
-    return itemEnCarrito ? itemEnCarrito.cantidad : 0;
+    return this.cartFacade.cantidadesMap()[this.item.codigo] || 0;
   });
-
-  agregarAlCarrito(event: Event) {
-    event.stopPropagation(); // para que no abra el Lightbox al hacer click en el botón
-    this.cartFacade.addToCart(this.item);
-  }
-
-  restar(event: Event) {
-    event.stopPropagation();
-    this.cartFacade.decreaseQuantity(this.item.codigo);
-  }
 
   // Acciones
   abrirLightbox(event: Event) {

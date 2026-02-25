@@ -21,13 +21,13 @@
     </div>
 
     @if (facade.items().length === 0) {
-      <div class="empty-state">
+      <div class="empty-state flex-center">
         <p>Tu carrito está vacío</p>
         <button class="action-btn" (click)="facade.closeSidebar()">Ir a comprar</button>
       </div>
     } @else {
       <div class="items-list">
-        @for (item of facade.items(); track item.productoId) {
+        @for (item of facade.itemsConPrecio(); track item.productoId) {
           <div class="cart-item">
            
             <img [src]="item.imagen" [alt]="item.nombre">
@@ -47,26 +47,22 @@
                       [nivelActivo]="facade.escalaActiva().nivel">
                 </app-visor-precios>
               }@else {
-                <span class="unit-price">{{ item.precioUnitario | pesoArg }}</span>
+                <span class="unit-price">{{ item.precioEfectivo | pesoArg }}</span>
               }
               
             </div>
 
             <div class="item-total">
-              {{ item.precioUnitario * item.cantidad | pesoArg }}
+              {{ item.subtotalItem| pesoArg }}
 
             </div>
 
-
-            <div class="mini-qty-control">
-
-                <button (click)="facade.decreaseQuantity(item.productoId)">−</button>
-
-                <span>{{ item.cantidad }}</span>
-
-                <button (click)="facade.incrementQuantity(item.productoId)">+</button> 
- 
-            </div>
+            <app-qty-selector 
+              [cantidad]="item.cantidad"
+              (onDecrease)="facade.decreaseQuantity(item.productoId)"
+              (onIncrease)="facade.incrementQuantity(item.productoId)"
+              (onChange)="facade.setQuantity(item.productoId, $event)">
+            </app-qty-selector>
 
             <button class="delete-item-btn " (click)="facade.removeItem(item.productoId)" 
                     title="Eliminar producto"> 
@@ -78,28 +74,6 @@
     }
   </div>
 
-  <!-- @if (facade.items().length > 0) {
-    <div class="sidebar-footer">
-      <div class="total-row">
-        <span>Total:</span>
-        <span class="total-amount">{{ facade.total() | pesoArg }}</span>
-      </div>
-
-      <div class="customer-info">
-        <input 
-          type="text" 
-          placeholder="Tu Nombre / Local *" 
-          [value]="facade.clienteNombre()" 
-          (input)="updateNombre($event)"
-          class="customer-input"
-        >
-      </div>
-      
-      <button class="checkout-btn" (click)="generarPedidoWhatsapp()">
-        Confirmar Pedido por WhatsApp
-      </button>
-    </div>
-  } -->
   @if (facade.items().length > 0) {
     <div class="sidebar-footer">
       

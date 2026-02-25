@@ -1,6 +1,6 @@
-/* ============================================
-   SIDE CART - VARIABLES Y ESTRUCTURA
-   ============================================ */
+/* ===========
+   SIDE CART 
+   =========== */
 
 /* ── Overlay ── */
 .sidebar-overlay {
@@ -168,41 +168,6 @@
   letter-spacing: 0.5px;
 }
 
-/* ── Controles de Cantidad ── */
-.mini-qty-control {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 5px;
-}
-
-.mini-qty-control button {
-  width: 32px;
-  height: 32px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  background: #eee;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-  touch-action: manipulation;
-}
-
-.mini-qty-control button:hover {
-  background: #ddd;
-}
-
-.mini-qty-control span {
-  font-weight: 600;
-  min-width: 28px;
-  text-align: center;
-  touch-action: manipulation;
-}
-
 /* ── Botón Eliminar ── */
 .delete-item-btn {
   grid-column: 3;
@@ -268,10 +233,7 @@
 
 /* ── Estado Vacío ── */
 .empty-state {
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100%;
   text-align: center;
   color: #666;
@@ -448,7 +410,6 @@
     height: 60px;
   }
 
-  .mini-qty-control button,
   .delete-item-btn {
     width: 28px;
     height: 28px;

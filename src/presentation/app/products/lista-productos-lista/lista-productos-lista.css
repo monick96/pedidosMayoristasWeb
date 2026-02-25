@@ -40,7 +40,6 @@
   gap: 2px;
 }
 
-
 /* Tipografía de Título */
 .title {
   font-size: 1rem; /* Usamos rem para que escale */
@@ -57,8 +56,6 @@
 }
 
 .flavor {
-  /*font-size: 0.9rem;
-  color: #666;*/
   margin: 0;
 }
 
@@ -77,49 +74,6 @@
   min-width: 90px;
 }
 
-
-
-/* Botones Compactos */
-.add-btn-small {
-  width: 32px;
-  height: 32px;
-  background: var(--primary-mustard);
-  border: none;
-  border-radius: 50%;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  display: flex; /* Centrar el + */
-  align-items: center;
-  justify-content: center;
-  padding-bottom: 3px;
-}
-
-.qty-control-small {
-  display: flex;
-  align-items: center;
-  background: #1a1a1a;
-  border-radius: 20px;
-  padding: 2px;
-}
-
-.qty-control-small button {
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: transparent;
-  color: var(--primary-mustard);
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.qty-control-small span {
-  color: white;
-  font-size: 1rem;
-  min-width: 20px;
-  text-align: center;
-}
-
 /* Ajuste específico para el botón PEQUEÑO */
 .btn-add-mini {
   width: 32px;
@@ -129,12 +83,26 @@
   padding-bottom: 3px;
 }
 
-/* Ajuste para el control PEQUEÑO */
-.qty-mini {
-  height: 28px;
+/* ============================================
+   AJUSTE DEL BADGE DE CAJA (Solo para Modo Lista)
+   ============================================ */
+.box-badge {
+  --box-badge-left: -2px;
+  --box-badge-gap: 2px;
 }
-.qty-mini button { width: 24px; font-size: 1rem; }
-.qty-mini span { font-size: 0.9rem; }
+
+/* ============================================
+   AJUSTES PARA EL VISOR DE PRECIOS EN LA LISTA
+   ============================================ */
+.action-wrapper app-visor-precios {
+  --visor-dir: column;
+  --visor-align: center;
+  --visor-gap: 4px;
+
+  --visor-size: 0.95rem;
+  --visor-size-activo: 1.2rem;
+}
+
 
 /* ============================================
    RESPONSIVE MÓVIL (max-width: 768px)
@@ -189,38 +157,6 @@
     display: flex;
     flex-direction: column; /* Precio viejo arriba del nuevo */
     align-items: flex-end;
-  }
-
-  /* CONTROLES DE CANTIDAD  */
-  /*  grandes y claros */
-  
-  /* El contenedor del selector */
-  .qty-selector, .qty-mini {
-    height: 36px; /* Altura táctil cómoda */
-    background-color: transparent; /* Fondo limpio */
-    border: 1px solid #e0e0e0; /* Borde suave como la referencia */
-    border-radius: 6px; /* Rectángulo redondeado */
-    gap: 0; /* Sin espacio entre botones */
-  }
-
-  /* Los botones - y + */
-  .qty-selector button {
-    width: 32px;
-    height: 100%;
-    color: var(--primary-mustard); /* Color de tu marca */
-    font-size: 1.4rem; /* Signos grandes */
-    background: #f9f9f9; /* Fondo gris muy clarito */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 4px; /* Ajuste visual del texto */
-  }
-  
-  /* El número en el medio */
-  .qty-selector span {
-    font-size: 1rem;
-    font-weight: 600;
-    min-width: 25px;
   }
 
   /* El botón de Agregar (+) cuando es 0 */
@@ -290,22 +226,6 @@
     border-radius: 4px;
   }
 
-  /* Selector de cantidad más compacto pero táctil */
-  .qty-selector, .qty-mini {
-    height: 32px;
-    border-radius: 4px;
-  }
-
-  .qty-selector button {
-    width: 28px;
-    font-size: 1.2rem;
-  }
-
-  .qty-selector span {
-    font-size: 1rem;
-    min-width: 22px;
-  }
-
   .btn-add-mini {
     width: 32px;
     height: 32px;
@@ -314,25 +234,16 @@
 
   .box-badge {
     /* Lo miniaturizamos */
-    font-size: 0.6rem;
-    padding: 1px 4px;
+    --box-badge-size: 0.6rem;
+    --box-badge-pad: 1px 4px;
   }
 
   /* Achicamos el ícono de la cajita proporcionalmente */
   .box-badge::before {
-    width: 11px;
-    height: 11px;
+   --box-badge-before-with: 11px;
+   --box-badge-before-height: 11px;
   }
 }
 
 /****nuevo****/
-/* ============================================
-   AJUSTE DEL BADGE DE CAJA (Solo para Modo Lista)
-   ============================================ */
-.box-badge {
-  left: -2px;
-  /* Sombra más suave*/
-  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-  gap: 2px;
-}
 

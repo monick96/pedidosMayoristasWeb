@@ -44,12 +44,14 @@ export class CalculadorPrecioProducto{
     return producto.preciosMayorista.slice(0, 3).map((mayorista, index) => {
       let nivelNumber = index + 1; 
       return {
-        nivel: "nivel " + nivelNumber, // index 0 es nivel 1, index 1 es nivel 2..
+        nivel: `nivel ${nivelNumber}`, // index 0 es nivel 1, index 1 es nivel 2..
         // Reutilizamos el métodoque ya sabe manejar descuentos y porcentajes
         precio: CalculadorPrecioProducto.calcularPrecioMayorista(producto, mayorista)
       };
     });
   }
+
+  
 
 
 

@@ -90,18 +90,18 @@
 
       }@else if (cantidadEnCarrito() === 0) {
 
-        <button class=" btn-primary add-btn" (click)="agregarAlCarrito($event)">
+        <button class=" btn-primary add-btn" (click)="$event.stopPropagation(); cartFacade.addToCart(item)">
           Agregar
         </button>
 
       } @else {
+        <app-qty-selector 
+          [cantidad]="cantidadEnCarrito()"
+          (onDecrease)="cartFacade.decreaseQuantity(item.codigo)"
+          (onIncrease)="cartFacade.addToCart(item)"
+          (onChange)="cartFacade.setQuantity(item.codigo, $event)">
+        </app-qty-selector>
 
-        <div class="qty-selector qty-card" (click)="$event.stopPropagation()">
-          <button class="qty-btn minus" (click)="restar($event)">−</button>
-          <span class="qty-value">{{ cantidadEnCarrito() }}</span>
-          <button class="qty-btn plus" (click)="agregarAlCarrito($event)">+</button>
-        </div>
-        
       }
       
     </div>

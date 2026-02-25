@@ -7,10 +7,14 @@ import { APP_CONFIG } from '../../../infrastructure/peristence/in-memory/appConf
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
+
+  private alertService = inject(AlertService);
+
   // LÓGICA DE NEGOCIO COMPUTADA (Reacciona  a los cambios)
   
   // Total usando el "Precio 1" (Para calcular en qué escala estamos sin romper el sistema)
   readonly subtotalNominal = computed(() => CartCalculator.calculateTotal(this.items()));
+
   readonly count = computed(() => CartCalculator.calculateTotalItems(this.items()));
 
   // ¿Hay algún combo en el carrito?
@@ -35,22 +39,33 @@ export class CartFacade {
     return escala || APP_CONFIG.escalas[0];
   });
 
-  // El Total Real (Aquí aplicaremos los descuentos de la Escala 2 y 3 más adelante)
-  readonly total = computed(() => {
-    // POR AHORA: Retorna el nominal. Cuando modifiquemos los Mappers para traer 
-    // los preciosMayorista, aquí haremos la magia de cambiar el precio final.
-    return this.subtotalNominal();
+ 
+  // Un array de items que ya tiene el precio final calculado para la vista
+  readonly itemsConPrecio = computed(() => {
+    const nivelActual = this.escalaActiva().nivel;
+
+    return this.items().map(item => {
+      // Buscamos el precio de la escala, si no hay usamos el base
+      const precioEscala = item.preciosPorEscala?.find(p => p.nivel === nivelActual);
+      const precioEfectivo = precioEscala ? precioEscala.precio : item.precioUnitario;
+
+      // Retornamos el item clonado, pero le agregamos los datos calculados
+      return {
+        ...item,
+        precioEfectivo: precioEfectivo,
+        subtotalItem: precioEfectivo * item.cantidad
+      };
+    });
   });
 
-  private alertService = inject(AlertService);
+  //  total general suma los subtotales
+  readonly total = computed(() => {
+    return this.itemsConPrecio().reduce((suma, item) => suma + item.subtotalItem, 0);
+  });
 
   // Signal principal del estado del carrito
   readonly items = signal<CartItem[]>([]);
-  
-  // Computed values (se actualizan solos)
-  //readonly total = computed(() => CartCalculator.calculateTotal(this.items()));
-  //readonly count = computed(() => CartCalculator.calculateTotalItems(this.items()));
-
+ 
   //Signal de Estado Visual
   readonly isOpen = signal<boolean>(false);
 
@@ -123,17 +138,20 @@ export class CartFacade {
     this.saveToStorage();
   }
 
+  
+
   // Solo busca por ID y suma 1. No necesita el objeto entero.
   incrementQuantity(productoId: string) {
     this.items.update(current => {
       return current.map(i => 
         i.productoId === productoId 
-          ? { ...i, cantidad: i.cantidad + 1 }
+          ? { ...i, cantidad: i.cantidad + 1}
           : i
       );
     });
     this.saveToStorage();
   }
+  
   
   private saveToStorage() {
     // Aquí llamarímos al repositorio o useCase de guardar
@@ -170,6 +188,25 @@ export class CartFacade {
     this.saveToStorage();
   }
 
+  //establecer una cantidad exacta desde un input
+  setQuantity(productoId: string, cantidad: number) {
+    // Si escribe 0 o borra el input, dejamos producto con cantidad 1
+    if (isNaN(cantidad) || cantidad <= 0) {
+      this.removeItem(productoId);
+      return;
+    }
+
+    this.items.update(current => {
+      return current.map(i => 
+        i.productoId === productoId 
+          ? { ...i, cantidad: cantidad } // Actualizamos a la cantidad exacta
+          : i
+      );
+    });
+    
+    this.saveToStorage();
+  }
+
   //Eliminar un producto específico completamente
   removeItem(productoId: string) {
     this.items.update(current => current.filter(i => i.productoId !== productoId));
@@ -184,5 +221,13 @@ export class CartFacade {
       this.saveToStorage();
     });
   }
+
+  // cantidad en carrito
+  readonly cantidadesMap = computed(() => {
+    return this.items().reduce((map, item) => {
+      map[item.productoId] = item.cantidad;
+      return map;
+    }, {} as Record<string, number>);
+  });
 
 }

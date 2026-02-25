@@ -93,11 +93,10 @@ export const PRODUCTS_MOCK: Producto[] = [
     descripcion: 'Platinum Whey Protein 2 lb',
     precioBase: 21000,
     porcentajePrecioSugerido: 60,
-    porcentajeDescuento: 5,
     pesoGramos: 930,
     pesoKg: 0.93,
     unidadesPorCaja: 12,
-    estaDisponible: false,
+    estaDisponible: true,
     preciosMayorista: [
       { tipo: 'MAYORISTA_1', porcentaje: 28 },
       { tipo: 'MAYORISTA_2', porcentaje: 22 },

@@ -6,12 +6,14 @@ import { productoToVM } from './mappers/productoMapper';
 import { ProductoListadoVM } from './models/productoListadoVm';
 import { comboComposition } from '../../../composition/ComboComposition';
 import { comboToVM } from './mappers/comboMapper';
-import { PRODUCTO } from '../../../domain/value-objects/TipoProducto';
+import { COMBO, PRODUCTO } from '../../../domain/value-objects/TipoProducto';
 import { ViewMode } from './models/viewType';
+import { ComboVM } from './models/comboVm';
 
 
 @Injectable({ providedIn: 'root' })
 export class ProductFacade {
+
   private readonly getProductsUseCase = productComposition();
 
   private readonly getCombosUseCase = comboComposition();
@@ -19,6 +21,7 @@ export class ProductFacade {
   readonly items = signal<ProductoListadoVM[]>([]);
 
   readonly loading = signal<boolean>(false);
+
   // Agregamos el signal para el texto de búsqueda
   readonly filterText = signal<string>('');
 
@@ -32,6 +35,7 @@ export class ProductFacade {
   readonly showOnlyCombos = signal<boolean>(false);
 
   readonly selectedGalleryItem = signal<ProductoListadoVM | null>(null);
+
   readonly currentImageIndex = signal<number>(0);
 
   readonly showOnlyOffers = signal<boolean>(false);
@@ -42,7 +46,18 @@ export class ProductFacade {
   //solo disponibles
   readonly showOnlyAvailable = signal<boolean>(true);
 
+  // type guard para TS: si esto devuelve true, 'item' es un ProductoVM
+  esProducto(item: ProductoListadoVM): item is ProductoVM {
+    return item.tipo === PRODUCTO;
+  }
+
+  // type guard para TS: si esto devuelve true, 'item' es un ComboVM
+  esCombo(item: ProductoListadoVM): item is ComboVM {
+    return item.tipo === COMBO;
+  }
+
   //Métodos para cambiar la vista
+
   setViewMode(mode: ViewMode) {
     this.viewMode.set(mode);
   }
@@ -153,11 +168,11 @@ export class ProductFacade {
       if (onlyNews && !item.esNovedad) return false;
       
       // Si hay combos, filtramos por tipo
-      if (onlyCombos && item.tipo !== 'COMBO') return false;
+      if (onlyCombos && !this.esCombo(item)) return false;
 
       if (onlyOffers) {
-        if (item.tipo !== 'PRODUCTO') return false; 
-        if (!(item as ProductoVM).tienePromo) return false;
+        if (!this.esProducto(item)) return false; 
+        if (!item.tienePromo) return false;
       }
 
       // 2. FILTRO DE TEXTO (Siempre combina con el botón activo)
@@ -166,7 +181,7 @@ export class ProductFacade {
       const palabras = query.split(' ').filter(p => p.length > 0);
       const desc = (item.descripcion || '').toLowerCase();
       const marc = (item.marcaId || '').toLowerCase();
-      const sab = (item.tipo === PRODUCTO) ? (item as ProductoVM).sabor?.toLowerCase() || '' : '';
+      const sab = this.esProducto(item) ? item.sabor?.toLowerCase() || '' : '';
 
       const superTexto = `${desc} ${marc} ${sab}`;
       

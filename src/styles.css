@@ -206,18 +206,18 @@ body {
 
 /* === BADGE DE CAJA (Flotante sobre la imagen) === */
 .box-badge {
+  font-size: var(--box-badge-size, 0.75rem);
+  padding: var(--box-badge-pad, 4px 8px);
   position: absolute;
   top: 8px;
-  left: 8px;
+  left: var(--box-badge-left, 8px);
   background-color: var(--secondary-black); /* Fondo negro*/
   color: var(--primary-mustard); /* Icono y texto mostaza */
   font-weight: 800;
-  font-size: 0.75rem;
-  padding: 4px 8px;
   border-radius: 20px; /* Redondeado tipo píldora */
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--box-badge-gap, 4px );
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   z-index: 10;
 }
@@ -225,8 +225,8 @@ body {
 .box-badge::before {
   content: ''; 
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: var(--box-badge-before-with, 14px );
+  height:var(--box-badge-before-height, 14px );
   
   /* Aquí le damos el color de la caja (mismo que el texto) */
   background-color: currentColor; 
@@ -260,6 +260,12 @@ button:disabled {
   cursor: not-allowed !important;
   transform: none !important;
   box-shadow: none !important;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
