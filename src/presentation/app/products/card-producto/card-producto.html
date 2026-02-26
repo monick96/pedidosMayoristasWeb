@@ -22,11 +22,6 @@
           [class.img-out-of-stock]="!item.estaDisponible"
           (click)="facade.openLightbox(item, i)"
         />
-
-        @if (item.images && item.images.length > 1) {
-          <button class="nav-btn prev" (click)="carrusel.scrollLeft -= carrusel.offsetWidth">❮</button>
-          <button class="nav-btn next" (click)="carrusel.scrollLeft += carrusel.offsetWidth">❯</button>
-        }
         
       }
 
@@ -56,7 +51,7 @@
         </span>
       }
       
-      @if (item.preciosPorEscala && !item.tienePromo) {
+      @if (item.preciosPorEscala) {
         <app-visor-precios 
               [precios]="item.preciosPorEscala" 
               [nivelActivo]="cartFacade.escalaActiva().nivel">

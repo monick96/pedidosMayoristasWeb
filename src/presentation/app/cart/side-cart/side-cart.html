@@ -41,7 +41,7 @@
                 <span class="item-flavor">{{ item.sabor }}</span>
               }
 
-              @if (item.preciosPorEscala && !item.tienePromocion) {
+              @if (item.preciosPorEscala) {
                 <app-visor-precios 
                       [precios]="item.preciosPorEscala" 
                       [nivelActivo]="facade.escalaActiva().nivel">

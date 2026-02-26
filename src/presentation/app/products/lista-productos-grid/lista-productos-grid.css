@@ -2,7 +2,7 @@
   display: flex;
   gap: 10px;
   overflow-x: auto; /* Scroll horizontal en móvil */
-  padding: 15px 10px; 
+  /* padding: 15px 10px;  */
   
   background: var(--bg-white);
   scrollbar-width: none; /* Ocultar scroll en Firefox */
@@ -157,11 +157,11 @@ app-buscador {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  /*padding: 15px;
-  /*max-width: 800px; /* Que no se estiren infinito en pantallas gigantes */
-  /*margin: 0 auto; /* Centrado */
+  /*padding: 15px;*/
+  /*max-width: 95%; /* Que no se estiren infinito en pantallas gigantes */
+  margin: 0 auto; /* Centrado */
   padding: 0;        /* 1. Quitamos el relleno para que se alinee con los bordes del buscador */
-  width: 100%;
+  width: 98%;
 }
 
 /* CLASE NUEVA: El bloque que se queda pegado arriba */
@@ -190,7 +190,6 @@ app-buscador {
 /* AJUSTE A LOS FILTROS EXISTENTES */
 /* Modificamos .brands-filter para que se integre bien en el header pegajoso */
 .brands-filter {
-  /* ... tus estilos existentes ... */
   border-bottom: none; /* Quitamos el borde porque ahora el sticky tiene sombra */
   background: transparent; /* Fondo transparente para heredar el del sticky-header */
   padding-bottom: 10px; /* Espacio antes de que empiecen los productos */
