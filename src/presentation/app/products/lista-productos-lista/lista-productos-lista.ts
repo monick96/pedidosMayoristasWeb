@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, inject, computed } from '@angular/core';
-import { ProductoVM } from '../models/productoVm';
-import { ProductFacade } from '../product.facade';
-import { CartFacade } from '../../cart/cart.facade';
+import { ProductoVM } from '../../models/productoVm';
+import { ProductFacade } from '../../facades/product.facade';
+import { CartFacade } from '../../facades/cart.facade';
 import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 import { VisorPrecios } from '../../shared/visor-precios/visor-precios';
 import { QtySelector } from '../../shared/qty-selector/qty-selector';

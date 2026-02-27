@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { ProductFacade } from '../product.facade';
+import { ProductFacade } from '../../facades/product.facade';
 import { CardProducto } from '../card-producto/card-producto';
 import { Buscador } from '../buscador/buscador';
 import { NgClass } from '@angular/common';

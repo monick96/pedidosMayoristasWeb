@@ -1,14 +1,13 @@
 import { signal, Injectable, computed } from '@angular/core';
-import { Producto } from '../../../domain/entities/Producto';
 import { productComposition } from '../../../composition/ProductoComposition';
-import {ProductoVM } from './models/productoVm'; 
-import { productoToVM } from './mappers/productoMapper';
-import { ProductoListadoVM } from './models/productoListadoVm';
+import {ProductoVM } from '../models/productoVm'; //models/productoVm
+import { productoToVM } from '../mappers/productoMapper';
+import { ProductoListadoVM } from '../models/productoListadoVm';
 import { comboComposition } from '../../../composition/ComboComposition';
-import { comboToVM } from './mappers/comboMapper';
+import { comboToVM } from '../mappers/comboMapper';
 import { COMBO, PRODUCTO } from '../../../domain/value-objects/TipoProducto';
-import { ViewMode } from './models/viewType';
-import { ComboVM } from './models/comboVm';
+import { ViewMode } from '../models/viewType';
+import { ComboVM } from '../models/comboVm';
 
 
 @Injectable({ providedIn: 'root' })

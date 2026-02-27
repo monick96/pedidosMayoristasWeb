@@ -6,14 +6,16 @@
         <span class="box-icon"></span> {{ item.unidadesPorCaja }}
       </div>
     }
+
+
     @if (item.images && item.images.length > 0) {
       <img [src]="item.images[0].small || item.images[0].url" 
            [alt]="item.descripcion" 
            class="thumb zoomable"
            [class.img-out-of-stock]="!item.estaDisponible"
-           >
-           
+           >    
     }
+    
   </div>
 
   <div class="info-wrapper">

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CartFacade } from '../cart.facade';
+import { CartFacade } from '../../facades/cart.facade';
 import { TELEFONO_DESTINO } from '../../../../environment/telefono';
 import { AlertService } from '../../shared/alert-service';
 import { NivelesModal } from '../../shared/niveles-modal/niveles-modal';

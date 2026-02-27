@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardProducto } from './card-producto';
 import { ProductoVM } from '../models/productoVm';
 import { signal, ChangeDetectionStrategy } from '@angular/core';
-import { CartFacade } from '../../cart/cart.facade';
+import { CartFacade } from '../../facades/cart.facade';
 import { ProductFacade } from '../product.facade';
 
 //Mocks de los servicios que inyecta el componente

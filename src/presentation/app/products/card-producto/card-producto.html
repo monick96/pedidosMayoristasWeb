@@ -2,7 +2,7 @@
   
   <div class="gallery-wrapper">
     
-    <div class="image-container" #carrusel>
+    <div class="image-container" appCarrusel #miCarrusel="appCarrusel">
       
       @if (item.unidadesPorCaja) {
         <div class="box-badge">
@@ -22,17 +22,16 @@
           [class.img-out-of-stock]="!item.estaDisponible"
           (click)="facade.openLightbox(item, i)"
         />
-        
+
       }
 
       @if (item.images && item.images.length > 1) {
-        <button class="nav-btn prev" 
-          (click)="carrusel.scrollLeft <= 0 ? carrusel.scrollLeft = carrusel.scrollWidth : carrusel.scrollLeft -= carrusel.offsetWidth">
+        
+        <button class="nav-btn prev" (click)="miCarrusel.scrollAnterior($event)">
           &#10094;
         </button>
 
-        <button class="nav-btn next" 
-          (click)="carrusel.scrollLeft + carrusel.offsetWidth >= carrusel.scrollWidth - 5 ? carrusel.scrollLeft = 0 : carrusel.scrollLeft += carrusel.offsetWidth">
+        <button class="nav-btn next" (click)="miCarrusel.scrollSiguiente($event)">
           &#10095;
         </button>
       }
@@ -100,7 +99,6 @@
       }
       
     </div>
-    
     
   </div>
 </div>

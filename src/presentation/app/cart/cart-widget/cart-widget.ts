@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CartFacade } from '../cart.facade';
+import { CartFacade } from '../../facades/cart.facade';
 
 @Component({
   selector: 'app-cart-widget',

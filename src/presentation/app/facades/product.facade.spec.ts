@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ProductFacade } from '../../../presentation/app/products/product.facade';
+import { ProductFacade } from '../../app/facades/product.facade';
 
 describe('ProductFacade', () => {
   let facade: ProductFacade;

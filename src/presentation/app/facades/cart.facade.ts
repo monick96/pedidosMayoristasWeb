@@ -1,14 +1,16 @@
 import { signal, Injectable, computed, inject } from '@angular/core';
 import { CartItem } from '../../../domain/entities/CartItem';
 import { CartCalculator } from '../../../domain/services/CartCalculator';
-import { ProductoVM } from '../products/models/productoVm';
+import { ProductoVM } from '../models/productoVm';
 import { AlertService } from '../shared/alert-service';
 import { APP_CONFIG } from '../../../infrastructure/peristence/in-memory/appConfigMock';
+import { cartRepositoryComposition } from '../../../composition/CartComposition';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
 
   private alertService = inject(AlertService);
+  private cartRepository = cartRepositoryComposition();
 
   // LÓGICA DE NEGOCIO COMPUTADA (Reacciona  a los cambios)
   
@@ -73,6 +75,7 @@ export class CartFacade {
   readonly clienteNombre = signal<string>('');
 
   constructor() {
+
     // Al iniciar, cargamos del storage
     this.loadFromStorage();
     //cargar nombre cliente
@@ -151,19 +154,6 @@ export class CartFacade {
     });
     this.saveToStorage();
   }
-  
-  
-  private saveToStorage() {
-    // Aquí llamarímos al repositorio o useCase de guardar
-    localStorage.setItem('cart', JSON.stringify(this.items()));
-  }
-  
-  private loadFromStorage() {
-    const data = localStorage.getItem('cart');
-    if (data) {
-      this.items.set(JSON.parse(data));
-    }
-  }
 
   // Método para restar cantidad
   decreaseQuantity(productoId: string) {
@@ -213,15 +203,6 @@ export class CartFacade {
     this.saveToStorage();
   }
 
-  //Vaciar el carrito
-  clearCart() {
-    // Pedimos confirmación con alert personalizado por seguridad
-    this.alertService.confirm('¿Estás seguro de que deseas vaciar todo el pedido?', () => {
-      this.items.set([]);
-      this.saveToStorage();
-    });
-  }
-
   // cantidad en carrito
   readonly cantidadesMap = computed(() => {
     return this.items().reduce((map, item) => {
@@ -229,5 +210,33 @@ export class CartFacade {
       return map;
     }, {} as Record<string, number>);
   });
+  
+  //metodos refactorizados para usar el repositorio en lugar del localStorage directo
+  loadFromStorage() {
+    const result = this.cartRepository.load();
+    if (result.isOk()) {
+      this.items.set(result.value);
+    } else {
+      console.error('Error al cargar carrito:', result.error);
+    }
+  }
+
+  saveToStorage() {
+    const result = this.cartRepository.save(this.items());
+    if (result.isFail()) {
+      console.error('No se pudo guardar el carrito:', result.error);
+    }
+  }
+
+  clearCart() {
+    this.alertService.confirm('¿Estás seguro de que deseas vaciar todo el pedido?', () => {
+      this.items.set([]); // Limpia la memoria UI
+      
+      const result = this.cartRepository.clear(); // Limpia la base de datos
+      if (result.isFail()) {
+        console.error('Error al limpiar el storage:', result.error);
+      }
+    });
+  }
 
 }
