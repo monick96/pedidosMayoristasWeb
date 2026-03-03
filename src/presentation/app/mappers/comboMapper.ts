@@ -6,18 +6,20 @@ import { COMBO } from "../../../domain/value-objects/TipoProducto";
 import { imagenProductoToVM } from "./productoMapper";
 
 export function comboToVM(combo: Combo): ComboVM {
+  // Calculamos el precio final antes
+  const precioFinal = ComboCalculador.precioTotal(combo);
  
   return {
     codigo: combo.codigo,
     //titulo: buildDescripcion(combo),
     marcaId: (combo as any).marcaId || null, 
     descripcion: buildDescripcion(combo), //+ combo.descripcion,
-    precioFinal: ComboCalculador.precioTotal(combo),
+    precioFinal,
     pesoGramos: ComboCalculador.pesoTotalGramos(combo),
     tipo:COMBO,
     esNovedad: combo.esNovedad || false,
     images: combo.images?.map(imagenProductoToVM),
-    estaDisponible: combo.estaDisponible || false
+    estaDisponible: (combo.estaDisponible || false) && precioFinal > 0
   };
 }
 

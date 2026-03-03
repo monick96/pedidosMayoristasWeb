@@ -1,7 +1,10 @@
 import { GetProductosUseCase } from "../aplication/use-cases/GetProductosUseCase";
+import { ProductoFirebaseRepository } from "../infrastructure/peristence/repositorie/ProductoFirebaseRepository";
 import { ProductoRepositoryInMemory } from "../infrastructure/peristence/repositorie/ProductoRepositoryInMemory";
+import { Firestore } from '@angular/fire/firestore';
 
-export function productComposition() {
-  const repository = new ProductoRepositoryInMemory();
+export function productComposition(firestoreDb: Firestore): GetProductosUseCase {
+  //const repository = new ProductoRepositoryInMemory();
+  const repository = new ProductoFirebaseRepository(firestoreDb);
   return new GetProductosUseCase(repository);
 }

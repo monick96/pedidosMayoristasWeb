@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="brands-filter">
+    <!-- <div class="brands-filter">
 
       <button class="all chip" [class.active]="facade.isAllMode()" (click)="facade.resetFilters()">
         Todos
@@ -53,6 +53,27 @@
         {{ marca }}
       </button>
       }
+    </div> -->
+    <div class="carousel-wrapper">
+  
+      <button class="nav-arrow left" (click)="carruselMarcas.scrollMarcas(-200)">❮</button>
+
+      <div class="brands-filter" appCarrusel #carruselMarcas="appCarrusel">
+        
+        <button class="all chip" [class.active]="facade.isAllMode()" (click)="facade.resetFilters()">Todos</button>
+        <button class="offers chip" [class.active]="facade.showOnlyOffers()" (click)="facade.activateOffers()">🔥 Ofertas</button>
+        <button class="news chip" [class.active]="facade.showOnlyNews()" (click)="facade.activateNews()">Novedades</button>
+        <button class="combo chip" [class.active]="facade.showOnlyCombos()" (click)="facade.activateCombos()">Combos</button>
+
+        @for (marca of facade.marcasDisponibles(); track marca) {
+          <button class="chip" [class.active]="facade.selectedBrand() === marca" (click)="facade.selectBrand(marca)">
+            {{ marca }}
+          </button>
+        }
+      </div>
+
+      <button class="nav-arrow right" (click)="carruselMarcas.scrollMarcas(200)">❯</button>
+
     </div>
 
   </div>

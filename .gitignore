@@ -1,4 +1,8 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# files
+src/apiSheet/*
+src/environments/*
+src/constantes/*
+
 # Firebase
 .firebase/*
 firebase-debug.log*

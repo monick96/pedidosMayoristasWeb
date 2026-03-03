@@ -5,8 +5,14 @@ import { ImagenProductoVM, ProductoVM } from "../models/productoVm";
 import { PRODUCTO} from "../../../domain/value-objects/TipoProducto";
 
 export function productoToVM(p: Producto): ProductoVM {
-  // 1. Guardamos si tiene promo en una variable
+  //  Guardamos si tiene promo en una variable
   const tienePromo = CalculadorPrecioProducto.tienePromocion(p);
+
+  // Verificamos si la lista imagenes está vacía o es nula
+  const imagenesVacias = !p.images || p.images.length === 0;
+
+  // Calculamos el precio final antes de armar el objeto
+  const precioFinal = CalculadorPrecioProducto.calcularPrecioFinal(p);
  
   return {
     codigo: p.codigo,
@@ -14,20 +20,23 @@ export function productoToVM(p: Producto): ProductoVM {
     titulo: p.descripcion,
     descripcion: p.descripcion,
     sabor:p.sabor,
-    precioFinal: CalculadorPrecioProducto.calcularPrecioFinal(p),
+    precioFinal: precioFinal,
     precioNormal: CalculadorPrecioProducto.calcularPrecioNormal(p),
     tienePromo,
     pesoKg: p.pesoKg,
     esNovedad: p.esNovedad || false,
     tipo:PRODUCTO,
-    estaDisponible: p.estaDisponible || false,
+    // Si no hay precio, no está disponible
+    estaDisponible: (p.estaDisponible || false) && precioFinal > 0,
     unidadesPorCaja: p.unidadesPorCaja,
     //Solo calculamos y enviamos la escala si NO hay promo
     preciosPorEscala: tienePromo 
       ? undefined 
       : CalculadorPrecioProducto.calcularPreciosPorEscala(p),
     // Ordenamos por el campo 'order' si existe antes de mapear
-    images: p.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM)
+    images:imagenesVacias 
+      ? [{ url: 'https://dcdn-us.mitiendanube.com/assets/stores/img/no-photo-1024-1024.webp', alt: 'imagen por defecto' }]
+      : p.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM)
   };
 }
 

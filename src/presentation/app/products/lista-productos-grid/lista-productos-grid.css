@@ -44,6 +44,7 @@ app-buscador {
   display: flex;
   flex-direction: column;
   gap: 20px; /* Espacio ENTRE todos los elementos hijos */
+  
 }
 
 .lightbox-overlay {
@@ -244,3 +245,48 @@ app-buscador {
 }
 
 /*NUEVOO*/
+/* El contenedor padre debe ser relativo para que las flechas floten dentro de él */
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* El estilo base de tus flechas mágicas */
+.nav-arrow {
+  position: absolute; /* Las hacemos flotar */
+  z-index: 10;        /* Para que estén por encima de las marcas */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 50%; /* Botones redonditos */
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombrita elegante */
+}
+
+/* Posición exacta de cada flecha */
+.nav-arrow.left { left: 0; }
+.nav-arrow.right { right: 0; } 
+
+/*Ocultamos las flechas en celulares*/
+@media (max-width: 768px) {
+  .nav-arrow {
+    display: none;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .brands-filter { 
+    /* Agregamos padding a los lados igual al tamaño del botón + un poquito más */
+    padding-left: 40px; 
+    padding-right: 40px;
+    padding-top: 0.5rem; 
+  }
+
+}

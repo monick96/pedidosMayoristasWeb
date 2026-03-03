@@ -31,4 +31,18 @@ export class CarruselDirective {
       carrusel.scrollLeft += carrusel.offsetWidth;
     }
   }
+
+  // 2. Creamos el método que ejecutan los botones
+  scrollMarcas(distancia: number) {
+    const contenedorMarcas = this.el.nativeElement;
+    if (contenedorMarcas) {
+      // Usamos la API nativa del navegador para hacer scroll suave
+      contenedorMarcas.scrollBy({
+        left: distancia,
+        behavior: 'smooth' // ¡Esta es la magia que hace que no sea de golpe!
+      });
+    }
+  }
+
+
 }

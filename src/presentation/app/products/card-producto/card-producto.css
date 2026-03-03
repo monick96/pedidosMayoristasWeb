@@ -98,12 +98,13 @@
    CONTENIDO DE LA TARJETA
    ============================================ */
 .content {
-  padding: 0.5rem;
+  padding: 0.6rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* <--- Esto hace que el medio crezca y empuje el precio al fondo */
   align-items: center;
   gap: 0.5rem;
+  text-align: center;
 }
 
 .content h3 {
@@ -118,6 +119,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  text-align: center;
 }
 
 .sabor {

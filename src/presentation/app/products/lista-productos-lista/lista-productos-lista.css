@@ -38,6 +38,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 /* Tipografía de Título */
@@ -57,6 +58,10 @@
 
 .flavor {
   margin: 0;
+  white-space: nowrap;        /* Evita que salte a la segunda línea */
+  overflow: hidden;           /* Oculta lo que sobra */
+  text-overflow: ellipsis;    /* Agrega los "..." al final */
+  width: 100%;
 }
 
 .header-row {

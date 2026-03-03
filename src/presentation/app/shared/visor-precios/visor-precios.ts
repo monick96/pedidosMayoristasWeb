@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal, computed } from '@angular/core';
 import { PesoArgPipe } from '../pipes/pesos-ar';
 import { NgClass } from '@angular/common';
 
@@ -9,10 +9,31 @@ import { NgClass } from '@angular/common';
   styleUrl: './visor-precios.css',
 })
 export class VisorPrecios {
-  // Recibimos los precios calculados
-  @Input({ required: true }) precios!: { nivel: string; precio: number }[];
   
-  // Recibimos en qué nivel está el usuario actualmente (1, 2 o 3)
   @Input({ required: true }) nivelActivo!: string;
+
+  //Signal interno para interceptar los precios que entran
+  private _precios = signal<{ nivel: string; precio: number }[]>([]);
+
+  //Interceptamos el Input y lo guardamos en el Signal
+  @Input({ required: true }) set precios(val: { nivel: string; precio: number }[]) {
+    this._precios.set(val);
+  }
+
+  //Filtramos los precios repetidos de forma reactiva
+  readonly preciosUnicos = computed(() => {
+    const listaOriginal = this._precios();
+    const listaFiltrada: { nivel: string; precio: number }[] = [];
+
+    listaOriginal.forEach(actual => {
+      // Verificamos si ya guardamos este valor de precio exacto
+      const yaExiste = listaFiltrada.some(p => p.precio === actual.precio);
+      if (!yaExiste) {
+        listaFiltrada.push(actual);
+      }
+    });
+
+    return listaFiltrada;
+  });
 
 }
