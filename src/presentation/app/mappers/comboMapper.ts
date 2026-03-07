@@ -8,6 +8,9 @@ import { imagenProductoToVM } from "./productoMapper";
 export function comboToVM(combo: Combo): ComboVM {
   // Calculamos el precio final antes
   const precioFinal = ComboCalculador.precioTotal(combo);
+
+   // Verificamos si la lista imagenes está vacía o es nula
+  const imagenesVacias = !combo.images || combo.images.length === 0;
  
   return {
     codigo: combo.codigo,
@@ -18,9 +21,13 @@ export function comboToVM(combo: Combo): ComboVM {
     pesoGramos: ComboCalculador.pesoTotalGramos(combo),
     tipo:COMBO,
     esNovedad: combo.esNovedad || false,
-    images: combo.images?.map(imagenProductoToVM),
+    images:imagenesVacias 
+      ? [{ url: 'https://dcdn-us.mitiendanube.com/assets/stores/img/no-photo-1024-1024.webp', alt: 'imagen por defecto' }]
+      : combo.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM),
+  
     estaDisponible: (combo.estaDisponible || false) && precioFinal > 0
   };
+  
 }
 
 // Esta lógica de formateo es puramente para la UI

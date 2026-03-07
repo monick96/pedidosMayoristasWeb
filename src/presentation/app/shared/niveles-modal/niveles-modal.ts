@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
-import { APP_CONFIG } from '../../../../infrastructure/peristence/in-memory/appConfigMock';
 import { PesoArgPipe } from '../pipes/pesos-ar';
+import { APP_CONFIG } from '../../../../infrastructure/peristence/in-memory/appConfigMock';
 
 @Component({
   selector: 'app-niveles-modal',

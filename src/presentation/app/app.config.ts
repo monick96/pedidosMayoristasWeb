@@ -14,6 +14,8 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { GetProductosUseCase } from '../../aplication/use-cases/GetProductosUseCase';
 import { Firestore } from '@angular/fire/firestore';
 import { productComposition } from '../../composition/ProductoComposition';
+import { GetCombosUseCase } from '../../aplication/use-cases/GetCombosUseCase';
+import { comboComposition } from '../../composition/ComboComposition';
 
 registerLocaleData(localeEsAr);
 
@@ -32,6 +34,13 @@ export const appConfig: ApplicationConfig = {
        return productComposition(firestore) // Le pasamos Firestore a la composición para que arme el caso de uso
       },
       deps: [Firestore] // Le decimos a Angular que le pase Firestore a la fábrica
+    },
+    {
+      provide: GetCombosUseCase, 
+      useFactory: (firestore: Firestore) => { 
+       return comboComposition(firestore) 
+      },
+      deps: [Firestore]
     }
   ]
 };

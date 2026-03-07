@@ -1,6 +1,7 @@
 import { tipoProducto } from "../../../domain/value-objects/TipoProducto";
 
 export interface ProductoVM {
+  inactivo?: boolean;
   codigo: string;
   marcaId?: string;
   titulo?: string;

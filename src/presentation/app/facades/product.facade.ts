@@ -2,12 +2,12 @@ import { signal, Injectable, computed, inject } from '@angular/core';
 import {ProductoVM } from '../models/productoVm';
 import { productoToVM } from '../mappers/productoMapper';
 import { ProductoListadoVM } from '../models/productoListadoVm';
-import { comboComposition } from '../../../composition/ComboComposition';
 import { comboToVM } from '../mappers/comboMapper';
 import { COMBO, PRODUCTO } from '../../../domain/value-objects/TipoProducto';
 import { ViewMode } from '../models/viewType';
 import { ComboVM } from '../models/comboVm';
 import { GetProductosUseCase } from '../../../aplication/use-cases/GetProductosUseCase';
+import { GetCombosUseCase } from '../../../aplication/use-cases/GetCombosUseCase';
 
 
 @Injectable({ providedIn: 'root' })
@@ -15,7 +15,7 @@ export class ProductFacade {
 
   private readonly getProductsUseCase = inject(GetProductosUseCase);
 
-  private readonly getCombosUseCase = comboComposition();
+  private readonly getCombosUseCase = inject(GetCombosUseCase);
 
   readonly items = signal<ProductoListadoVM[]>([]);
 

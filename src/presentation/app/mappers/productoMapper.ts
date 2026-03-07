@@ -13,6 +13,11 @@ export function productoToVM(p: Producto): ProductoVM {
 
   // Calculamos el precio final antes de armar el objeto
   const precioFinal = CalculadorPrecioProducto.calcularPrecioFinal(p);
+
+  // Solo lo apagamos si Firebase dice EXACTAMENTE "false". 
+  // Si no existe (undefined) o es nulo, asumimos que es true.
+  const estaActivo = p.activo !== false; 
+  const tieneStock = p.estaDisponible !== false;
  
   return {
     codigo: p.codigo,
@@ -27,7 +32,7 @@ export function productoToVM(p: Producto): ProductoVM {
     esNovedad: p.esNovedad || false,
     tipo:PRODUCTO,
     // Si no hay precio, no está disponible
-    estaDisponible: (p.estaDisponible || false) && precioFinal > 0,
+    estaDisponible: tieneStock && precioFinal > 0 && estaActivo,
     unidadesPorCaja: p.unidadesPorCaja,
     //Solo calculamos y enviamos la escala si NO hay promo
     preciosPorEscala: tienePromo 

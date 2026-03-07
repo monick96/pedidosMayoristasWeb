@@ -39,9 +39,23 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
       //Si hay documentos nuevos o modificados, actualizamos nuestra caché
       if (!querySnapshot.empty) {
         console.log(`Se descargaron ${querySnapshot.size} productos actualizados de Firebase.`);
+
+        let maxFechaServer = ultimaFechaString ? parseInt(ultimaFechaString) : 0;
         
         const productosModificados = querySnapshot.docs.map(doc => {
           const data = doc.data();
+
+          //Extraemos la fecha del servidor que guardó Java (si existe)
+          if (data['fechaActualizacion']) {
+            // toDate() convierte el Timestamp de Firebase a un Date de Javascript
+            const fechaDocMs = data['fechaActualizacion'].toDate().getTime();
+
+            if (fechaDocMs > maxFechaServer) {
+              maxFechaServer = fechaDocMs;
+            }
+
+          }
+
           return {
             codigo: doc.id,
             marcaId: data['marcaId'],
@@ -56,7 +70,8 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
             estaDisponible: data['estaDisponible'],
             unidadesPorCaja: data['unidadesPorCaja'] || 0,
             preciosMayorista: data['preciosMayorista'] || [],
-            images: data['images'] || []
+            images: data['images'] || [],
+            activo: data['activo'] || true // Por defecto, si no se especifica, consideramos el producto como activo
           } as Producto;
         });
 
@@ -83,8 +98,8 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
         //Guardamos en el navegador para la próxima visita
         localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
 
-        // Guardamos la hora actual para usarla en el próximo query
-        localStorage.setItem(FECHA_KEY, Date.now().toString()); 
+        //Guardamos la hora del SERVIDOR, no la del celular para usarla en el próximo query
+        localStorage.setItem(FECHA_KEY, maxFechaServer.toString());
         
       } else {
 
