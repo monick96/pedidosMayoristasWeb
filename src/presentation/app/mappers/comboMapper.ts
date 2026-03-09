@@ -7,7 +7,8 @@ import { imagenProductoToVM } from "./productoMapper";
 
 export function comboToVM(combo: Combo): ComboVM {
   // Calculamos el precio final antes
-  const precioFinal = ComboCalculador.precioTotal(combo);
+  // El operador '??' significa "Si es null o undefined, usa lo de la derecha"
+  const precioFinal = combo.precioTotal ?? ComboCalculador.precioTotal(combo);
 
    // Verificamos si la lista imagenes está vacía o es nula
   const imagenesVacias = !combo.images || combo.images.length === 0;
@@ -27,7 +28,7 @@ export function comboToVM(combo: Combo): ComboVM {
   
     estaDisponible: (combo.estaDisponible || false) && precioFinal > 0
   };
-  
+
 }
 
 // Esta lógica de formateo es puramente para la UI

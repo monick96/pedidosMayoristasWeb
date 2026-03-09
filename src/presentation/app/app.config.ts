@@ -16,6 +16,9 @@ import { Firestore } from '@angular/fire/firestore';
 import { productComposition } from '../../composition/ProductoComposition';
 import { GetCombosUseCase } from '../../aplication/use-cases/GetCombosUseCase';
 import { comboComposition } from '../../composition/ComboComposition';
+import { GetConfigRuleUseCase } from '../../aplication/use-cases/GetConfigRuleUseCase';
+import { getConfigRuleComposition, updateRuleConfigComposition } from '../../composition/ConfigRuleComposition';
+import { UpdateRuleConfigUseCase } from '../../aplication/use-cases/UpdateRuleConfigUseCase';
 
 registerLocaleData(localeEsAr);
 
@@ -41,6 +44,16 @@ export const appConfig: ApplicationConfig = {
        return comboComposition(firestore) 
       },
       deps: [Firestore]
+    },
+    {
+      provide: GetConfigRuleUseCase, 
+      useFactory: (firestore: Firestore) => getConfigRuleComposition(firestore),
+      deps: [Firestore] 
+    },
+    {
+      provide: UpdateRuleConfigUseCase, 
+      useFactory: (firestore: Firestore) => updateRuleConfigComposition(firestore),
+      deps: [Firestore] 
     }
   ]
 };

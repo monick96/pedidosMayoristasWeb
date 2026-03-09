@@ -1,0 +1,208 @@
+.admin-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #333;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.admin-header h1 { margin: 0; font-size: 1.8rem; color: #222; }
+.admin-header p { margin: 5px 0 0; color: #666; font-size: 0.9rem; }
+
+.btn-save {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btn-save:hover { background-color: #333; transform: translateY(-2px); }
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #eaeaea;
+  overflow: hidden;
+}
+
+.card-header {
+  background: #f8f9fa;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.card-header h3 { margin: 0; font-size: 1.1rem; color: #444; }
+
+.card-body { padding: 1.5rem; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.mt-3 { margin-top: 1.5rem; }
+
+label { font-weight: 600; font-size: 0.9rem; color: #555; }
+small { color: #888; font-size: 0.8rem; }
+
+.form-control {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #000;
+}
+
+/* --- ESTILOS DEL INTERRUPTOR (TOGGLE SWITCH) --- */
+.toggle-group {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-texts { display: flex; flex-direction: column; }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider { background-color: #000; }
+input:checked + .slider:before { transform: translateX(22px); }
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+/* --- ESTILOS CATÁLOGO RÁPIDO --- */
+.mt-4 { margin-top: 2rem; }
+.mr-2 { margin-right: 0.5rem; }
+
+.catalog-card {
+  /* Hacemos que esta tarjeta ocupe todo el ancho */
+  grid-column: 1 / -1; 
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-box {
+  flex: 1;
+  max-width: 350px;
+}
+
+.catalog-list {
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+  transition: background 0.2s;
+}
+
+.product-item:hover {
+  background-color: #f9fafb;
+}
+
+.prod-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.prod-sku {
+  background: #eee;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  min-width: 70px;
+  text-align: center;
+}
+
+.prod-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.prod-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.prod-flavor {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.prod-action {
+  display: flex;
+  align-items: center;
+}
+
+/* Un color distinto (rojo/gris) para el switch cuando está pausado (opcional) */
+.slider.paused {
+  background-color: #ff4d4d;
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}

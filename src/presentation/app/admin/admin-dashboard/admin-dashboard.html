@@ -1,0 +1,120 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <div class="header-titles">
+      <h1>Panel de Administración</h1>
+      <p>Configura las preferencias de tu tienda web</p>
+    </div>
+    <button class="btn-save" (click)="guardarConfiguracion()">
+      @if (!estaCargando()) {
+        <span>💾 Guardar Cambios</span>
+      } @else {
+        <span>⏳ Guardando...</span>
+      }
+    </button>
+  </header>
+
+  <div class="admin-grid">
+    
+    <div class="admin-card">
+      <div class="card-header">
+        <h3>🛒 Reglas de Pedidos</h3>
+      </div>
+      <div class="card-body">
+        
+        <div class="form-group">
+          <label for="whatsapp">WhatsApp para recibir pedidos</label>
+          <input type="text" id="whatsapp" [(ngModel)]="config().whatsapp" placeholder="Ej: 5491123456789" class="form-control">
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="montoMinimo">Monto mínimo MAYORISTA 1 ($)</label>
+          <input type="number" id="montoMinimo" [(ngModel)]="config().montoMinimo" class="form-control">
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="montoMinimoCombo">Monto mínimo con COMBO ($)</label>
+          <input type="number" id="montoMinimoCombo" [(ngModel)]="config().montoMinimoCombo" class="form-control">
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="montoMinimoMay2">Monto mínimo MAYORISTA 2 ($)</label>
+          <input type="number" id="montoMinimoMay2" [(ngModel)]="config().montoMinimoMayorista2" class="form-control">
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="montoMinimoMay3">Monto mínimo MAYORISTA 3 ($)</label>
+          <input type="number" id="montoMinimoMay3" [(ngModel)]="config().montoMinimoMayorista3" class="form-control">
+        </div>
+
+        <div class="form-group mt-3">
+          <label for="montoMinimoMay4">Monto mínimo MAYORISTA 4 ($)</label>
+          <input type="number" id="montoMinimoMay4" [(ngModel)]="config().montoMinimoMayorista4" class="form-control">
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="card-header">
+        <h3>🎨 Apariencia de la Tienda</h3>
+      </div>
+      <div class="card-body">
+        
+        <div class="form-group toggle-group mt-3">
+          <div class="toggle-texts">
+            <label class="toggle-label">Ocultar productos en descuento (DESC)</label>
+            <small>Si se activa, los productos con código que incluya "DESC" desaparecerán.</small>
+          </div>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="config().ocultarDesc">
+            <span class="slider round"></span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-card mt-4 catalog-card">
+    <div class="card-header catalog-header">
+      <h3>📦 Gestión Rápida de Catálogo</h3>
+      <div class="search-box">
+        <input type="text" placeholder="Buscar por código o nombre..." 
+               [(ngModel)]="textoBusqueda" class="form-control">
+      </div>
+    </div>
+    
+    <div class="card-body catalog-list">
+      
+      @for (prod of productosFiltrados(); track prod.codigo) {
+        <div class="product-item">
+          <div class="prod-info">
+            <span class="prod-sku">{{ prod.codigo }}</span>
+            <div class="prod-details">
+              <span class="prod-title">{{ prod.descripcion }}</span>
+              <span class="prod-flavor">{{ prod.sabor }} | ${{ prod.precio }}</span>
+            </div>
+          </div>
+          
+          <div class="prod-action">
+            <label class="toggle-label mr-2">
+              {{ prod.disponible ? 'Disponible' : 'Pausado' }}
+            </label>
+            <label class="switch">
+              <input type="checkbox" [checked]="prod.disponible" (change)="toggleDisponibilidad(prod)">
+              <span class="slider round" [class.paused]="!prod.disponible"></span>
+            </label>
+          </div>
+        </div>
+      }
+
+      @if (productosFiltrados().length === 0) {
+        <div class="empty-state">
+          <p>No se encontraron productos con "{{ textoBusqueda() }}"</p>
+        </div>
+      }
+
+    </div>
+  </div>
+
+</div>
