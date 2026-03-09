@@ -19,16 +19,21 @@ export class ConfigRuleFirebaseRepository implements ConfigRuleRepositoryPort {
       if (docSnap.exists()) {
         return ok(docSnap.data() as AppRuleConfig);
       } else {
-        // Si no existe en Firebase, devolvemos los valores por defecto (tu antiguo Mock)
-        return ok({
+        // Si no existe en Firebase, devolvemos los valores por defecto 
+       const defaultConfig: AppRuleConfig = {
           minimoGeneral: 290000,
           minimoConCombos: 490000,
           escalas: [
-            { nivel: "nivel 1", nombre: 'Precio 1', montoMinimo: 0 },
-            { nivel: "nivel 2", nombre: 'Precio 2', montoMinimo: 490000 },
-            { nivel: "nivel 3", nombre: 'Precio 3', montoMinimo: 1200000 }
+            { nivel: "nivel 1", nombre: 'Mayorista 1', montoMinimo: 0 },
+            { nivel: "nivel 2", nombre: 'Mayorista 2', montoMinimo: 490000 },
+            { nivel: "nivel 3", nombre: 'Mayorista 3', montoMinimo: 1200000 }
           ]
-        });
+        };
+        // Lo creamos en Firebase porque no existía
+        await setDoc(docRef, defaultConfig);
+
+        //Devolvemos los datos para que la app siga funcionando sin interrupciones
+        return ok(defaultConfig);
       }
     } catch (error) {
       console.error("Error obteniendo configuración:", error);

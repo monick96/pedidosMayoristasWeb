@@ -2,7 +2,7 @@
   @for (escala of preciosUnicos(); track escala.nivel) {
     <span 
       class="precio-item" 
-      [ngClass]="{ 'activo': escala.nivel === nivelActivo, 'inactivo': escala.nivel !== nivelActivo }">
+      [ngClass]="{ 'activo': escala.precio === getPrecioActivo(), 'inactivo': escala.precio !== getPrecioActivo() }">
       {{ escala.precio | pesoArg }}
     </span>
   }

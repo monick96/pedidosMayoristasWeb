@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CartFacade } from '../../facades/cart.facade';
 import { TELEFONO_DESTINO } from '../../../../constantes/constantes';
-import { AlertService } from '../../shared/alert-service';
+import { AlertService } from '../../shared/services/alert-service';
 import { NivelesModal } from '../../shared/niveles-modal/niveles-modal';
 import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 import { VisorPrecios } from '../../shared/visor-precios/visor-precios';

@@ -36,4 +36,11 @@ export class VisorPrecios {
     return listaFiltrada;
   });
 
+  //Busca qué precio en dinero le corresponde al nivel actual,
+  // leyendo la lista ORIGINAL completa (sin borrar repetidos).
+  getPrecioActivo(): number {
+    const escalaActual = this._precios().find(p => p.nivel === this.nivelActivo);
+    return escalaActual ? escalaActual.precio : -1;
+  }
+
 }

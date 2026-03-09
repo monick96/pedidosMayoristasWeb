@@ -22,11 +22,11 @@
           <div class="minimos-grid">
             <div class="minimo-card">
               <span class="minimo-label">Sin combos</span>
-              <span class="minimo-valor">{{ (minimoGeneral | pesoArg)}}</span>
+              <span class="minimo-valor">{{ (minimoGeneral() | pesoArg)}}</span>
             </div>
             <div class="minimo-card destacado">
               <span class="minimo-label">Con combos</span>
-              <span class="minimo-valor">{{ minimoConCombos | pesoArg }}</span>
+              <span class="minimo-valor">{{ minimoConCombos() | pesoArg }}</span>
             </div>
           </div>
         </div>

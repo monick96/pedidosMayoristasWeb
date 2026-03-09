@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { PesoArgPipe } from '../pipes/pesos-ar';
-import { APP_CONFIG } from '../../../../infrastructure/peristence/in-memory/appConfigMock';
+import { ConfigFacade } from '../../facades/Config.facade';
 
 @Component({
   selector: 'app-niveles-modal',
@@ -9,10 +9,11 @@ import { APP_CONFIG } from '../../../../infrastructure/peristence/in-memory/appC
   styleUrl: './niveles-modal.css',
 })
 export class NivelesModal {
+  private configFacade = inject(ConfigFacade);
   readonly isOpen = signal(false);
-  readonly escalas = APP_CONFIG.escalas;
-  readonly minimoGeneral = APP_CONFIG.minimoGeneral;
-  readonly minimoConCombos = APP_CONFIG.minimoConCombos;
+  readonly escalas = this.configFacade.escalas;
+  readonly minimoGeneral = this.configFacade.minimoGeneral;
+  readonly minimoConCombos = this.configFacade.minimoConCombos;
 
   open() { this.isOpen.set(true); }
   close() { this.isOpen.set(false); }

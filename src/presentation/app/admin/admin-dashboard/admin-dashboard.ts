@@ -1,27 +1,8 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-
-// --- INTERFACES ---
-export interface TiendaConfig {
-  whatsapp: string;
-  montoMinimo: number;
-  montoMinimoCombo: number;      // Agregado
-  montoMinimoMayorista2: number; // Agregado
-  montoMinimoMayorista3: number; // Agregado
-  montoMinimoMayorista4: number; // Agregado
-  bannerText: string;
-  ocultarSinStock: boolean;
-  ocultarDesc: boolean;          // Agregado
-}
-
-export interface ProductoAdminDummy {
-  codigo: string;
-  descripcion: string;
-  sabor: string;
-  precio: number;
-  disponible: boolean;
-}
+import { ConfigFacade } from '../../facades/Config.facade';
+import { AppRuleConfig } from '../../../../domain/entities/AppRuleConfig';
+import { AlertService } from '../../shared/services/alert-service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,78 +10,98 @@ export interface ProductoAdminDummy {
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard implements OnInit{
-// --- ESTADO DE CONFIGURACIÓN ---
-  config = signal<TiendaConfig>({
-    whatsapp: '',
-    montoMinimo: 0,
-    montoMinimoCombo: 0,
-    montoMinimoMayorista2: 0,
-    montoMinimoMayorista3: 0,
-    montoMinimoMayorista4: 0,
-    bannerText: '',
-    ocultarSinStock: false,
-    ocultarDesc: false
-  });
+export class AdminDashboard implements OnInit {
+  
+  // Inyectamos el Facade que trae los datos reales
+  private configFacade = inject(ConfigFacade);
+  private alertService = inject(AlertService);
+
+  // Variables locales del formulario
+  minimoGeneral = signal<number>(0);
+  minimoConCombos = signal<number>(0);
+  
+  escala1_nombre = signal<string>('');
+  escala2_nombre = signal<string>('');
+  escala2_minimo = signal<number>(0);
+  escala3_nombre = signal<string>('');
+  escala3_minimo = signal<number>(0);
 
   estaCargando = signal<boolean>(false);
 
-  // --- ESTADO DEL CATÁLOGO (DUMMY) ---
-  textoBusqueda = signal<string>('');
-  
-  productosDummy = signal<ProductoAdminDummy[]>([
-    { codigo: 'PROT-01', descripcion: 'Whey Protein Ena 1Kg', sabor: 'Vainilla', precio: 25000, disponible: true },
-    { codigo: 'CREA-02', descripcion: 'Creatina Monohidrato 300g', sabor: 'Sin sabor', precio: 18000, disponible: false },
-    { codigo: 'PRE-03', descripcion: 'C4 Pre-entreno 30 serv.', sabor: 'Fruit Punch', precio: 32000, disponible: true },
-    { codigo: 'DESC-04', descripcion: 'Shaker Mezclador', sabor: 'Negro', precio: 5000, disponible: true }
-  ]);
-
-  // Señal computada para filtrar la lista instantáneamente
-  productosFiltrados = computed(() => {
-    const term = this.textoBusqueda().toLowerCase();
-    return this.productosDummy().filter(p => 
-      p.descripcion.toLowerCase().includes(term) || 
-      p.codigo.toLowerCase().includes(term)
-    );
-  });
-
+  constructor() {
+    // ✨ EL TRUCO: Effect escucha los Signals del Facade.
+    // Cuando terminan de cargar desde Firebase, llenamos el formulario automáticamente.
+    effect(() => {
+      const loading = this.configFacade.loading();
+      
+      if (!loading) {
+        this.minimoGeneral.set(this.configFacade.minimoGeneral());
+        this.minimoConCombos.set(this.configFacade.minimoConCombos());
+        
+        const escalas = this.configFacade.escalas();
+        if (escalas && escalas.length >= 3) {
+           this.escala1_nombre.set(escalas[0].nombre);
+           this.escala2_nombre.set(escalas[1].nombre);
+           this.escala2_minimo.set(escalas[1].montoMinimo);
+           this.escala3_nombre.set(escalas[2].nombre);
+           this.escala3_minimo.set(escalas[2].montoMinimo);
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.cargarConfiguracionDummy();
+    // Ya no usamos cargarConfiguracionDummy(), el Facade hace todo el trabajo
   }
 
-  cargarConfiguracionDummy() {
+  async guardarConfiguracion() {
     this.estaCargando.set(true);
-    setTimeout(() => {
-      this.config.set({
-        whatsapp: '5491123456789',
-        montoMinimo: 50000,
-        montoMinimoCombo: 60000,
-        montoMinimoMayorista2: 100000,
-        montoMinimoMayorista3: 200000,
-        montoMinimoMayorista4: 500000,
-        bannerText: '',
-        ocultarSinStock: true,
-        ocultarDesc: false
-      });
-      this.estaCargando.set(false);
-    }, 1000);
-  }
-
-  guardarConfiguracion() {
-    console.log('💾 Guardando config:', this.config());
-    console.log('📦 Estado del catálogo:', this.productosDummy());
     
-    this.estaCargando.set(true);
-    setTimeout(() => {
-      this.estaCargando.set(false);
-      alert('¡Excelente! Cambios guardados con éxito 🚀');
-    }, 800);
+    // Armamos el objeto con el formato que espera la base de datos
+    const nuevaConfig: AppRuleConfig = {
+      minimoGeneral: Number(this.minimoGeneral()),
+      minimoConCombos: Number(this.minimoConCombos()),
+      escalas: [
+        { nivel: "nivel 1", nombre: this.escala1_nombre(), montoMinimo: 0 },
+        { nivel: "nivel 2", nombre: this.escala2_nombre(), montoMinimo: Number(this.escala2_minimo()) },
+        { nivel: "nivel 3", nombre: this.escala3_nombre(), montoMinimo: Number(this.escala3_minimo()) }
+      ]
+    };
+
+    // Le pedimos al Facade que guarde en Firebase
+    const exito = await this.configFacade.saveConfig(nuevaConfig);
+    
+    this.estaCargando.set(false);
+    
+    if (exito) {
+
+      this.alertService.show('Cambios guardados con éxito en Firebase', 'success');
+
+    } else {
+
+      this.alertService.show('Hubo un error al guardar. Revisa tu conexión.', 'warning');
+
+    }
   }
 
-  // Método para el botón individual del producto
-  toggleDisponibilidad(producto: ProductoAdminDummy) {
-    producto.disponible = !producto.disponible;
+  // Convierte 290000 a "290.000"
+  formatearNumero(valor: number): string {
+    if (!valor) return '0';
+    return new Intl.NumberFormat('es-AR').format(valor);
   }
 
+  // Toma "290.000", le quita el punto, lo guarda en el Signal y lo vuelve a dibujar
+  actualizarValor(event: Event, signalToUpdate: any) {
+    const input = event.target as HTMLInputElement;
+    
+    // Quitamos los puntos para poder convertirlo a matemática pura
+    const valorLimpio = input.value.replace(/\./g, '');
+    const numeroReal = parseInt(valorLimpio, 10) || 0;
+
+    // Guardamos el número real en la memoria de Angular
+    signalToUpdate.set(numeroReal);
+
+    // Obligamos al input a redibujarse con los puntos
+    input.value = this.formatearNumero(numeroReal);
+  }
 }

@@ -2,15 +2,16 @@ import { signal, Injectable, computed, inject } from '@angular/core';
 import { CartItem } from '../../../domain/entities/CartItem';
 import { CartCalculator } from '../../../domain/services/CartCalculator';
 import { ProductoVM } from '../models/productoVm';
-import { AlertService } from '../shared/alert-service';
-import { APP_CONFIG } from '../../../infrastructure/peristence/in-memory/appConfigMock';
+import { AlertService } from '../shared/services/alert-service';
 import { cartRepositoryComposition } from '../../../composition/CartComposition';
+import { ConfigFacade } from './Config.facade';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
 
   private alertService = inject(AlertService);
   private cartRepository = cartRepositoryComposition();
+  private configFacade = inject(ConfigFacade);
 
   // LÓGICA DE NEGOCIO COMPUTADA (Reacciona  a los cambios)
   
@@ -24,7 +25,7 @@ export class CartFacade {
 
   // Define el mínimo a pagar dinámicamente
   readonly minimoRequerido = computed(() => {
-    return this.tieneCombos() ? APP_CONFIG.minimoConCombos : APP_CONFIG.minimoGeneral;
+    return this.tieneCombos() ? this.configFacade.minimoConCombos() : this.configFacade.minimoGeneral();
   });
 
   // Calcula cuánto falta para poder comprar
@@ -36,9 +37,17 @@ export class CartFacade {
   // Calcula en qué escala de precios está el cliente basado en su volumen
   readonly escalaActiva = computed(() => {
     const total = this.subtotalNominal();
+    // Leemos las escalas de Firebase
+    const escalasFirebase = this.configFacade.escalas();
+    
+    // para que .nivel nunca sea 'undefined' y la app no explote.
+    if (!escalasFirebase || escalasFirebase.length === 0) {
+      return { nivel: "nivel 1", nombre: 'Precio 1', montoMinimo: 0 };
+    }
+
     // Reversamos el array para chequear desde la más alta a la más baja
-    const escala = [...APP_CONFIG.escalas].reverse().find(e => total >= e.montoMinimo);
-    return escala || APP_CONFIG.escalas[0];
+    const escala = [...escalasFirebase].reverse().find(e => total >= e.montoMinimo);
+    return escala || escalasFirebase[0];
   });
 
  

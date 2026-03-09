@@ -1,120 +1,113 @@
-<div class="admin-container">
-  <header class="admin-header">
+<div class="minimal-container">
+  
+  <header class="minimal-header">
     <div class="header-titles">
-      <h1>Panel de Administración</h1>
-      <p>Configura las preferencias de tu tienda web</p>
+      <h1>Configuración</h1>
     </div>
-    <button class="btn-save" (click)="guardarConfiguracion()">
-      @if (!estaCargando()) {
-        <span>💾 Guardar Cambios</span>
-      } @else {
-        <span>⏳ Guardando...</span>
-      }
+    <button class="btn-save" (click)="guardarConfiguracion()" [disabled]="estaCargando()">
+      {{ estaCargando() ? '⏳ Guardando...' : '💾 Guardar Cambios' }}
     </button>
   </header>
 
-  <div class="admin-grid">
+  <section class="settings-section">
+    <h2>Mínimos de Compra</h2>
     
-    <div class="admin-card">
-      <div class="card-header">
-        <h3>🛒 Reglas de Pedidos</h3>
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Mínimo General/{{ escala1_nombre() }}</label>
+        <span>Aplica para pedidos que NO contienen combos.</span>
       </div>
-      <div class="card-body">
-        
-        <div class="form-group">
-          <label for="whatsapp">WhatsApp para recibir pedidos</label>
-          <input type="text" id="whatsapp" [(ngModel)]="config().whatsapp" placeholder="Ej: 5491123456789" class="form-control">
-        </div>
-
-        <div class="form-group mt-3">
-          <label for="montoMinimo">Monto mínimo MAYORISTA 1 ($)</label>
-          <input type="number" id="montoMinimo" [(ngModel)]="config().montoMinimo" class="form-control">
-        </div>
-
-        <div class="form-group mt-3">
-          <label for="montoMinimoCombo">Monto mínimo con COMBO ($)</label>
-          <input type="number" id="montoMinimoCombo" [(ngModel)]="config().montoMinimoCombo" class="form-control">
-        </div>
-
-        <div class="form-group mt-3">
-          <label for="montoMinimoMay2">Monto mínimo MAYORISTA 2 ($)</label>
-          <input type="number" id="montoMinimoMay2" [(ngModel)]="config().montoMinimoMayorista2" class="form-control">
-        </div>
-
-        <div class="form-group mt-3">
-          <label for="montoMinimoMay3">Monto mínimo MAYORISTA 3 ($)</label>
-          <input type="number" id="montoMinimoMay3" [(ngModel)]="config().montoMinimoMayorista3" class="form-control">
-        </div>
-
-        <div class="form-group mt-3">
-          <label for="montoMinimoMay4">Monto mínimo MAYORISTA 4 ($)</label>
-          <input type="number" id="montoMinimoMay4" [(ngModel)]="config().montoMinimoMayorista4" class="form-control">
-        </div>
-        
+      <div class="setting-input-group">
+        <span class="currency-symbol">Desde $</span>
+        <input type="text" 
+               [value]="formatearNumero(minimoGeneral())" 
+               (blur)="actualizarValor($event, minimoGeneral)" 
+               class="minimal-input shortInput">
       </div>
     </div>
 
-    <div class="admin-card">
-      <div class="card-header">
-        <h3>🎨 Apariencia de la Tienda</h3>
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Mínimo con Combos</label>
+        <span>Aplica si el cliente agrega al menos 1 combo al carrito.</span>
       </div>
-      <div class="card-body">
-        
-        <div class="form-group toggle-group mt-3">
-          <div class="toggle-texts">
-            <label class="toggle-label">Ocultar productos en descuento (DESC)</label>
-            <small>Si se activa, los productos con código que incluya "DESC" desaparecerán.</small>
-          </div>
-          <label class="switch">
-            <input type="checkbox" [(ngModel)]="config().ocultarDesc">
-            <span class="slider round"></span>
-          </label>
-        </div>
-
+      <div class="setting-input-group">
+        <span class="currency-symbol">Desde $</span>
+        <input type="text" 
+               [value]="formatearNumero(minimoConCombos())" 
+               (blur)="actualizarValor($event, minimoConCombos)" 
+               class="minimal-input shortInput">
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="admin-card mt-4 catalog-card">
-    <div class="card-header catalog-header">
-      <h3>📦 Gestión Rápida de Catálogo</h3>
-      <div class="search-box">
-        <input type="text" placeholder="Buscar por código o nombre..." 
-               [(ngModel)]="textoBusqueda" class="form-control">
-      </div>
-    </div>
+  <section class="settings-section">
+    <h2>Escalas de Precio</h2>
     
-    <div class="card-body catalog-list">
-      
-      @for (prod of productosFiltrados(); track prod.codigo) {
-        <div class="product-item">
-          <div class="prod-info">
-            <span class="prod-sku">{{ prod.codigo }}</span>
-            <div class="prod-details">
-              <span class="prod-title">{{ prod.descripcion }}</span>
-              <span class="prod-flavor">{{ prod.sabor }} | ${{ prod.precio }}</span>
-            </div>
-          </div>
-          
-          <div class="prod-action">
-            <label class="toggle-label mr-2">
-              {{ prod.disponible ? 'Disponible' : 'Pausado' }}
-            </label>
-            <label class="switch">
-              <input type="checkbox" [checked]="prod.disponible" (change)="toggleDisponibilidad(prod)">
-              <span class="slider round" [class.paused]="!prod.disponible"></span>
-            </label>
-          </div>
-        </div>
-      }
-
-      @if (productosFiltrados().length === 0) {
-        <div class="empty-state">
-          <p>No se encontraron productos con "{{ textoBusqueda() }}"</p>
-        </div>
-      }
-
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 1 (mínimo general)</label>
+        <span>Es el precio por defecto.</span>
+      </div>
+      <div class="setting-input-group">
+        <span class="currency-symbol">Nombre: </span>
+        <input type="text" 
+               [ngModel]="escala1_nombre()" 
+               (ngModelChange)="escala1_nombre.set($event)" 
+               placeholder="Ej: Precio Base"
+               class="minimal-input shortInput">
+      </div>
     </div>
-  </div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 2</label>
+        <span>Segunda escala de precios.</span>
+      </div>
+      <div class="setting-inputs-multiple">
+        <div class="setting-input-group">
+          <span class="currency-symbol">Nombre: </span>
+          <input type="text" 
+                 [ngModel]="escala2_nombre()" 
+                 (ngModelChange)="escala2_nombre.set($event)" 
+                 placeholder="Nombre Nivel 2"
+                 class="minimal-input">
+        </div>
+        <div class="setting-input-group highlight-group">
+          <span class="currency-symbol">Desde $</span>
+          <input type="text" 
+                 [value]="formatearNumero(escala2_minimo())" 
+                 (blur)="actualizarValor($event, escala2_minimo)" 
+                 class="minimal-input text-right">
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 3</label>
+        <span>Tercera escala de precios</span>
+      </div>
+      <div class="setting-inputs-multiple">
+        
+        <div class="setting-input-group">
+          <span class="currency-symbol">Nombre: </span>
+          <input type="text" 
+                 [ngModel]="escala3_nombre()" 
+                 (ngModelChange)="escala3_nombre.set($event)" 
+                 placeholder="Nombre Nivel 3"
+                 class="minimal-input">
+        </div>
+        <div class="setting-input-group highlight-group">
+          <span class="currency-symbol">Desde $</span>
+          <input type="text" 
+                 [value]="formatearNumero(escala3_minimo())" 
+                 (blur)="actualizarValor($event, escala3_minimo)" 
+                 class="minimal-input text-right">
+        </div>
+      </div>
+    </div>
+
+  </section>
 
 </div>

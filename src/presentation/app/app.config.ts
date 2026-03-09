@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -33,26 +33,34 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
     {
       provide: GetProductosUseCase, // Cuando alguien pida el UseCase...
-      useFactory: (firestore: Firestore) => { // ...Angular ejecutará esta fábrica
-       return productComposition(firestore) // Le pasamos Firestore a la composición para que arme el caso de uso
+      useFactory: () => { 
+        const firestore = inject(Firestore);
+        return productComposition(firestore); 
       },
       deps: [Firestore] // Le decimos a Angular que le pase Firestore a la fábrica
     },
     {
       provide: GetCombosUseCase, 
-      useFactory: (firestore: Firestore) => { 
-       return comboComposition(firestore) 
+      useFactory: () => { 
+        const firestore = inject(Firestore);
+        return comboComposition(firestore) 
       },
       deps: [Firestore]
     },
     {
       provide: GetConfigRuleUseCase, 
-      useFactory: (firestore: Firestore) => getConfigRuleComposition(firestore),
+      useFactory: () => { 
+        const firestore = inject(Firestore);
+        return getConfigRuleComposition(firestore);
+      },
       deps: [Firestore] 
     },
     {
       provide: UpdateRuleConfigUseCase, 
-      useFactory: (firestore: Firestore) => updateRuleConfigComposition(firestore),
+      useFactory: () => { 
+        const firestore = inject(Firestore);
+        return updateRuleConfigComposition(firestore);
+      },
       deps: [Firestore] 
     }
   ]
