@@ -18,6 +18,14 @@ export function productoToVM(p: Producto): ProductoVM {
   // Si no existe (undefined) o es nulo, asumimos que es true.
   const estaActivo = p.activo !== false; 
   const tieneStock = p.estaDisponible !== false;
+
+  if (!p.preciosMayorista || p.preciosMayorista.length === 0) {
+    p.preciosMayorista = [
+      { tipo: 'MAYORISTA_1', porcentaje: 0 },
+      { tipo: 'MAYORISTA_2', porcentaje: 0 },
+      { tipo: 'MAYORISTA_3', porcentaje: 0 }
+    ];
+  }
  
   return {
     codigo: p.codigo,

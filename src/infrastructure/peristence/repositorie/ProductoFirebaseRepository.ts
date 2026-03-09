@@ -14,6 +14,20 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
       const CACHE_KEY = 'mi_catalogo_cache';
       const FECHA_KEY = 'mi_catalogo_ultima_fecha';
 
+      //AGREGAMOS EL VERSIONADO DE CACHÉ
+      const VERSION_KEY = 'mi_catalogo_version';
+      const CURRENT_VERSION = '1.0.1'; // <-Subir este número (ej: '1.0.1') cuando queramos forzar a todos a borrar su caché
+      
+      const versionGuardada = localStorage.getItem(VERSION_KEY);
+
+      // Si la versión del navegador es vieja o no existe, destruimos la caché
+      if (versionGuardada !== CURRENT_VERSION) {
+        console.log("Nueva versión detectada. Limpiando caché antigua...");
+        localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem(FECHA_KEY);
+        localStorage.setItem(VERSION_KEY, CURRENT_VERSION); // Guardamos la versión nueva
+      }
+      
       //Leemos lo que tenemos guardado en el navegador del cliente
       const cacheGuardada = localStorage.getItem(CACHE_KEY);
       const ultimaFechaString = localStorage.getItem(FECHA_KEY);
@@ -71,7 +85,7 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
             unidadesPorCaja: data['unidadesPorCaja'] || 0,
             preciosMayorista: data['preciosMayorista'] || [],
             images: data['images'] || [],
-            activo: data['activo'] || true // Por defecto, si no se especifica, consideramos el producto como activo
+            activo: data['activo']!== false // Si no existe el campo, asumimos que es true
           } as Producto;
         });
 

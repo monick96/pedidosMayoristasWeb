@@ -6,13 +6,16 @@ export class CalculadorPrecioProducto{
 
   static calcularPrecioMayorista(
     producto: Producto,
-    mayorista: MayoristaPrecio
+    mayorista?: MayoristaPrecio
   ): number {
+
+    //Si no hay datos del mayorista, asumimos 0% de aumento
+    const porcentajeMayorista = mayorista ? mayorista.porcentaje : 0;
 
     const porcentajeAplicable =
       producto.porcentajeDescuento && producto.porcentajeDescuento > 0
         ? producto.porcentajeDescuento
-        : mayorista.porcentaje;
+        : porcentajeMayorista;
 
     return (
       producto.precioBase +
@@ -23,14 +26,14 @@ export class CalculadorPrecioProducto{
   static calcularPrecioFinal(producto:Producto) {
     return CalculadorPrecioProducto.calcularPrecioMayorista(
         producto,
-        producto.preciosMayorista[0] // ej: MAYORISTA_1
+        producto.preciosMayorista?.[0] // ej: MAYORISTA_1
       );
     
   }
 
   static calcularPrecioNormal(producto:Producto) {
     return producto.precioBase +
-        (producto.precioBase * producto.preciosMayorista[0].porcentaje) / 100;// ej: MAYORISTA_1
+        (producto.precioBase * producto.preciosMayorista?.[0]?.porcentaje || 0) / 100;// ej: MAYORISTA_1
   }
 
   static tienePromocion(producto:Producto) {
