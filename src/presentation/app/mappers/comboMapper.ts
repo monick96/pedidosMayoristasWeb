@@ -26,7 +26,8 @@ export function comboToVM(combo: Combo): ComboVM {
       ? [{ url: 'https://dcdn-us.mitiendanube.com/assets/stores/img/no-photo-1024-1024.webp', alt: 'imagen por defecto' }]
       : combo.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM),
   
-    estaDisponible: (combo.estaDisponible || false) && precioFinal > 0
+    estaDisponible: (combo.estaDisponible || false) && precioFinal > 0,
+    activo: combo.activo !== false // Si no existe el campo, asumimos que es true
   };
 
 }

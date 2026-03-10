@@ -5,9 +5,28 @@
       <h1>Configuración</h1>
     </div>
     <button class="btn-save" (click)="guardarConfiguracion()" [disabled]="estaCargando()">
-      {{ estaCargando() ? '⏳ Guardando...' : '💾 Guardar Cambios' }}
+      {{ estaCargando() ? 'Guardando...' : 'Guardar Cambios' }}
     </button>
   </header>
+
+  <section class="settings-section">
+    <h2>Contacto y Pedidos</h2>
+    
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Número de WhatsApp</label>
+        <span>Ej: 549112345678 (Código de país + área + número sin el 15).</span>
+      </div>
+      <div class="setting-input-group">
+        <span class="currency-symbol icon-whatsapp"></span>
+        <input type="text" 
+               [ngModel]="telefonoWhatsapp()" 
+               (ngModelChange)="telefonoWhatsapp.set($event)" 
+               placeholder="549..."
+               class="minimal-input ">
+      </div>
+    </div>
+  </section>
 
   <section class="settings-section">
     <h2>Mínimos de Compra</h2>
@@ -103,6 +122,31 @@
           <input type="text" 
                  [value]="formatearNumero(escala3_minimo())" 
                  (blur)="actualizarValor($event, escala3_minimo)" 
+                 class="minimal-input text-right">
+        </div>
+      </div>
+    </div>
+
+     <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 4</label>
+        <span>Cuarta escala de precios</span>
+      </div>
+      <div class="setting-inputs-multiple">
+        
+        <div class="setting-input-group">
+          <span class="currency-symbol">Nombre: </span>
+          <input type="text" 
+                 [ngModel]="escala4_nombre()" 
+                 (ngModelChange)="escala4_nombre.set($event)" 
+                 placeholder="Nombre Nivel 4"
+                 class="minimal-input">
+        </div>
+        <div class="setting-input-group highlight-group">
+          <span class="currency-symbol">Desde $</span>
+          <input type="text" 
+                 [value]="formatearNumero(escala4_minimo())" 
+                 (blur)="actualizarValor($event, escala4_minimo)" 
                  class="minimal-input text-right">
         </div>
       </div>

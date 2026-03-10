@@ -8,6 +8,9 @@ import { ViewMode } from '../models/viewType';
 import { ComboVM } from '../models/comboVm';
 import { GetProductosUseCase } from '../../../aplication/use-cases/GetProductosUseCase';
 import { GetCombosUseCase } from '../../../aplication/use-cases/GetCombosUseCase';
+import { UpdateProductoActivoUseCase } from '../../../aplication/use-cases/UpdateProductoActivoUseCase';
+import { AlertService } from '../shared/services/alert-service';
+import { UpdateProductoUnidadesUseCase } from '../../../aplication/use-cases/UpdateProductoUnidadesUseCase';
 
 
 @Injectable({ providedIn: 'root' })
@@ -16,6 +19,12 @@ export class ProductFacade {
   private readonly getProductsUseCase = inject(GetProductosUseCase);
 
   private readonly getCombosUseCase = inject(GetCombosUseCase);
+
+  private readonly updateActivoUseCase = inject(UpdateProductoActivoUseCase); 
+
+  private readonly updateUnidadesUseCase = inject(UpdateProductoUnidadesUseCase);
+
+  private readonly alertService = inject(AlertService);
 
   readonly items = signal<ProductoListadoVM[]>([]);
 
@@ -44,6 +53,67 @@ export class ProductFacade {
 
   //solo disponibles
   readonly showOnlyAvailable = signal<boolean>(true);
+
+  async toggleProductoActivo(codigo: string, nuevoEstado: boolean) {
+    // La UI cambia al instante sin esperar a Firebase
+    this.items.update(items => items.map(item => {
+      if (item.codigo === codigo && this.esProducto(item)) {
+        return { ...item, activo: nuevoEstado, estaDisponible: nuevoEstado && item.precioFinal > 0 };
+      }
+      return item;
+    }));
+
+    //Guardamos en Firebase en segundo plano
+    const result = await this.updateActivoUseCase.execute(codigo, nuevoEstado);
+    
+    if (result.isFail()) {
+      this.alertService.show("Error al actualizar producto. Se revertirán los cambios.");
+      this.loadProducts(); // Si falla el internet, recargamos la lista para deshacer el error visual
+    } else {
+      //Actualizamos la caché local 
+      const CACHE_KEY = 'mi_catalogo_cache';
+      const cache = localStorage.getItem(CACHE_KEY);
+      if (cache) {
+         const productos = JSON.parse(cache);
+         const index = productos.findIndex((p: any) => p.codigo === codigo);
+         if (index !== -1) {
+           productos[index].activo = nuevoEstado;
+           localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
+         }
+      }
+    }
+  }
+
+  // Al final de la clase:
+  async updateUnidadesPorCaja(codigo: string, unidades: number) {
+    // 1. Actualización Optimista (UI instantánea)
+    this.items.update(items => items.map(item => {
+      if (item.codigo === codigo && this.esProducto(item)) {
+        return { ...item, unidadesPorCaja: unidades };
+      }
+      return item;
+    }));
+
+    // 2. Guardamos en Firebase en segundo plano
+    const result = await this.updateUnidadesUseCase.execute(codigo, unidades);
+    
+    if (result.isFail()) {
+      this.alertService.show("Error al actualizar unidades. Se revertirán los cambios.", "warning");
+      this.loadProducts();
+    } else {
+      // 3. Actualizamos la caché local
+      const CACHE_KEY = 'mi_catalogo_cache';
+      const cache = localStorage.getItem(CACHE_KEY);
+      if (cache) {
+         const productos = JSON.parse(cache);
+         const index = productos.findIndex((p: any) => p.codigo === codigo);
+         if (index !== -1) {
+           productos[index].unidadesPorCaja = unidades;
+           localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
+         }
+      }
+    }
+  }
 
   // type guard para TS: si esto devuelve true, 'item' es un ProductoVM
   esProducto(item: ProductoListadoVM): item is ProductoVM {

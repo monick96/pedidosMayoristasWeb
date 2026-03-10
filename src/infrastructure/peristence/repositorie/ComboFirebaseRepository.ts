@@ -25,7 +25,7 @@ export class ComboFirebaseRepository implements ComboRepositorioPort {
         localStorage.removeItem(FECHA_KEY);
         localStorage.setItem(VERSION_KEY, CURRENT_VERSION); // Guardamos la versión nueva
       }
-      
+
       const cacheGuardada = localStorage.getItem(CACHE_KEY);
       const ultimaFechaString = localStorage.getItem(FECHA_KEY);
       
@@ -67,7 +67,8 @@ export class ComboFirebaseRepository implements ComboRepositorioPort {
             pesoTotalGramos: data['pesoTotalGramos'],
             items: data['items'] || [],
             images: data['images'] || [],
-            estaDisponible: data['estaDisponible'] !== false // Si no existe, asumimos true
+            estaDisponible: data['estaDisponible'] !== false, // Si no existe, asumimos true
+            activo: data['activo'] !== false // Si no existe, asumimos true 
           } as Combo;
         });
 

@@ -50,7 +50,8 @@ export function productoToVM(p: Producto): ProductoVM {
     // Ordenamos por el campo 'order' si existe antes de mapear
     images:imagenesVacias 
       ? [{ url: 'https://dcdn-us.mitiendanube.com/assets/stores/img/no-photo-1024-1024.webp', alt: 'imagen por defecto' }]
-      : p.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM)
+      : p.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM),
+    activo: estaActivo
   };
 }
 

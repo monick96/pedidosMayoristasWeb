@@ -8,4 +8,5 @@ export interface AppRuleConfig {
   minimoGeneral: number;
   minimoConCombos: number;
   escalas: EscalaPrecio[];
+  telefonoWhatsapp: string;
 }

@@ -2,7 +2,7 @@ import { ProductoRepositoryPort } from "../../../aplication/ports/ProductoReposi
 import { Producto } from "../../../domain/entities/Producto";
 import { environment } from "../../../environments/environment.development";
 import { fail, ok, Result } from "../../../shared/Result";
-import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, doc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
 
 export class ProductoFirebaseRepository implements ProductoRepositoryPort {
   
@@ -127,6 +127,42 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
     } catch (error) {
       console.error("Error leyendo Firebase:", error);
       return fail(new Error("No se pudieron cargar los productos de la base de datos"));
+    }
+  }
+
+  async updateActivo(codigo: string, activo: boolean): Promise<Result<void>> {
+    try {
+
+      const docRef = doc(this.firestore, environment.firebase.coleccionProductos, codigo);
+
+      await updateDoc(docRef, {
+        activo: activo,
+        //Actualizamos la fecha para que la caché de los clientes descargue el cambio
+        fechaActualizacion: serverTimestamp() 
+      });
+
+      return ok(undefined);
+
+    } catch (error) {
+
+      console.error("Error actualizando estado en Firebase:", error);
+      return fail(error as Error);
+
+    }
+    
+  }
+
+  async updateUnidadesPorCaja(codigo: string, unidades: number): Promise<Result<void>> {
+    try {
+      const docRef = doc(this.firestore, environment.firebase.coleccionProductos, codigo);
+      await updateDoc(docRef, {
+        unidadesPorCaja: unidades,
+        fechaActualizacion: serverTimestamp() //para la caché
+      });
+      return ok(undefined);
+    } catch (error) {
+      console.error("Error actualizando unidades en Firebase:", error);
+      return fail(error as Error);
     }
   }
 

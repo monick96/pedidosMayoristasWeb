@@ -23,10 +23,12 @@ export class ConfigRuleFirebaseRepository implements ConfigRuleRepositoryPort {
        const defaultConfig: AppRuleConfig = {
           minimoGeneral: 290000,
           minimoConCombos: 490000,
+          telefonoWhatsapp:'5491123456789',
           escalas: [
             { nivel: "nivel 1", nombre: 'Mayorista 1', montoMinimo: 0 },
             { nivel: "nivel 2", nombre: 'Mayorista 2', montoMinimo: 490000 },
-            { nivel: "nivel 3", nombre: 'Mayorista 3', montoMinimo: 1200000 }
+            { nivel: "nivel 3", nombre: 'Mayorista 3', montoMinimo: 1200000 },
+            { nivel: "nivel 4 ", nombre: 'Mayorista 4', montoMinimo: 2000000 }
           ]
         };
         // Lo creamos en Firebase porque no existía

@@ -21,5 +21,7 @@ export interface Combo {
   
   esNovedad?: boolean; 
   
-  estaDisponible?: boolean
+  estaDisponible?: boolean;
+  
+  activo?: boolean; 
 }

@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CartFacade } from '../../facades/cart.facade';
-import { TELEFONO_DESTINO } from '../../../../constantes/constantes';
 import { AlertService } from '../../shared/services/alert-service';
 import { NivelesModal } from '../../shared/niveles-modal/niveles-modal';
 import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 import { VisorPrecios } from '../../shared/visor-precios/visor-precios';
 import { QtySelector } from '../../shared/qty-selector/qty-selector';
+import { ConfigFacade } from '../../facades/Config.facade';
 
 @Component({
   selector: 'app-side-cart',
@@ -18,6 +18,8 @@ export class SideCart {
   facade = inject(CartFacade);
 
   private alertService = inject(AlertService);
+
+  private configFacade = inject(ConfigFacade);
 
   updateNombre(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -35,7 +37,7 @@ export class SideCart {
       return;
     }
 
-    const telefono = TELEFONO_DESTINO; // NUMERO AQUI
+    const telefono = this.configFacade.telefonoWhatsapp(); // NUMERO AQUI
     const items = this.facade.itemsConPrecio();
     
     let mensaje = `Hola! Soy *${nombre}* y quiero realizar el siguiente pedido mayorista:%0A%0A`;

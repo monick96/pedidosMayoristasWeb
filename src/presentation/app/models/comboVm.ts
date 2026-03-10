@@ -2,6 +2,7 @@ import { ImagenProductoVM } from "./productoVm";
 import { tipoProducto } from "../../../domain/value-objects/TipoProducto";
 
 export interface ComboVM {
+  activo?: boolean;
   codigo: string;
   titulo?: string;
   marcaId?: string;

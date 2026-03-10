@@ -10,7 +10,7 @@ import { AlertService } from '../../shared/services/alert-service';
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard implements OnInit {
+export class AdminDashboard {
   
   // Inyectamos el Facade que trae los datos reales
   private configFacade = inject(ConfigFacade);
@@ -19,17 +19,20 @@ export class AdminDashboard implements OnInit {
   // Variables locales del formulario
   minimoGeneral = signal<number>(0);
   minimoConCombos = signal<number>(0);
+  telefonoWhatsapp = signal<string>('');
   
   escala1_nombre = signal<string>('');
   escala2_nombre = signal<string>('');
   escala2_minimo = signal<number>(0);
   escala3_nombre = signal<string>('');
   escala3_minimo = signal<number>(0);
+  escala4_nombre = signal<string>('');
+  escala4_minimo = signal<number>(0);
 
   estaCargando = signal<boolean>(false);
 
   constructor() {
-    // ✨ EL TRUCO: Effect escucha los Signals del Facade.
+    //Effect escucha los Signals del Facade.
     // Cuando terminan de cargar desde Firebase, llenamos el formulario automáticamente.
     effect(() => {
       const loading = this.configFacade.loading();
@@ -37,6 +40,7 @@ export class AdminDashboard implements OnInit {
       if (!loading) {
         this.minimoGeneral.set(this.configFacade.minimoGeneral());
         this.minimoConCombos.set(this.configFacade.minimoConCombos());
+        this.telefonoWhatsapp.set(this.configFacade.telefonoWhatsapp());
         
         const escalas = this.configFacade.escalas();
         if (escalas && escalas.length >= 3) {
@@ -46,12 +50,14 @@ export class AdminDashboard implements OnInit {
            this.escala3_nombre.set(escalas[2].nombre);
            this.escala3_minimo.set(escalas[2].montoMinimo);
         }
+
+        //Solo intentamos leer el Nivel 4 si realmente vino de Firebase
+        if (escalas && escalas.length >= 4) {
+           this.escala4_nombre.set(escalas[3].nombre);
+           this.escala4_minimo.set(escalas[3].montoMinimo); 
+        }
       }
     });
-  }
-
-  ngOnInit(): void {
-    // Ya no usamos cargarConfiguracionDummy(), el Facade hace todo el trabajo
   }
 
   async guardarConfiguracion() {
@@ -61,10 +67,12 @@ export class AdminDashboard implements OnInit {
     const nuevaConfig: AppRuleConfig = {
       minimoGeneral: Number(this.minimoGeneral()),
       minimoConCombos: Number(this.minimoConCombos()),
+      telefonoWhatsapp: this.telefonoWhatsapp(), 
       escalas: [
         { nivel: "nivel 1", nombre: this.escala1_nombre(), montoMinimo: 0 },
         { nivel: "nivel 2", nombre: this.escala2_nombre(), montoMinimo: Number(this.escala2_minimo()) },
-        { nivel: "nivel 3", nombre: this.escala3_nombre(), montoMinimo: Number(this.escala3_minimo()) }
+        { nivel: "nivel 3", nombre: this.escala3_nombre(), montoMinimo: Number(this.escala3_minimo()) },
+        { nivel: "nivel 4", nombre: this.escala4_nombre() , montoMinimo: Number(this.escala4_minimo()) }
       ]
     };
 

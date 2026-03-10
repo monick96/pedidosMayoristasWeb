@@ -2,12 +2,12 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--bg-gray);
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .admin-sidebar {
   width: 250px;
   background-color: var(--secondary-black);
+  background-color: rgb(10, 10, 10);
   color: white;
   display: flex;
   flex-direction: column;
@@ -64,9 +64,9 @@
 
 .admin-main-content {
   flex: 1;
-  margin-left: 250px; /* Deja espacio para el sidebar fijo */
+  margin-left: 280px; /* Deja espacio para el sidebar fijo */
   padding: 0; /* El padding lo maneja cada componente interno */
-  width: calc(100% - 250px);
+  width: calc(100% - 280px);
 }
 
 @media (max-width: 768px) {

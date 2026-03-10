@@ -14,6 +14,8 @@ export class ConfigFacade {
   readonly minimoConCombos = signal<number>(0);
   readonly escalas = signal<EscalaPrecio[]>([]);
   readonly loading = signal<boolean>(true);
+  readonly telefonoWhatsapp = signal<string>('');
+  
 
   constructor() {
     this.loadConfig(); // Al arrancar la app, va a buscar los datos a Firebase
@@ -28,6 +30,7 @@ export class ConfigFacade {
       this.minimoGeneral.set(config.minimoGeneral);
       this.minimoConCombos.set(config.minimoConCombos);
       this.escalas.set(config.escalas);
+      this.telefonoWhatsapp.set(config.telefonoWhatsapp || '');
     } else {
       console.error("Error al cargar la configuración general:", result.error);
     }
@@ -43,6 +46,7 @@ export class ConfigFacade {
       this.minimoGeneral.set(newConfig.minimoGeneral);
       this.minimoConCombos.set(newConfig.minimoConCombos);
       this.escalas.set(newConfig.escalas);
+      this.telefonoWhatsapp.set(newConfig.telefonoWhatsapp);
       return true;
     }
     return false;
