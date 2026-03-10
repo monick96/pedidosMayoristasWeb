@@ -11,6 +11,7 @@ import { GetCombosUseCase } from '../../../aplication/use-cases/GetCombosUseCase
 import { UpdateProductoActivoUseCase } from '../../../aplication/use-cases/UpdateProductoActivoUseCase';
 import { AlertService } from '../shared/services/alert-service';
 import { UpdateProductoUnidadesUseCase } from '../../../aplication/use-cases/UpdateProductoUnidadesUseCase';
+import { UpdateComboActivoUseCase } from '../../../aplication/use-cases/UpdateComboActivoUseCase';
 
 
 @Injectable({ providedIn: 'root' })
@@ -23,6 +24,8 @@ export class ProductFacade {
   private readonly updateActivoUseCase = inject(UpdateProductoActivoUseCase); 
 
   private readonly updateUnidadesUseCase = inject(UpdateProductoUnidadesUseCase);
+
+  private readonly updateComboActivoUseCase = inject(UpdateComboActivoUseCase);
 
   private readonly alertService = inject(AlertService);
 
@@ -54,31 +57,39 @@ export class ProductFacade {
   //solo disponibles
   readonly showOnlyAvailable = signal<boolean>(true);
 
-  async toggleProductoActivo(codigo: string, nuevoEstado: boolean) {
-    // La UI cambia al instante sin esperar a Firebase
-    this.items.update(items => items.map(item => {
-      if (item.codigo === codigo && this.esProducto(item)) {
-        return { ...item, activo: nuevoEstado, estaDisponible: nuevoEstado && item.precioFinal > 0 };
+  // recibimos el ITEM COMPLETO, no solo el código
+  async toggleProductoActivo(item: ProductoListadoVM, nuevoEstado: boolean) {
+    // Actualización en UI
+    this.items.update(items => items.map(i => {
+      if (i.codigo === item.codigo) {
+        return { ...i, activo: nuevoEstado, estaDisponible: nuevoEstado && i.precioFinal > 0 };
       }
-      return item;
+      return i;
     }));
 
-    //Guardamos en Firebase en segundo plano
-    const result = await this.updateActivoUseCase.execute(codigo, nuevoEstado);
-    
-    if (result.isFail()) {
-      this.alertService.show("Error al actualizar producto. Se revertirán los cambios.");
-      this.loadProducts(); // Si falla el internet, recargamos la lista para deshacer el error visual
+    //Guardamos en Firebase dependiendo de si es Producto o Combo
+    let result;
+    if (this.esProducto(item)) {
+      result = await this.updateActivoUseCase.execute(item.codigo, nuevoEstado);
     } else {
-      //Actualizamos la caché local 
-      const CACHE_KEY = 'mi_catalogo_cache';
+      result = await this.updateComboActivoUseCase.execute(item.codigo, nuevoEstado);
+    }
+    
+    // Manejo de Errores y Caché
+    if (result.isFail()) {
+      this.alertService.show("Error al actualizar estado. Se revertirán los cambios.");
+      this.loadProducts(); 
+    } else {
+      // Guardamos en la caché correcta (Combos y Productos tienen cachés separadas)
+      const CACHE_KEY = this.esProducto(item) ? 'mi_catalogo_cache' : 'mi_catalogo_combos_cache';
       const cache = localStorage.getItem(CACHE_KEY);
+      
       if (cache) {
-         const productos = JSON.parse(cache);
-         const index = productos.findIndex((p: any) => p.codigo === codigo);
+         const datosCacheados = JSON.parse(cache);
+         const index = datosCacheados.findIndex((p: any) => p.codigo === item.codigo);
          if (index !== -1) {
-           productos[index].activo = nuevoEstado;
-           localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
+           datosCacheados[index].activo = nuevoEstado;
+           localStorage.setItem(CACHE_KEY, JSON.stringify(datosCacheados));
          }
       }
     }

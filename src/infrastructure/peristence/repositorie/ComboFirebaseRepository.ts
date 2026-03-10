@@ -2,7 +2,7 @@ import { ComboRepositorioPort } from "../../../aplication/ports/ComboRepositorio
 import { Combo } from "../../../domain/entities/Combo";
 import { environment } from "../../../environments/environment.development";
 import { fail, ok, Result } from "../../../shared/Result";
-import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, getDocs, query, where, doc, serverTimestamp, updateDoc } from '@angular/fire/firestore';
 
 export class ComboFirebaseRepository implements ComboRepositorioPort {
   
@@ -97,6 +97,20 @@ export class ComboFirebaseRepository implements ComboRepositorioPort {
     } catch (error) {
       console.error("Error leyendo Combos de Firebase:", error);
       return fail(new Error("No se pudieron cargar los combos de la base de datos"));
+    }
+  }
+
+  async updateActivo(codigo: string, activo: boolean): Promise<Result<void>> {
+    try {
+      const docRef = doc(this.firestore, environment.firebase.coleccionCombos, codigo);
+      await updateDoc(docRef, {
+        activo: activo,
+        fechaActualizacion: serverTimestamp() 
+      });
+      return ok(undefined);
+    } catch (error) {
+      console.error("Error actualizando combo en Firebase:", error);
+      return fail(error as Error);
     }
   }
 }

@@ -15,12 +15,13 @@ import { GetProductosUseCase } from '../../aplication/use-cases/GetProductosUseC
 import { Firestore } from '@angular/fire/firestore';
 import { productComposition, updateProductoComposition, updateProductoUnidadesComposition } from '../../composition/ProductoComposition';
 import { GetCombosUseCase } from '../../aplication/use-cases/GetCombosUseCase';
-import { comboComposition } from '../../composition/ComboComposition';
+import { comboComposition, updateComboComposition } from '../../composition/ComboComposition';
 import { GetConfigRuleUseCase } from '../../aplication/use-cases/GetConfigRuleUseCase';
 import { getConfigRuleComposition, updateRuleConfigComposition } from '../../composition/ConfigRuleComposition';
 import { UpdateRuleConfigUseCase } from '../../aplication/use-cases/UpdateRuleConfigUseCase';
 import { UpdateProductoActivoUseCase } from '../../aplication/use-cases/UpdateProductoActivoUseCase';
 import { UpdateProductoUnidadesUseCase } from '../../aplication/use-cases/UpdateProductoUnidadesUseCase';
+import { UpdateComboActivoUseCase } from '../../aplication/use-cases/UpdateComboActivoUseCase';
 
 registerLocaleData(localeEsAr);
 
@@ -70,14 +71,24 @@ export const appConfig: ApplicationConfig = {
       useFactory: () => { 
         const firestore = inject(Firestore);
         return updateProductoComposition(firestore);
-      }
+      },
+      deps: [Firestore]
     },
     {
       provide: UpdateProductoUnidadesUseCase, 
       useFactory: () => { 
         const firestore = inject(Firestore);
         return updateProductoUnidadesComposition(firestore);
-      }
-    }
+      },
+      deps: [Firestore]
+    },
+    {
+      provide: UpdateComboActivoUseCase, 
+      useFactory: () => { 
+        const firestore = inject(Firestore);
+        return updateComboComposition(firestore);
+      },
+      deps: [Firestore]
+    },
   ]
 };

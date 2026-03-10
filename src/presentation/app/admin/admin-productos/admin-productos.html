@@ -36,20 +36,28 @@
               <td>
                 <div class="table-desc">
                   <strong>{{ item.descripcion }}</strong>
-                  @if(item.sabor) { <span class="table-sabor">{{ item.sabor }}</span> }
+                  @if (productFacade.esProducto(item)) {
+                    @if (item.sabor) { 
+                      <span class="table-sabor">{{ item.sabor }}</span> 
+                    }
+                  }
                 </div>
               </td>
               <td class="table-price">{{ item.precioFinal | pesoArg }}</td>
               <td class="text-center">
-                <input type="number" 
-                       class="mini-input text-center" 
-                       [value]="item.unidadesPorCaja || 0" 
-                       (change)="cambiarUnidades(item.codigo, $event)"
-                       min="0">
+                @if (productFacade.esProducto(item)) {
+                    <input type="number" 
+                        class="mini-input text-center" 
+                        [value]="item.unidadesPorCaja || 0" 
+                        (change)="cambiarUnidades(item.codigo, $event)"
+                        min="0">
+                } @else {
+                    <span style="color: #ccc;">-</span>
+                }
               </td>
               <td class="text-center">
                 <label class="switch">
-                  <input type="checkbox" [checked]="item.activo" (change)="cambiarEstado(item.codigo, $event)">
+                  <input type="checkbox" [checked]="item.activo" (change)="cambiarEstado(item, $event)">
                   <span class="slider round"></span>
                 </label>
               </td>

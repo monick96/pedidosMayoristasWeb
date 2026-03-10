@@ -3,6 +3,7 @@ import { ProductFacade } from '../../facades/product.facade';
 import { FormsModule } from '@angular/forms';
 import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
 import { ProductoVM } from '../../models/productoVm';
+import { ProductoListadoVM } from '../../models/productoListadoVm';
 
 @Component({
   selector: 'app-admin-productos',
@@ -17,7 +18,7 @@ export class AdminProductos implements OnInit {
   searchTerm = signal<string>('');
   
   //solo productos (sin combos)
-  productosFiltrados = computed<ProductoVM[]>(() => {
+  /*productosFiltrados = computed<ProductoVM[]>(() => {
     const query = this.searchTerm().toLowerCase().trim();
     const todosLosItems = this.productFacade.items();
 
@@ -45,6 +46,33 @@ export class AdminProductos implements OnInit {
       return palabras.every(p => superTexto.includes(p));
     });
 
+  });*/
+
+  productosFiltrados = computed<ProductoListadoVM[]>(() => {
+    const query = this.searchTerm().toLowerCase().trim();
+    // Tomamos ABSOLUTAMENTE TODOS los items (Productos y Combos)
+    const todosLosItems = this.productFacade.items();
+
+    return todosLosItems.filter(item => {
+      // Si el buscador está vacío, mostramos todo
+      if (!query) return true;
+
+      const palabras = query.split(' ').filter(p => p.length > 0);
+      
+      const desc = (item.descripcion || '').toLowerCase();
+      const cod  = (item.codigo || '').toLowerCase();
+      const marc = (item.marcaId || '').toLowerCase();
+      
+      // ✨ Si es un producto, leemos el sabor. Si es combo, lo dejamos vacío.
+      const sab = this.productFacade.esProducto(item) 
+                  ? (item.sabor || '').toLowerCase() 
+                  : '';
+
+      const superTexto = `${desc} ${cod} ${marc} ${sab}`;
+
+      // Búsqueda multi-palabra inteligente
+      return palabras.every(p => superTexto.includes(p));
+    });
   });
 
   ngOnInit() {
@@ -58,9 +86,9 @@ export class AdminProductos implements OnInit {
     this.searchTerm.set(input.value);
   }
 
-  cambiarEstado(codigo: string, event: Event) {
+  cambiarEstado(item : ProductoListadoVM, event: Event) {
     const checkbox = event.target as HTMLInputElement;
-    this.productFacade.toggleProductoActivo(codigo, checkbox.checked);
+    this.productFacade.toggleProductoActivo(item, checkbox.checked);
   }
 
   cambiarUnidades(codigo: string, event: Event) {
