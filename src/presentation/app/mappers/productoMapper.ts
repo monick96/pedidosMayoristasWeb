@@ -23,7 +23,8 @@ export function productoToVM(p: Producto): ProductoVM {
     p.preciosMayorista = [
       { tipo: 'MAYORISTA_1', porcentaje: 0 },
       { tipo: 'MAYORISTA_2', porcentaje: 0 },
-      { tipo: 'MAYORISTA_3', porcentaje: 0 }
+      { tipo: 'MAYORISTA_3', porcentaje: 0 },
+      { tipo: 'MAYORISTA_4', porcentaje: 0 }
     ];
   }
  
