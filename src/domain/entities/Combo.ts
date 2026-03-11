@@ -20,6 +20,8 @@ export interface Combo {
   images?: ImagenProducto[];
   
   esNovedad?: boolean; 
+
+  vencimientoNovedadMs?: number;
   
   estaDisponible?: boolean;
   

@@ -58,3 +58,6 @@ input:checked + .slider:before { transform: translateX(20px); }
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* Color especial para el switch de Novedades */
+.novelty-switch input:checked + .slider { background-color: #9c27b0; }

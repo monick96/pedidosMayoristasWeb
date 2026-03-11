@@ -5,6 +5,7 @@ import { ProductoVM } from '../models/productoVm';
 import { AlertService } from '../shared/services/alert-service';
 import { cartRepositoryComposition } from '../../../composition/CartComposition';
 import { ConfigFacade } from './Config.facade';
+import { STORAGE_KEYS } from '../../../constantes/constantes';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
@@ -94,12 +95,12 @@ export class CartFacade {
   // Método para actualizar y guardar el nombre
   setClienteNombre(nombre: string) {
     this.clienteNombre.set(nombre);
-    localStorage.setItem('mayorista_cliente_nombre', nombre);
+    localStorage.setItem(STORAGE_KEYS.CLIENT_NAME, nombre);
   }
 
   //Método para cargar el nombre guardado
   private loadNameFromStorage() {
-    const savedName = localStorage.getItem('mayorista_cliente_nombre');
+    const savedName = localStorage.getItem(STORAGE_KEYS.CLIENT_NAME);
     if (savedName) {
       this.clienteNombre.set(savedName);
     }

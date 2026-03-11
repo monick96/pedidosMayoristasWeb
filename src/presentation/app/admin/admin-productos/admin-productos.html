@@ -24,6 +24,7 @@
             <th>PRECIO</th>
             <th class="text-center">U/CAJA</th> 
             <th class="text-center">VISIBLE</th>
+            <th class="text-center">NOVEDAD (30D)</th>
           </tr>
         </thead>
         <tbody>
@@ -58,6 +59,13 @@
               <td class="text-center">
                 <label class="switch">
                   <input type="checkbox" [checked]="item.activo" (change)="cambiarEstado(item, $event)">
+                  <span class="slider round"></span>
+                </label>
+              </td>
+
+              <td class="text-center">
+                <label class="switch novelty-switch">
+                  <input type="checkbox" [checked]="item.esNovedad" (change)="cambiarNovedad(item, $event)">
                   <span class="slider round"></span>
                 </label>
               </td>

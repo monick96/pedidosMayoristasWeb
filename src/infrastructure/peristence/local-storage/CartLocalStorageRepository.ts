@@ -1,9 +1,10 @@
 import { CartRepositoryPort } from "../../../aplication/ports/CartRepositoryPort";
+import { STORAGE_KEYS } from "../../../constantes/constantes";
 import { CartItem } from "../../../domain/entities/CartItem";
 import { fail, ok, Result } from "../../../shared/Result";
 
 export class CartLocalStorageRepository implements CartRepositoryPort {
-  private readonly KEY = 'mayorista_cart_v1';
+  private readonly KEY = STORAGE_KEYS.CART;
 
   save(items: CartItem[]): Result<void> {
     try {
@@ -32,4 +33,6 @@ export class CartLocalStorageRepository implements CartRepositoryPort {
       return fail<void>(error as Error);
     }
   }
+
+  
 }

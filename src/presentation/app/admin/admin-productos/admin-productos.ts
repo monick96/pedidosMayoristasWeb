@@ -97,4 +97,9 @@ export class AdminProductos implements OnInit {
     this.productFacade.updateUnidadesPorCaja(codigo, unidades);
   }
 
+  cambiarNovedad(item: ProductoListadoVM, event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    this.productFacade.toggleNovedad(item, checkbox.checked);
+  }
+
 }

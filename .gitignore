@@ -1,7 +1,6 @@
 # files
 src/apiSheet/*
 src/environments/*
-src/constantes/*
 src/presentation/app/admin-dashboard/*
 
 # Firebase

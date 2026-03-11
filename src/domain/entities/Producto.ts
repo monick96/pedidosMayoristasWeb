@@ -21,6 +21,8 @@ export interface Producto {
   pesoKg?: number;
 
   esNovedad?: boolean;
+  
+  vencimientoNovedadMs?: number;
 
   activo?: boolean; // para ocultar productos que ya no se venden pero no queremos eliminar de la base de datos
 

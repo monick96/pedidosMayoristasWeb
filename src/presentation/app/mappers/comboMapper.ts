@@ -21,7 +21,9 @@ export function comboToVM(combo: Combo): ComboVM {
     precioFinal,
     pesoGramos: ComboCalculador.pesoTotalGramos(combo),
     tipo:COMBO,
-    esNovedad: combo.esNovedad || false,
+    esNovedad: combo.vencimientoNovedadMs 
+             ? Date.now() < combo.vencimientoNovedadMs 
+             : (combo.esNovedad || false),
     images:imagenesVacias 
       ? [{ url: 'https://dcdn-us.mitiendanube.com/assets/stores/img/no-photo-1024-1024.webp', alt: 'imagen por defecto' }]
       : combo.images?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map(imagenProductoToVM),

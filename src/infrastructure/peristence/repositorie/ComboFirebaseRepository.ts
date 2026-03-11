@@ -1,4 +1,5 @@
 import { ComboRepositorioPort } from "../../../aplication/ports/ComboRepositorio";
+import { APP_CONFIG, STORAGE_KEYS } from "../../../constantes/constantes";
 import { Combo } from "../../../domain/entities/Combo";
 import { environment } from "../../../environments/environment.development";
 import { fail, ok, Result } from "../../../shared/Result";
@@ -10,11 +11,11 @@ export class ComboFirebaseRepository implements ComboRepositorioPort {
 
   async getAll(): Promise<Result<Combo[]>> {
     try {
-      const CACHE_KEY = 'mi_catalogo_combos_cache';
-      const FECHA_KEY = 'mi_catalogo_combos_fecha';
+      const CACHE_KEY = STORAGE_KEYS.COMBOS_CACHE;
+      const FECHA_KEY = STORAGE_KEYS.COMBOS_FECHA;
       //AGREGAMOS EL VERSIONADO DE CACHÉ
-      const VERSION_KEY = 'mi_catalogo_combos_version';
-      const CURRENT_VERSION = '1.0.1'; // <-Subir este número (ej: '1.0.1') cuando queramos forzar a todos a borrar su caché
+      const VERSION_KEY = STORAGE_KEYS.COMBOS_VERSION;
+      const CURRENT_VERSION = APP_CONFIG.CATALOGO_VERSION; // <-Subir este número (ej: '1.0.1') cuando queramos forzar a todos a borrar su caché
 
       const versionGuardada = localStorage.getItem(VERSION_KEY);
 
@@ -64,7 +65,9 @@ export class ComboFirebaseRepository implements ComboRepositorioPort {
             marcaId: data['marcaId'],
             descripcion: data['descripcion'],
             precioTotal: data['precioTotal'],
+            esNovedad: data['esNovedad'] || false,
             pesoTotalGramos: data['pesoTotalGramos'],
+            vencimientoNovedadMs: data['vencimientoNovedadMs'] || null,
             items: data['items'] || [],
             images: data['images'] || [],
             estaDisponible: data['estaDisponible'] !== false, // Si no existe, asumimos true
@@ -110,6 +113,25 @@ export class ComboFirebaseRepository implements ComboRepositorioPort {
       return ok(undefined);
     } catch (error) {
       console.error("Error actualizando combo en Firebase:", error);
+      return fail(error as Error);
+    }
+  }
+
+  async updateNovedad(codigo: string, esNovedad: boolean): Promise<Result<void>> {
+    try {
+      const docRef = doc(this.firestore, environment.firebase.coleccionCombos, codigo);
+      
+      // Si activan la novedad, calculamos Hoy + 30 días en milisegundos. Si la apagan, lo dejamos en null.
+      //const msEn30Dias = 30 * 24 * 60 * 60 * 1000;
+      const msEn30Dias = APP_CONFIG.NOVEDAD_DURATION_MS;
+      const vencimiento = esNovedad ? Date.now() + msEn30Dias : null;
+
+      await updateDoc(docRef, {
+        vencimientoNovedadMs: vencimiento,
+        fechaActualizacion: serverTimestamp()
+      });
+      return ok(undefined);
+    } catch (error) {
       return fail(error as Error);
     }
   }

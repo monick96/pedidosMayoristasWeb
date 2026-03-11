@@ -12,6 +12,7 @@ import { UpdateProductoActivoUseCase } from '../../../aplication/use-cases/Updat
 import { AlertService } from '../shared/services/alert-service';
 import { UpdateProductoUnidadesUseCase } from '../../../aplication/use-cases/UpdateProductoUnidadesUseCase';
 import { UpdateComboActivoUseCase } from '../../../aplication/use-cases/UpdateComboActivoUseCase';
+import { APP_CONFIG, STORAGE_KEYS } from '../../../constantes/constantes';
 
 
 @Injectable({ providedIn: 'root' })
@@ -81,7 +82,7 @@ export class ProductFacade {
       this.loadProducts(); 
     } else {
       // Guardamos en la caché correcta (Combos y Productos tienen cachés separadas)
-      const CACHE_KEY = this.esProducto(item) ? 'mi_catalogo_cache' : 'mi_catalogo_combos_cache';
+      const CACHE_KEY = this.esProducto(item) ? STORAGE_KEYS.PRODUCTOS_CACHE : STORAGE_KEYS.COMBOS_CACHE;
       const cache = localStorage.getItem(CACHE_KEY);
       
       if (cache) {
@@ -113,7 +114,7 @@ export class ProductFacade {
       this.loadProducts();
     } else {
       // 3. Actualizamos la caché local
-      const CACHE_KEY = 'mi_catalogo_cache';
+      const CACHE_KEY = STORAGE_KEYS.PRODUCTOS_CACHE;
       const cache = localStorage.getItem(CACHE_KEY);
       if (cache) {
          const productos = JSON.parse(cache);
@@ -296,5 +297,49 @@ export class ProductFacade {
     this.items.set(items);
 
     this.loading.set(false);
+  }
+
+  async toggleNovedad(item: ProductoListadoVM, nuevoEstado: boolean) {
+    // 1. Actualización Optimista UI
+    this.items.update(items => items.map(i => {
+      if (i.codigo === item.codigo) return { ...i, esNovedad: nuevoEstado };
+      return i;
+    }));
+
+    // Guardamos en Firebase usando el repositorio directamente
+    // (Para mayor rapidez, usamos el repositorio inyectado indirectamente por los use cases actuales)
+    let result;
+    if (this.esProducto(item)) {
+       // Llamamos a un nuevo caso de uso o usamos el repositorio que ya construimos
+       result = await this['updateActivoUseCase']['repo'].updateNovedad(item.codigo, nuevoEstado);
+    } else {
+       result = await this['updateComboActivoUseCase']['repo'].updateNovedad(item.codigo, nuevoEstado);
+    }
+
+    if (result.isFail()) {
+
+      this.alertService.show("Error al actualizar Novedad.", "warning");
+      this.loadProducts(); 
+
+    } else {
+
+      //Solo actualizamos el producto modificado en NUESTRO Local Storage 
+      const CACHE_KEY = this.esProducto(item) ? STORAGE_KEYS.PRODUCTOS_CACHE : STORAGE_KEYS.COMBOS_CACHE;
+      const cache = localStorage.getItem(CACHE_KEY);
+      
+      if (cache) {
+         const datosCacheados = JSON.parse(cache);
+         const index = datosCacheados.findIndex((p: any) => p.codigo === item.codigo);
+         if (index !== -1) {
+           
+            const msEn30Dias = APP_CONFIG.NOVEDAD_DURATION_MS;
+           
+           datosCacheados[index].vencimientoNovedadMs = nuevoEstado ? Date.now() + msEn30Dias : null;
+           datosCacheados[index].esNovedad = nuevoEstado; // Mantenemos compatibilidad
+           
+           localStorage.setItem(CACHE_KEY, JSON.stringify(datosCacheados));
+         }
+      }
+    }
   }
 }

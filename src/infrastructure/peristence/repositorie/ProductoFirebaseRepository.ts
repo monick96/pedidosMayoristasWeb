@@ -1,4 +1,5 @@
 import { ProductoRepositoryPort } from "../../../aplication/ports/ProductoRepositorioPort";
+import { APP_CONFIG, STORAGE_KEYS } from "../../../constantes/constantes";
 import { Producto } from "../../../domain/entities/Producto";
 import { environment } from "../../../environments/environment.development";
 import { fail, ok, Result } from "../../../shared/Result";
@@ -11,13 +12,13 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
 
   async getAll(): Promise<Result<Producto[]>> {
     try {
-      const CACHE_KEY = 'mi_catalogo_cache';
-      const FECHA_KEY = 'mi_catalogo_ultima_fecha';
+      const CACHE_KEY = STORAGE_KEYS.PRODUCTOS_CACHE;
+      const FECHA_KEY = STORAGE_KEYS.PRODUCTOS_FECHA;
 
       //AGREGAMOS EL VERSIONADO DE CACHÉ
-      const VERSION_KEY = 'mi_catalogo_version';
-      const CURRENT_VERSION = '1.0.1'; // <-Subir este número (ej: '1.0.1') cuando queramos forzar a todos a borrar su caché
-      
+      const VERSION_KEY = STORAGE_KEYS.PRODUCTOS_VERSION;
+      const CURRENT_VERSION = APP_CONFIG.CATALOGO_VERSION; // <-Subir este número (ej: '1.0.1') cuando queramos forzar a todos a borrar su caché
+
       const versionGuardada = localStorage.getItem(VERSION_KEY);
 
       // Si la versión del navegador es vieja o no existe, destruimos la caché
@@ -81,6 +82,7 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
             pesoGramos: data['pesoGramos'],
             pesoKg: data['pesoKg'],
             esNovedad: data['esNovedad'] || false,
+            vencimientoNovedadMs: data['vencimientoNovedadMs'] || null,
             estaDisponible: data['estaDisponible'],
             unidadesPorCaja: data['unidadesPorCaja'] || 0,
             preciosMayorista: data['preciosMayorista'] || [],
@@ -162,6 +164,25 @@ export class ProductoFirebaseRepository implements ProductoRepositoryPort {
       return ok(undefined);
     } catch (error) {
       console.error("Error actualizando unidades en Firebase:", error);
+      return fail(error as Error);
+    }
+  }
+
+  async updateNovedad(codigo: string, esNovedad: boolean): Promise<Result<void>> {
+    try {
+      const docRef = doc(this.firestore, environment.firebase.coleccionProductos, codigo);
+      
+      // Si activan la novedad, calculamos Hoy + 30 días en milisegundos. Si la apagan, lo dejamos en null.
+      //const msEn30Dias = 30 * 24 * 60 * 60 * 1000;
+      const msEn30Dias = APP_CONFIG.NOVEDAD_DURATION_MS; 
+      const vencimiento = esNovedad ? Date.now() + msEn30Dias : null;
+
+      await updateDoc(docRef, {
+        vencimientoNovedadMs: vencimiento,
+        fechaActualizacion: serverTimestamp()
+      });
+      return ok(undefined);
+    } catch (error) {
       return fail(error as Error);
     }
   }
