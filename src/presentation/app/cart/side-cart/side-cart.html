@@ -28,7 +28,7 @@
     } @else {
       <div class="items-list">
         @for (item of facade.itemsConPrecio(); track item.productoId) {
-          <div class="cart-item">
+          <!-- <div class="cart-item">
            
             <img [src]="item.imagen" [alt]="item.nombre">
             
@@ -68,6 +68,41 @@
                     title="Eliminar producto"> 
             </button>
 
+          </div> -->
+          <div class="cart-item" [class.item-unavailable]="!item.estaDisponible">
+           
+            <img [src]="item.imagen" [alt]="item.nombre">
+            
+            <div class="item-details">
+              <h4>
+                {{ item.nombre }}
+  
+              </h4>
+
+              @if (item.sabor) { <span class="item-flavor">{{ item.sabor }}</span> }
+
+              @if (item.preciosPorEscala) {
+                <app-visor-precios [precios]="item.preciosPorEscala" [nivelActivo]="facade.escalaActiva().nivel"></app-visor-precios>
+              }@else {
+                <span class="unit-price">{{ item.precioEfectivo | pesoArg }}</span>
+              }
+            </div>
+
+            <div class="item-total">{{ item.subtotalItem| pesoArg }}</div>
+
+            @if (item.estaDisponible) {
+              <app-qty-selector 
+                [cantidad]="item.cantidad"
+                (onDecrease)="facade.decreaseQuantity(item.productoId)"
+                (onIncrease)="facade.incrementQuantity(item.productoId)"
+                (onChange)="facade.setQuantity(item.productoId, $event)">
+              </app-qty-selector>
+            } @else {
+              <div class="unavailable-text">No disponible</div>
+            }
+
+            <button class="delete-item-btn" (click)="facade.removeItem(item.productoId)" title="Eliminar producto"></button>
+
           </div>
         }
       </div>
@@ -98,6 +133,16 @@
 
       </div>
 
+      @if (facade.hayProductosAgotados()) {
+        <div class="rule-alert" style="background: #fef2f2; border-left-color: #ef4444; margin-bottom: 10px;">
+          <span class="rule-icon"></span>
+          <div class="rule-text">
+            <strong style="color: #b91c1c;">Hay productos sin stock</strong>
+            <span>Elimínalos de la lista para poder enviar tu pedido.</span>
+          </div>
+        </div>
+      }
+
       <div class="total-row">
         <span>Total a Pagar:</span>
         <span class="total-amount">{{ facade.total() | pesoArg }}</span>
@@ -114,7 +159,7 @@
       </div>
       
       <button class="checkout-btn" 
-              [disabled]="facade.faltaParaMinimo() > 0 || !facade.clienteNombre().trim()"
+              [disabled]="facade.faltaParaMinimo() > 0 || !facade.clienteNombre().trim() || facade.hayProductosAgotados()"
               (click)="generarPedidoWhatsapp()">
         Confirmar Pedido por WhatsApp
       </button>

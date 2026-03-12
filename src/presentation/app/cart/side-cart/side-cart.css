@@ -380,6 +380,33 @@
   --visor-gap: 2px; /* Bien juntitos para que no ocupe tanto alto */
 }
 
+/* ── ESTILOS PARA PRODUCTOS AGOTADOS EN CARRITO ── */
+.item-unavailable {
+  background-color: #fafafa;
+}
+
+.item-unavailable img {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.item-unavailable h4, 
+.item-unavailable .unit-price, 
+.item-unavailable .item-total, 
+.item-unavailable .item-flavor {
+  opacity: 0.5;
+  text-decoration: line-through; /* Tachamos todo */
+}
+
+.unavailable-text {
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  align-self: center;
+  margin-top: 5px;
+}
+
 /* ============================================
    RESPONSIVE MÓVIL (≤ 480px)
    ============================================ */
@@ -477,6 +504,25 @@
   
     --visor-align: center;
     --visor-gap: 1px; /* Bien juntitos para que no ocupe tanto alto */
+  }
+
+  .unavailable-text {
+    font-size: 0.65rem;
+  }
+
+  .rule-alert{
+    gap: 2px;
+    padding: 1px;
+    border-radius: 4px;
+    border-left: 2px solid;
+  }
+
+  .rule-alert span{
+    font-size: 0.55rem;
+  }
+
+  .rule-alert strong{
+    font-size: 0.6rem;
   }
 }
 

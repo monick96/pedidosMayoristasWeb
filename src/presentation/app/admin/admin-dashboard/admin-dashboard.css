@@ -174,36 +174,38 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-
-
-/* --- RESPONSIVE MÓVIL --- */
+/* ============================================
+   ADMIN DASHBOARD - RESPONSIVE MÓVIL
+   ============================================ */
 @media (max-width: 768px) {
+  .minimal-container { padding: 1.5rem 1rem; }
+
   .minimal-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+    align-items: stretch;
+    gap: 1rem;
   }
+
+  .btn-save { width: 100%; padding: 12px; }
   
   .setting-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 1rem;
     padding: 1.5rem 0;
   }
 
-  .setting-input-group {
+  /* Liberamos el ancho fijo de 400px para que use el 100% de la pantalla */
+  .setting-row > .setting-input-group,
+  .setting-row > .setting-inputs-multiple {
+    flex: unset;
     width: 100%;
-    box-sizing: border-box;
   }
 
   .setting-inputs-multiple {
-    width: 100%;
     flex-direction: column;
-    align-items: stretch;
     gap: 0.8rem;
   }
   
-  .text-right {
-    text-align: left;
-  }
+  .text-right { text-align: left; }
 }

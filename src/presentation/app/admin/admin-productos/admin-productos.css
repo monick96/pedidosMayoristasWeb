@@ -214,3 +214,29 @@
   color: #666;
   font-weight: 600;
 }
+
+/* ============================================
+   ADMIN PRODUCTOS - RESPONSIVE MÓVIL
+   ============================================ */
+@media (max-width: 768px) {
+  .admin-table-container { padding: 1rem 0.5rem; }
+  
+  .header-titles h1 { font-size: 1.5rem; }
+  
+  /* Ajustamos la tabla para que ocupe menos espacio visual */
+  .admin-table th, .admin-table td { 
+    padding: 10px 8px; 
+    font-size: 0.85rem; 
+  }
+  
+  .table-img { width: 35px; height: 35px; }
+  .table-desc { min-width: 160px; }
+  
+  /* Hacemos que la paginación sea una columna amigable para los dedos */
+  .pagination-controls { 
+    flex-direction: column; 
+    gap: 12px; 
+    padding: 15px; 
+  }
+  .pagination-controls .page-btn { width: 100%; padding: 12px; }
+}

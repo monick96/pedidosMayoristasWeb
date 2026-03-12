@@ -67,3 +67,13 @@
     border-radius: 8px;
     margin-top: 10px;
 }
+
+/* ============================================
+   ADMIN LOGIN - RESPONSIVE MÓVIL
+   ============================================ */
+@media (max-width: 480px) {
+  .login-container { padding: 15px; }
+  .login-card { padding: 30px 20px; }
+  .login-header h2 { font-size: 1.5rem; }
+  .form-group input { padding: 14px 15px; } /* Más fácil de tocar */
+}

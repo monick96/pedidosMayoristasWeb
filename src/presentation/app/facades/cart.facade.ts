@@ -6,6 +6,7 @@ import { AlertService } from '../shared/services/alert-service';
 import { cartRepositoryComposition } from '../../../composition/CartComposition';
 import { ConfigFacade } from './Config.facade';
 import { STORAGE_KEYS } from '../../../constantes/constantes';
+import { ProductFacade } from './product.facade';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
@@ -13,6 +14,24 @@ export class CartFacade {
   private alertService = inject(AlertService);
   private cartRepository = cartRepositoryComposition();
   private configFacade = inject(ConfigFacade);
+  private productFacade = inject(ProductFacade);
+
+  // Signal principal del estado del carrito
+  readonly items = signal<CartItem[]>([]);
+ 
+  //Signal de Estado Visual
+  readonly isOpen = signal<boolean>(false);
+
+  //Signal para el nombre del cliente
+  readonly clienteNombre = signal<string>('');
+
+  constructor() {
+
+    // Al iniciar, cargamos del storage
+    this.loadFromStorage();
+    //cargar nombre cliente
+    this.loadNameFromStorage();
+  }
 
   // LÓGICA DE NEGOCIO COMPUTADA (Reacciona  a los cambios)
   
@@ -51,21 +70,33 @@ export class CartFacade {
     return escala || escalasFirebase[0];
   });
 
- 
   // Un array de items que ya tiene el precio final calculado para la vista
   readonly itemsConPrecio = computed(() => {
     const nivelActual = this.escalaActiva().nivel;
+    const catalogoLive = this.productFacade.items(); // Catálogo actualizado
+    const catalogoCargado = catalogoLive.length > 0;
 
     return this.items().map(item => {
+      
       // Buscamos el precio de la escala, si no hay usamos el base
       const precioEscala = item.preciosPorEscala?.find(p => p.nivel === nivelActual);
       const precioEfectivo = precioEscala ? precioEscala.precio : item.precioUnitario;
+
+      //  Verificamos el estado stock
+      // Si el catálogo está cargando, asumimos true para que no parpadee en rojo.
+      let estaDisponible = true;
+      if (catalogoCargado) {
+        const productoReal = catalogoLive.find(p => p.codigo === item.productoId);
+        // Si lo encuentra, copiamos su estado. Si no esta en la BD, es false.
+        estaDisponible = productoReal ? (productoReal.estaDisponible ?? false) : false;
+      }
 
       // Retornamos el item clonado, pero le agregamos los datos calculados
       return {
         ...item,
         precioEfectivo: precioEfectivo,
-        subtotalItem: precioEfectivo * item.cantidad
+        subtotalItem: precioEfectivo * item.cantidad,
+        estaDisponible: estaDisponible
       };
     });
   });
@@ -75,22 +106,10 @@ export class CartFacade {
     return this.itemsConPrecio().reduce((suma, item) => suma + item.subtotalItem, 0);
   });
 
-  // Signal principal del estado del carrito
-  readonly items = signal<CartItem[]>([]);
- 
-  //Signal de Estado Visual
-  readonly isOpen = signal<boolean>(false);
-
-  //Signal para el nombre del cliente
-  readonly clienteNombre = signal<string>('');
-
-  constructor() {
-
-    // Al iniciar, cargamos del storage
-    this.loadFromStorage();
-    //cargar nombre cliente
-    this.loadNameFromStorage();
-  }
+  // COMPUTED: Nos avisa si el carrito tiene no disponibles
+  readonly hayProductosAgotados = computed(() => {
+    return this.itemsConPrecio().some(item => !item.estaDisponible);
+  });
 
   // Método para actualizar y guardar el nombre
   setClienteNombre(nombre: string) {
@@ -242,7 +261,7 @@ export class CartFacade {
     this.alertService.confirm('¿Estás seguro de que deseas vaciar todo el pedido?', () => {
       this.items.set([]); // Limpia la memoria UI
       
-      const result = this.cartRepository.clear(); // Limpia la base de datos
+      const result = this.cartRepository.clear(); // Limpia la cart storage
       if (result.isFail()) {
         console.error('Error al limpiar el storage:', result.error);
       }

@@ -21,6 +21,8 @@ export class SideCart {
 
   private configFacade = inject(ConfigFacade);
 
+  
+
   updateNombre(event: Event) {
     const input = event.target as HTMLInputElement;
     this.facade.setClienteNombre(input.value); 
@@ -34,6 +36,11 @@ export class SideCart {
     
     if (!nombre) {
       this.alertService.show('Por favor, ingresa tu nombre / local para confirmar el pedido.', 'warning');
+      return;
+    }
+
+    if (this.facade.hayProductosAgotados()) {
+      this.alertService.show('Tienes productos agotados en tu pedido. Por favor, elimínalos para continuar.', 'warning');
       return;
     }
 
