@@ -1,10 +1,16 @@
 <div class="page-container">
   <!-- <app-buscador (onSearch)="facade.updateFilter($event)" /> -->
   <div class="sticky-header">
-
+    
     <div class="header-controls">
+      
+      <div class="store-topbar">
+        <img src="https://acdn-us.mitiendanube.com/stores/002/956/718/themes/common/logo-1609976901-1719067272-25c5503d690507368f76b005c799aa621719067273-480-0.webp" alt="VA Suplementos" class="main-logo">
+      </div>
+
       <app-buscador (onSearch)="facade.updateFilter($event)" class="flex-grow" />
-       <app-niveles-modal/>
+
+      <app-niveles-modal/>
       
       <div class="controls-row">
     
@@ -30,30 +36,6 @@
       </div>
     </div>
 
-    <!-- <div class="brands-filter">
-
-      <button class="all chip" [class.active]="facade.isAllMode()" (click)="facade.resetFilters()">
-        Todos
-      </button>
-
-      <button class="offers chip" [class.active]="facade.showOnlyOffers()" (click)="facade.activateOffers()">
-        🔥 Ofertas
-      </button>
-
-      <button class="news chip" [class.active]="facade.showOnlyNews()" (click)="facade.activateNews()">
-        Novedades
-      </button>
-
-      <button class="combo chip" [class.active]="facade.showOnlyCombos()" (click)="facade.activateCombos()">
-        Combos
-      </button>
-
-      @for (marca of facade.marcasDisponibles(); track marca) {
-      <button class="chip" [class.active]="facade.selectedBrand() === marca" (click)="facade.selectBrand(marca)">
-        {{ marca }}
-      </button>
-      }
-    </div> -->
     <div class="carousel-wrapper">
   
       <button class="nav-arrow left" (click)="carruselMarcas.scrollMarcas(-200)">❮</button>

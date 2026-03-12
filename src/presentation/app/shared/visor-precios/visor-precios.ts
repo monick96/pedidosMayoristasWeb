@@ -33,7 +33,7 @@ export class VisorPrecios {
       }
     });
 
-    return listaFiltrada;
+      return listaFiltrada.slice(0, 3);//solo 3 niveles por regla de negocio
   });
 
   //Busca qué precio en dinero le corresponde al nivel actual,

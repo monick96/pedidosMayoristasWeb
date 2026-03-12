@@ -145,7 +145,10 @@
 
       <div class="total-row">
         <span>Total a Pagar:</span>
-        <span class="total-amount">{{ facade.total() | pesoArg }}</span>
+        <div class="total-amount-wrapper">
+          <span class="total-amount">{{ facade.total() | pesoArg }}</span>
+          <span class="shipping-note">* No incluye costo de envío</span>
+        </div>
       </div>
 
       <div class="customer-info">

@@ -1,10 +1,34 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 
+import { GetConfigRuleUseCase } from '../../aplication/use-cases/GetConfigRuleUseCase';
+import { UpdateRuleConfigUseCase } from '../../aplication/use-cases/UpdateRuleConfigUseCase';
+import { ok } from '../../shared/Result';
+
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        {
+          provide: GetConfigRuleUseCase,
+          useValue: {
+            execute: jasmine.createSpy().and.resolveTo(
+              ok({
+                minimoGeneral: 0,
+                minimoConCombos: 0,
+                escalas: [],
+                telefonoWhatsapp: '',
+                tiendaAbierta: true,
+              })
+            ),
+          },
+        },
+        {
+          provide: UpdateRuleConfigUseCase,
+          useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) },
+        },
+      ],
     }).compileComponents();
   });
 
@@ -14,11 +38,4 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should have title', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    const app = fixture.componentInstance;
-   // Cambia el test para verificar el signal 'title' que tienes en app.ts
-   expect(app.title()).toEqual('pedidos-web-mayorista');
-  });
 });

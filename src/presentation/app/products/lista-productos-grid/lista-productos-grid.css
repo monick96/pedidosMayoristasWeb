@@ -23,17 +23,10 @@
   gap: 20px;
 }
 
-/* Media query para pantallas muy pequeñas */
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: 1fr; /* Una sola columna en celulares chicos */
-    padding: 10px;
-  }
-}
-
 app-buscador {
   display: block;
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  margin-top: 0;
 }
 
 /* Contenedor principal*/
@@ -97,10 +90,7 @@ app-buscador {
 .prev { left: -60px; }
 .next { right: -60px; }
 
-@media (max-width: 768px) {
-  .prev { left: 10px; }
-  .next { right: 10px; }
-}
+
 
 .close-btn {
   position: absolute;
@@ -233,16 +223,24 @@ app-buscador {
   cursor: pointer;
 }
 
-/* Ajuste móvil*/
-@media (max-width: 768px) {
-  .header-controls {
-    flex-wrap: wrap; /* Permite que caiga a la siguiente línea si no entra */
-  }
-  .controls-row {
-    width: 100%;
-    justify-content: space-between;
-  }
+/* === LOGO DE LA TIENDA === */
+.store-topbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*padding-bottom: 5px;*/
 }
+
+
+.main-logo {
+  height: 44px; /* Misma altura aproximada que el input del buscador */
+  width: 44px;
+  object-fit: contain;
+  flex-shrink: 0; /* Evita que el buscador lo aplaste al achicar la pantalla */
+  border-radius: 50%; /* Asegura que el borde redondo quede perfecto */
+  margin-right: 5px; /* Un respirito contra el buscador */
+}
+
 
 /*NUEVOO*/
 /* El contenedor padre debe ser relativo para que las flechas floten dentro de él */
@@ -273,10 +271,49 @@ app-buscador {
 .nav-arrow.left { left: 0; }
 .nav-arrow.right { right: 0; } 
 
+/* Media query para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr; /* Una sola columna en celulares chicos */
+    padding: 10px;
+  }
+}
+
 /*Ocultamos las flechas en celulares*/
 @media (max-width: 768px) {
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
   .nav-arrow {
     display: none;
+  }
+
+  .header-controls {
+    flex-wrap: wrap; /* Permite que caiga a la siguiente línea */
+    gap: 12px; /* Espacio vertical entre el buscador y los botones */
+  }
+
+  /*  Le decimos al buscador que nunca mida menos de 200px. 
+     Como no entra junto con los otros botones, forzará a la "Fila 2" a bajar. */
+  app-buscador {
+    flex: 1; 
+    min-width: 200px; 
+  }
+
+  /* La fila de abajo toma el 100% y reparte los 3 elementos */
+  .controls-row {
+    width: 100%;
+    justify-content: space-between;
+    gap: 5px; /* Reducimos el gap para que no choquen en 320px */
+  }
+
+  /* Achicamos levemente el texto del checkbox para que respiren en pantallas mini */
+  .checkbox-disponibles {
+    font-size: 0.8rem;
+  }
+
+  .main-logo {
+    height: 40px; /* Un poco más pequeño en móviles para ahorrar espacio vertical */
   }
 }
 

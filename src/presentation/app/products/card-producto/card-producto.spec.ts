@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CardProducto } from './card-producto';
-import { ProductoVM } from '../models/productoVm';
+import { ProductoVM } from '../../models/productoVm';
 import { signal, ChangeDetectionStrategy } from '@angular/core';
 import { CartFacade } from '../../facades/cart.facade';
-import { ProductFacade } from '../product.facade';
+import { ProductFacade } from '../../facades/product.facade';
 
 //Mocks de los servicios que inyecta el componente
 const mockProductFacade = {
@@ -13,7 +13,11 @@ const mockProductFacade = {
 const mockCartFacade = {
   items: signal([]),
   addToCart: jasmine.createSpy('addToCart'),
-  decreaseQuantity: jasmine.createSpy('decreaseQuantity')
+  decreaseQuantity: jasmine.createSpy('decreaseQuantity'),
+  // en el real es computed, acá lo mockeamos como función
+  cantidadesMap: () => ({ 'TEST-001': 0 }),
+  setQuantity: jasmine.createSpy('setQuantity'),
+  escalaActiva: () => ({ nivel: 1 }),
 };
 
 // Helper para no repetir el mock base en cada test
@@ -92,7 +96,9 @@ describe('CardProducto Component', () => {
       fixture.detectChanges();
 
       const precioFinalElement = compiled.querySelector('.price-final');
-      expect(precioFinalElement?.textContent).toContain('45,000');
+      //expect(precioFinalElement?.textContent).toContain('45,000');
+      const texto = soloNumero(precioFinalElement?.textContent);
+      expect(texto).toContain(normalizarMilesAR(45000)); // "45.000"
     });
   });
 
@@ -106,7 +112,8 @@ describe('CardProducto Component', () => {
       // Assert
       const precioOldElement = compiled.querySelector('.price-old');
       expect(precioOldElement).toBeTruthy();
-      expect(precioOldElement?.textContent).toContain('25,000');
+      const textoOld = soloNumero(precioOldElement?.textContent);
+      expect(textoOld).toContain(normalizarMilesAR(25000)); // "25.000"
     });
 
     it('NO debe mostrar el precio normal tachado cuando NO hay promoción', () => {
@@ -230,3 +237,12 @@ describe('CardProducto Component', () => {
   });
 
 });
+
+function soloNumero(text?: string | null): string {
+  return (text ?? '').replace(/[^\d.,]/g, '').trim();
+}
+
+function normalizarMilesAR(num: number): string {
+  // 45000 -> "45.000" en es-AR
+  return num.toLocaleString('es-AR');
+}

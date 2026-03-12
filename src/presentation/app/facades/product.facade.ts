@@ -342,4 +342,14 @@ export class ProductFacade {
       }
     }
   }
+
+  //un Diccionario para acceso ultra rápido (O(1))
+  readonly itemsDictionary = computed(() => {
+    const dict: Record<string, ProductoListadoVM> = {};
+    this.items().forEach(item => {
+      dict[item.codigo] = item;
+    });
+    return dict;
+  });
+  
 }

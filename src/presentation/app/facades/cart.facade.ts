@@ -73,8 +73,8 @@ export class CartFacade {
   // Un array de items que ya tiene el precio final calculado para la vista
   readonly itemsConPrecio = computed(() => {
     const nivelActual = this.escalaActiva().nivel;
-    const catalogoLive = this.productFacade.items(); // Catálogo actualizado
-    const catalogoCargado = catalogoLive.length > 0;
+    const dictLive = this.productFacade.itemsDictionary(); 
+    const catalogoCargado = Object.keys(dictLive).length > 0;
 
     return this.items().map(item => {
       
@@ -86,7 +86,7 @@ export class CartFacade {
       // Si el catálogo está cargando, asumimos true para que no parpadee en rojo.
       let estaDisponible = true;
       if (catalogoCargado) {
-        const productoReal = catalogoLive.find(p => p.codigo === item.productoId);
+        const productoReal = dictLive[item.productoId];
         // Si lo encuentra, copiamos su estado. Si no esta en la BD, es false.
         estaDisponible = productoReal ? (productoReal.estaDisponible ?? false) : false;
       }

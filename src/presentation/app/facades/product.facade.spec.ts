@@ -1,12 +1,54 @@
 import { TestBed } from '@angular/core/testing';
 import { ProductFacade } from '../../app/facades/product.facade';
+import { GetProductosUseCase } from '../../../aplication/use-cases/GetProductosUseCase';
+import { GetCombosUseCase } from '../../../aplication/use-cases/GetCombosUseCase';
+import { UpdateProductoActivoUseCase } from '../../../aplication/use-cases/UpdateProductoActivoUseCase';
+import { UpdateProductoUnidadesUseCase } from '../../../aplication/use-cases/UpdateProductoUnidadesUseCase';
+import { UpdateComboActivoUseCase } from '../../../aplication/use-cases/UpdateComboActivoUseCase';
+import { ok } from '../../../shared/Result';
 
 describe('ProductFacade', () => {
   let facade: ProductFacade;
 
+   const getProductosMock = {
+    execute: jasmine.createSpy().and.resolveTo(ok([
+      {
+        codigo: 'PROD1',
+        descripcion: 'Producto 1',
+        marcaId: 'MARCA',
+        precioBase: 100,
+        preciosMayorista: [],
+        activo: true,
+        estaDisponible: true,
+        images: [],
+      } as any,
+    ])),
+  };
+
+  const getCombosMock = {
+    execute: jasmine.createSpy().and.resolveTo(ok([
+      {
+        codigo: 'COMBO1',
+        descripcion: 'Combo 1',
+        items: [],
+        precioTotal: 200,
+        activo: true,
+        estaDisponible: true,
+        images: [],
+      } as any,
+    ])),
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ProductFacade]
+      providers: [
+        ProductFacade,
+        { provide: GetProductosUseCase, useValue: getProductosMock },
+        { provide: GetCombosUseCase, useValue: getCombosMock },
+        { provide: UpdateProductoActivoUseCase, useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) } },
+        { provide: UpdateProductoUnidadesUseCase, useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) } },
+        { provide: UpdateComboActivoUseCase, useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) } },
+      ],
     });
 
     facade = TestBed.inject(ProductFacade);

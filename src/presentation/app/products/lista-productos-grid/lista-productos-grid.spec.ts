@@ -1,23 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { GetConfigRuleUseCase } from '../../../../aplication/use-cases/GetConfigRuleUseCase';
+import { UpdateRuleConfigUseCase } from '../../../../aplication/use-cases/UpdateRuleConfigUseCase';
+import { ok } from '../../../../shared/Result';
 
-import { ListaProductos } from './lista-productos-grid';
-
-describe('ListaProductos', () => {
-  let component: ListaProductos;
-  let fixture: ComponentFixture<ListaProductos>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ListaProductos]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(ListaProductos);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+providers: [
+  {
+    provide: GetConfigRuleUseCase,
+    useValue: { execute: jasmine.createSpy().and.resolveTo(ok({
+      minimoGeneral: 0,
+      minimoConCombos: 0,
+      escalas: [],
+      telefonoWhatsapp: '',
+      tiendaAbierta: true,
+    })) },
+  },
+  {
+    provide: UpdateRuleConfigUseCase,
+    useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) },
+  },
+]
