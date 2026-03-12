@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, inject } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 
 import { routes } from './app.routes';
 
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
     //USAMOS LA VARIABLE DEL ENTORNO
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
     {
       provide: GetProductosUseCase, // Cuando alguien pida el UseCase...
       useFactory: () => { 

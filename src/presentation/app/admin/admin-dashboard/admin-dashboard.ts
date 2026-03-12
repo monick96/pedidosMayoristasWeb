@@ -31,6 +31,8 @@ export class AdminDashboard {
 
   estaCargando = signal<boolean>(false);
 
+  tiendaAbierta = signal<boolean>(true);
+
   constructor() {
     //Effect escucha los Signals del Facade.
     // Cuando terminan de cargar desde Firebase, llenamos el formulario automáticamente.
@@ -41,6 +43,7 @@ export class AdminDashboard {
         this.minimoGeneral.set(this.configFacade.minimoGeneral());
         this.minimoConCombos.set(this.configFacade.minimoConCombos());
         this.telefonoWhatsapp.set(this.configFacade.telefonoWhatsapp());
+        this.tiendaAbierta.set(this.configFacade.tiendaAbierta());
         
         const escalas = this.configFacade.escalas();
         if (escalas && escalas.length >= 3) {
@@ -67,7 +70,8 @@ export class AdminDashboard {
     const nuevaConfig: AppRuleConfig = {
       minimoGeneral: Number(this.minimoGeneral()),
       minimoConCombos: Number(this.minimoConCombos()),
-      telefonoWhatsapp: this.telefonoWhatsapp(), 
+      telefonoWhatsapp: this.telefonoWhatsapp(),
+      tiendaAbierta: this.tiendaAbierta(), 
       escalas: [
         { nivel: "nivel 1", nombre: this.escala1_nombre(), montoMinimo: 0 },
         { nivel: "nivel 2", nombre: this.escala2_nombre(), montoMinimo: Number(this.escala2_minimo()) },

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './guard/admin-guard';
 
 export const routes: Routes = [
     {
@@ -6,9 +7,15 @@ export const routes: Routes = [
         loadComponent: ()=>import ('./products/lista-productos-grid/lista-productos-grid').then(m=> m.ListaProductos),
         
     },
+    //RUTA DE LOGIN
+    {
+        path: 'login',
+        loadComponent: () => import('./admin/admin-login/admin-login').then(m => m.AdminLogin)
+    },
     {
         path: 'admin',
         loadComponent: () => import('./admin/admin-layout/admin-layout').then(m => m.AdminLayout),
+        canActivate: [adminGuard],// Protegemos TODAS las rutas hijas de /admin con el guard
         children: [
         {
             path: 'config',

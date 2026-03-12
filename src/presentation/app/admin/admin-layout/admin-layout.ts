@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth-service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -8,5 +9,12 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './admin-layout.css',
 })
 export class AdminLayout {
+  authService = inject(AuthService);
+  router = inject(Router);
+
+  async logout() {
+    await this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 
 }

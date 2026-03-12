@@ -10,6 +10,29 @@
   </header>
 
   <section class="settings-section">
+    <h2>Estado de la Tienda (Botón de mantenimiento)</h2>
+    
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Tienda Disponible</label>
+        <span>Si lo apagas, los clientes verán un cartel de "Mantenimiento" y no podrán comprar.</span>
+      </div>
+      <div class="setting-input-group" style="border: none; background: transparent; justify-content: flex-start;">
+        <label class="switch">
+          <input type="checkbox" 
+                 [ngModel]="tiendaAbierta()" 
+                 (ngModelChange)="tiendaAbierta.set($event)">
+          <span class="slider round"></span>
+          
+        </label>
+        <span style="color: #888; font-size: 0.95rem; font-weight: 500; margin-left: 0.4rem;">
+            {{ tiendaAbierta() ? '(Disponible)' : '(En mantenimiento)' }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="settings-section">
     <h2>Contacto y Pedidos</h2>
     
     <div class="setting-row">

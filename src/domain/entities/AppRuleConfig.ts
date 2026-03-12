@@ -9,4 +9,5 @@ export interface AppRuleConfig {
   minimoConCombos: number;
   escalas: EscalaPrecio[];
   telefonoWhatsapp: string;
+  tiendaAbierta: boolean;
 }

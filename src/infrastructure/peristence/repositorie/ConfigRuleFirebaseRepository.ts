@@ -17,13 +17,21 @@ export class ConfigRuleFirebaseRepository implements ConfigRuleRepositoryPort {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        return ok(docSnap.data() as AppRuleConfig);
+        //return ok(docSnap.data() as AppRuleConfig);
+        const data = docSnap.data();
+        return ok({
+          ...data,
+          // Si el campo no existe en Firebase, asumimos que está abierta (true)
+          tiendaAbierta: data['tiendaAbierta'] !== false 
+        } as AppRuleConfig);
+      
       } else {
         // Si no existe en Firebase, devolvemos los valores por defecto 
        const defaultConfig: AppRuleConfig = {
           minimoGeneral: 290000,
           minimoConCombos: 490000,
           telefonoWhatsapp:'5491123456789',
+          tiendaAbierta: true,
           escalas: [
             { nivel: "nivel 1", nombre: 'Mayorista 1', montoMinimo: 0 },
             { nivel: "nivel 2", nombre: 'Mayorista 2', montoMinimo: 490000 },

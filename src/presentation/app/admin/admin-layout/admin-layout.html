@@ -19,8 +19,9 @@
       </ul>
     </nav>
     
-    <div class="sidebar-footer">
-      <a routerLink="/home" class="btn-return">← Volver a la Tienda</a>
+    <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 15px;">
+      <a routerLink="/home" class="btn-return">Volver a la Tienda</a>
+      <button (click)="logout()" class="btn-return" style="background: none; border: none; text-align: left; cursor: pointer; padding: 0;">Cerrar Sesión</button>
     </div>
   </aside>
 

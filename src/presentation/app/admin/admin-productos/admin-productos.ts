@@ -17,36 +17,9 @@ export class AdminProductos implements OnInit {
 
   searchTerm = signal<string>('');
   
-  //solo productos (sin combos)
-  /*productosFiltrados = computed<ProductoVM[]>(() => {
-    const query = this.searchTerm().toLowerCase().trim();
-    const todosLosItems = this.productFacade.items();
+  currentPage = signal<number>(1);
 
-    const soloProductos = todosLosItems.filter(item => 
-      this.productFacade.esProducto(item)
-    ) as ProductoVM[];
-
-    return soloProductos.filter(item => {
-      // Si no hay búsqueda, devolvemos todo
-      if (!query) return true;
-
-      // separamos por palabras sueltas
-      const palabras = query.split(' ').filter(p => p.length > 0);
-      
-      // Preparamos los textos protegiéndonos de los 'undefined' o 'null'
-      const desc = (item.descripcion || '').toLowerCase();
-      const cod  = (item.codigo || '').toLowerCase();
-      const marc = (item.marcaId || '').toLowerCase();
-      const sab  = (item.sabor || '').toLowerCase(); // Sumamos el sabor
-
-      // Unimos todo en un mega texto
-      const superTexto = `${desc} ${cod} ${marc} ${sab}`;
-
-      // Verificamos que TODAS las palabras escritas existan en el superTexto (sin importar el orden)
-      return palabras.every(p => superTexto.includes(p));
-    });
-
-  });*/
+  itemsPerPage = signal<number>(20);
 
   productosFiltrados = computed<ProductoListadoVM[]>(() => {
     const query = this.searchTerm().toLowerCase().trim();
@@ -81,10 +54,10 @@ export class AdminProductos implements OnInit {
     }
   }
 
-  buscar(event: Event) {
+  /*buscar(event: Event) {
     const input = event.target as HTMLInputElement;
     this.searchTerm.set(input.value);
-  }
+  }*/
 
   cambiarEstado(item : ProductoListadoVM, event: Event) {
     const checkbox = event.target as HTMLInputElement;
@@ -100,6 +73,38 @@ export class AdminProductos implements OnInit {
   cambiarNovedad(item: ProductoListadoVM, event: Event) {
     const checkbox = event.target as HTMLInputElement;
     this.productFacade.toggleNovedad(item, checkbox.checked);
+  }
+
+  //Corta la lista para la página actual
+  productosPaginados = computed<ProductoListadoVM[]>(() => {
+    const inicio = (this.currentPage() - 1) * this.itemsPerPage();
+    const fin = inicio + this.itemsPerPage();
+    return this.productosFiltrados().slice(inicio, fin);
+  });
+
+  // Calcula cuántas páginas hay en total
+  totalPages = computed<number>(() => {
+    return Math.ceil(this.productosFiltrados().length / this.itemsPerPage()) || 1;
+  });
+
+
+  buscar(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+    this.currentPage.set(1); // Volvemos a la página 1 al buscar algo nuevo
+  }
+
+  //Funciones para cambiar de página
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+    }
   }
 
 }

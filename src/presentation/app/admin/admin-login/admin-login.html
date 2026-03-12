@@ -1,0 +1,23 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>VA Admin</h2>
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" required placeholder="admin@tienda.com">
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password" required placeholder="••••••••">
+      </div>
+
+      <button type="submit" class="btn-primary login-btn" [disabled]="loading()">
+        {{ loading() ? 'Verificando...' : 'Iniciar Sesión' }}
+      </button>
+    </form>
+  </div>
+</div>

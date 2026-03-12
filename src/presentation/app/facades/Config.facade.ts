@@ -10,6 +10,7 @@ export class ConfigFacade {
   private readonly updateUseCase = inject(UpdateRuleConfigUseCase);
 
   // Signals Reactivos que toda la app podrá leer
+  readonly tiendaAbierta = signal<boolean>(true);
   readonly minimoGeneral = signal<number>(0);
   readonly minimoConCombos = signal<number>(0);
   readonly escalas = signal<EscalaPrecio[]>([]);
@@ -31,6 +32,7 @@ export class ConfigFacade {
       this.minimoConCombos.set(config.minimoConCombos);
       this.escalas.set(config.escalas);
       this.telefonoWhatsapp.set(config.telefonoWhatsapp || '');
+      this.tiendaAbierta.set(config.tiendaAbierta);
     } else {
       console.error("Error al cargar la configuración general:", result.error);
     }
@@ -47,6 +49,7 @@ export class ConfigFacade {
       this.minimoConCombos.set(newConfig.minimoConCombos);
       this.escalas.set(newConfig.escalas);
       this.telefonoWhatsapp.set(newConfig.telefonoWhatsapp);
+      this.tiendaAbierta.set(newConfig.tiendaAbierta);
       return true;
     }
     return false;

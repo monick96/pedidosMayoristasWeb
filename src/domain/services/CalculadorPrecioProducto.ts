@@ -42,9 +42,9 @@ export class CalculadorPrecioProducto{
   }
 
   static calcularPreciosPorEscala(producto: Producto): { nivel: string, precio: number }[] {
-    // Tomamos solo los primeros 3 precios mayoristas (Nivel 1, 2 y 3)
+    // Tomamos solo los primeros 4 precios mayoristas (Nivel 1, 2, 3 y 4)
     // Usamos map para transformar cada MayoristaPrecio en un objeto { nivel, precio }
-    return producto.preciosMayorista.slice(0, 3).map((mayorista, index) => {
+    return producto.preciosMayorista.slice(0, 4).map((mayorista, index) => {
       let nivelNumber = index + 1; 
       return {
         nivel: `nivel ${nivelNumber}`, // index 0 es nivel 1, index 1 es nivel 2..
