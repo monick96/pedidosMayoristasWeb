@@ -65,8 +65,13 @@ export class CartFacade {
       return { nivel: "nivel 1", nombre: 'Precio 1', montoMinimo: 0 };
     }
 
-    // Reversamos el array para chequear desde la más alta a la más baja
-    const escala = [...escalasFirebase].reverse().find(e => total >= e.montoMinimo);
+    // (por ahora)Solo consideramos las primeras 3 escalas para el cálculo
+    const escalasPermitidas = escalasFirebase.slice(0, 3); 
+    
+    // reverse al array para chequear desde la más alta a la más baja
+    // Ahora buscamos solo dentro de esas 3
+    const escala = [...escalasPermitidas].reverse().find(e => total >= e.montoMinimo);
+   
     return escala || escalasFirebase[0];
   });
 

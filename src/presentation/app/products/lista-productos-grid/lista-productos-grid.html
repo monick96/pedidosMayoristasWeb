@@ -47,11 +47,18 @@
         <button class="news chip" [class.active]="facade.showOnlyNews()" (click)="facade.activateNews()">Novedades</button>
         <button class="combo chip" [class.active]="facade.showOnlyCombos()" (click)="facade.activateCombos()">Combos</button>
 
-        @for (marca of facade.marcasDisponibles(); track marca) {
+        <!-- @for (marca of facade.marcasDisponibles(); track marca) {
+          <button class="chip" [class.active]="facade.selectedBrand() === marca" (click)="facade.selectBrand(marca)">
+            {{ marca }}
+          </button>
+        } -->
+
+        @for (marca of facade.marcasDestacadas(); track marca) {
           <button class="chip" [class.active]="facade.selectedBrand() === marca" (click)="facade.selectBrand(marca)">
             {{ marca }}
           </button>
         }
+
       </div>
 
       <button class="nav-arrow right" (click)="carruselMarcas.scrollMarcas(200)">❯</button>

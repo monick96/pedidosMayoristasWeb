@@ -13,6 +13,7 @@ import { AlertService } from '../shared/services/alert-service';
 import { UpdateProductoUnidadesUseCase } from '../../../aplication/use-cases/UpdateProductoUnidadesUseCase';
 import { UpdateComboActivoUseCase } from '../../../aplication/use-cases/UpdateComboActivoUseCase';
 import { APP_CONFIG, STORAGE_KEYS } from '../../../constantes/constantes';
+import { ConfigFacade } from './Config.facade';
 
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +30,8 @@ export class ProductFacade {
   private readonly updateComboActivoUseCase = inject(UpdateComboActivoUseCase);
 
   private readonly alertService = inject(AlertService);
+
+  private readonly configFacade = inject(ConfigFacade); 
 
   readonly items = signal<ProductoListadoVM[]>([]);
 
@@ -175,7 +178,7 @@ export class ProductFacade {
   // Extrae marcas únicas de los items cargados(ambos tipos tienen marca)
   readonly marcasDisponibles = computed(() => {
     const todasLasMarcas = this.items()
-      .map(item => item.marcaId)
+      .map(item => item.marcaId?.trim().toUpperCase()) // Quitamos espacios y forzamos mayúsculas
       .filter((m): m is string => !!m);
 
     return [...new Set(todasLasMarcas)];
@@ -243,7 +246,10 @@ export class ProductFacade {
       if (onlyAvailable && !item.estaDisponible) return false;
 
       // Si hay marca, filtramos por marca
-      if (brand && item.marcaId !== brand) return false;
+      if (brand) {
+        const marcaBuscada = brand.trim().toUpperCase();
+        if (item.marcaId?.trim().toUpperCase() !== marcaBuscada) return false;
+      }
       
       // Si hay novedades, filtramos por esNovedad
       if (onlyNews && !item.esNovedad) return false;
@@ -271,8 +277,14 @@ export class ProductFacade {
   });
 
   //Método para actualizar el filtro
+
   updateFilter(value: string) {
     this.filterText.set(value);
+
+    // Si el usuario escribió al menos una letra, apagamos todas las marcas y botones especiales
+    if (value.trim().length > 0) {
+      this.resetFilters(); 
+    }
   }
 
   async loadProducts() {
@@ -351,5 +363,21 @@ export class ProductFacade {
     });
     return dict;
   });
-  
+
+  // 2Calcula cuáles son las marcas que el admin destacó
+  readonly marcasDestacadas = computed(() => {
+    const configuradas = this.configFacade.marcasDestacadas();
+    
+    // Si el admin no configuró nada, mostramos TODAS por defecto
+    if (!configuradas || configuradas.length === 0) {
+      return this.marcasDisponibles(); 
+    }
+
+    // Normalizamos las configuradas también (por si el admin dejó espacios)
+    const configNormalizadas = configuradas.map(m => m.trim().toUpperCase());
+
+    // Mostramos solo las elegidas que realmente tengan productos en stock
+    return configNormalizadas.filter(m => this.marcasDisponibles().includes(m));
+  });
+
 }

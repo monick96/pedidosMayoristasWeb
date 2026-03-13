@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { AppRuleConfig, EscalaPrecio } from '../../../domain/entities/AppRuleConfig';
 import { GetConfigRuleUseCase } from '../../../aplication/use-cases/GetConfigRuleUseCase';
 import { UpdateRuleConfigUseCase } from '../../../aplication/use-cases/UpdateRuleConfigUseCase';
@@ -16,6 +16,7 @@ export class ConfigFacade {
   readonly escalas = signal<EscalaPrecio[]>([]);
   readonly loading = signal<boolean>(true);
   readonly telefonoWhatsapp = signal<string>('');
+  readonly marcasDestacadas = signal<string[]>([]);
   
 
   constructor() {
@@ -33,6 +34,7 @@ export class ConfigFacade {
       this.escalas.set(config.escalas);
       this.telefonoWhatsapp.set(config.telefonoWhatsapp || '');
       this.tiendaAbierta.set(config.tiendaAbierta);
+      this.marcasDestacadas.set(config.marcasDestacadas || []);
     } else {
       console.error("Error al cargar la configuración general:", result.error);
     }
@@ -50,8 +52,11 @@ export class ConfigFacade {
       this.escalas.set(newConfig.escalas);
       this.telefonoWhatsapp.set(newConfig.telefonoWhatsapp);
       this.tiendaAbierta.set(newConfig.tiendaAbierta);
+      this.marcasDestacadas.set(newConfig.marcasDestacadas || []);
       return true;
     }
     return false;
   }
+
+ 
 }

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ConfigFacade } from '../../facades/Config.facade';
 import { AppRuleConfig } from '../../../../domain/entities/AppRuleConfig';
 import { AlertService } from '../../shared/services/alert-service';
+import { ProductFacade } from '../../facades/product.facade';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -10,11 +11,12 @@ import { AlertService } from '../../shared/services/alert-service';
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboard {
+export class AdminDashboard implements OnInit{
   
   // Inyectamos el Facade que trae los datos reales
   private configFacade = inject(ConfigFacade);
   private alertService = inject(AlertService);
+  productFacade = inject(ProductFacade);
 
   // Variables locales del formulario
   minimoGeneral = signal<number>(0);
@@ -33,6 +35,14 @@ export class AdminDashboard {
 
   tiendaAbierta = signal<boolean>(true);
 
+  marcasDestacadasSeleccionadas = signal<string[]>([]);
+
+  ngOnInit() {
+    if (this.productFacade.items().length === 0) {
+      this.productFacade.loadProducts();
+    }
+  }
+
   constructor() {
     //Effect escucha los Signals del Facade.
     // Cuando terminan de cargar desde Firebase, llenamos el formulario automáticamente.
@@ -44,6 +54,9 @@ export class AdminDashboard {
         this.minimoConCombos.set(this.configFacade.minimoConCombos());
         this.telefonoWhatsapp.set(this.configFacade.telefonoWhatsapp());
         this.tiendaAbierta.set(this.configFacade.tiendaAbierta());
+
+        const marcasGuardadas = this.configFacade.marcasDestacadas();
+        this.marcasDestacadasSeleccionadas.set(marcasGuardadas || []);
         
         const escalas = this.configFacade.escalas();
         if (escalas && escalas.length >= 3) {
@@ -63,6 +76,19 @@ export class AdminDashboard {
     });
   }
 
+  //El método que se ejecuta al hacer clic en un botoncito de marca
+  toggleMarcaDestacada(marca: string) {
+    this.marcasDestacadasSeleccionadas.update(actuales => {
+      if (actuales.includes(marca)) {
+        // Si ya estaba, la quitamos (la deselecciona)
+        return actuales.filter(m => m !== marca); 
+      } else {
+        // Si no estaba, la agregamos al array
+        return [...actuales, marca]; 
+      }
+    });
+  }
+
   async guardarConfiguracion() {
     this.estaCargando.set(true);
     
@@ -72,6 +98,7 @@ export class AdminDashboard {
       minimoConCombos: Number(this.minimoConCombos()),
       telefonoWhatsapp: this.telefonoWhatsapp(),
       tiendaAbierta: this.tiendaAbierta(), 
+      marcasDestacadas: this.marcasDestacadasSeleccionadas(),
       escalas: [
         { nivel: "nivel 1", nombre: this.escala1_nombre(), montoMinimo: 0 },
         { nivel: "nivel 2", nombre: this.escala2_nombre(), montoMinimo: Number(this.escala2_minimo()) },

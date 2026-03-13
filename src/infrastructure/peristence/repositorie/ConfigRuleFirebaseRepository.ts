@@ -32,6 +32,7 @@ export class ConfigRuleFirebaseRepository implements ConfigRuleRepositoryPort {
           minimoConCombos: 490000,
           telefonoWhatsapp:'5491123456789',
           tiendaAbierta: true,
+          marcasDestacadas: [],
           escalas: [
             { nivel: "nivel 1", nombre: 'Mayorista 1', montoMinimo: 0 },
             { nivel: "nivel 2", nombre: 'Mayorista 2', montoMinimo: 490000 },

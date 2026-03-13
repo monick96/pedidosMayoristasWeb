@@ -10,4 +10,5 @@ export interface AppRuleConfig {
   escalas: EscalaPrecio[];
   telefonoWhatsapp: string;
   tiendaAbierta: boolean;
+  marcasDestacadas?: string[]; 
 }

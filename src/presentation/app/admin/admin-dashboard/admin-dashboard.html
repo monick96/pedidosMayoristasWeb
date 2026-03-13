@@ -177,4 +177,35 @@
 
   </section>
 
+  <section class="settings-section">
+    <h2>Filtro de Marcas</h2>
+    
+    <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+      
+      <div class="setting-info" style="width: 100%;">
+        <label>Marcas Destacadas</label>
+        <span>Toca las marcas que quieres mostrar como botones principales. Las que dejes apagadas se agruparán automáticamente en "Otros".</span>
+      </div>
+
+      <div class="admin-brands-container">
+        
+        @if (productFacade.loading()) {
+          <span style="color: #999; font-size: 0.9rem;">Cargando marcas disponibles...</span>
+        }
+
+        @for (marca of productFacade.marcasDisponibles(); track marca) {
+          <button 
+            type="button"
+            class="chip" 
+            [class.active]="marcasDestacadasSeleccionadas().includes(marca)"
+            (click)="toggleMarcaDestacada(marca)">
+            {{ marca }}
+          </button>
+        }
+        
+      </div>
+      
+    </div>
+  </section>
+
 </div>
