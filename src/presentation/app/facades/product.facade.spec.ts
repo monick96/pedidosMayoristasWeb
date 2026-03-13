@@ -6,10 +6,23 @@ import { UpdateProductoActivoUseCase } from '../../../aplication/use-cases/Updat
 import { UpdateProductoUnidadesUseCase } from '../../../aplication/use-cases/UpdateProductoUnidadesUseCase';
 import { UpdateComboActivoUseCase } from '../../../aplication/use-cases/UpdateComboActivoUseCase';
 import { ok } from '../../../shared/Result';
+import { GetConfigRuleUseCase } from '../../../aplication/use-cases/GetConfigRuleUseCase';
+import { UpdateRuleConfigUseCase } from '../../../aplication/use-cases/UpdateRuleConfigUseCase';
 
 describe('ProductFacade', () => {
   let facade: ProductFacade;
+  
+   // Creamos un mock para el UseCase de configuración
+    const getConfigUseCaseMock = {
+      execute: jasmine.createSpy('execute').and.resolveTo({ 
+        isOk: () => true, 
+        value: { escalas: [], marcasDestacadas: [] } 
+      })
+    };
 
+    const updateConfigMock = {
+      execute: jasmine.createSpy('execute').and.resolveTo({ isOk: () => true })
+    };
    const getProductosMock = {
     execute: jasmine.createSpy().and.resolveTo(ok([
       {
@@ -48,6 +61,8 @@ describe('ProductFacade', () => {
         { provide: UpdateProductoActivoUseCase, useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) } },
         { provide: UpdateProductoUnidadesUseCase, useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) } },
         { provide: UpdateComboActivoUseCase, useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) } },
+        { provide: GetConfigRuleUseCase, useValue: getConfigUseCaseMock },
+        { provide: UpdateRuleConfigUseCase, useValue: getConfigUseCaseMock },
       ],
     });
 

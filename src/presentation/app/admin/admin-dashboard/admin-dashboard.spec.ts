@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminDashboard } from './admin-dashboard';
 import { ConfigFacade } from '../../../../presentation/app/facades/Config.facade';
+import { GetConfigRuleUseCase } from '../../../../aplication/use-cases/GetConfigRuleUseCase';
+import { signal } from '@angular/core';
+import { ProductFacade } from '../../facades/product.facade';
+import { ok } from '../../../../shared/Result';
+
 
 const configFacadeMock = {
   // señales/computed -> funciones
@@ -9,6 +14,7 @@ const configFacadeMock = {
   escalas: () => [],
   telefonoWhatsapp: () => '',
   tiendaAbierta: () => true,
+  marcasDestacadas: () => [],
 
   // si el template/ts usa config() también
   config: () => ({
@@ -17,6 +23,7 @@ const configFacadeMock = {
     escalas: [],
     telefonoWhatsapp: '',
     tiendaAbierta: true,
+    marcasDestacadas: () => [],
   }),
 
   loading: () => false,
@@ -24,6 +31,19 @@ const configFacadeMock = {
   // si el dashboard llama acciones:
   load: jasmine.createSpy('load'),
   updateConfig: jasmine.createSpy('updateConfig'),
+  marcasDisponibles: signal([]),
+};
+
+const productFacadeMock = {
+  items: signal([]),        // Usamos señales reales para que el template no falle
+  loading: signal(false),
+  loadProducts: jasmine.createSpy('loadProducts'),
+  marcasDisponibles: signal([]),
+  config: () => ({ 
+        minimoGeneral: 0, 
+        escalas: [], 
+        marcasDestacadas: [] 
+  })
 };
 
 describe('AdminDashboard', () => {
@@ -33,7 +53,15 @@ describe('AdminDashboard', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AdminDashboard],
-      providers: [{ provide: ConfigFacade, useValue: configFacadeMock }],
+      providers: [
+        { provide: ConfigFacade, useValue: configFacadeMock },
+        { provide: ProductFacade, useValue: productFacadeMock },
+        {
+          provide: GetConfigRuleUseCase,
+          useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) },
+        },
+  
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminDashboard);

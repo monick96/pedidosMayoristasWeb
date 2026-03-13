@@ -7,6 +7,7 @@ import { cartRepositoryComposition } from '../../../composition/CartComposition'
 import { ConfigFacade } from './Config.facade';
 import { STORAGE_KEYS } from '../../../constantes/constantes';
 import { ProductFacade } from './product.facade';
+import { CalculadorPrecio } from '../../../domain/services/CalculadorPrecio';
 
 @Injectable({ providedIn: 'root' })
 export class CartFacade {
@@ -49,13 +50,20 @@ export class CartFacade {
   });
 
   // Calcula cuánto falta para poder comprar
-  readonly faltaParaMinimo = computed(() => {
+  /*readonly faltaParaMinimo = computed(() => {
     const falta = this.minimoRequerido() - this.subtotalNominal();
     return falta > 0 ? falta : 0;
+  });*/
+
+  readonly faltaParaMinimo = computed(() => {
+    return CalculadorPrecio.calcularFaltaParaMinimo(
+      this.subtotalNominal(),
+      this.minimoRequerido()
+    );
   });
 
   // Calcula en qué escala de precios está el cliente basado en su volumen
-  readonly escalaActiva = computed(() => {
+  /*readonly escalaActiva = computed(() => {
     const total = this.subtotalNominal();
     // Leemos las escalas de Firebase
     const escalasFirebase = this.configFacade.escalas();
@@ -73,6 +81,13 @@ export class CartFacade {
     const escala = [...escalasPermitidas].reverse().find(e => total >= e.montoMinimo);
    
     return escala || escalasFirebase[0];
+  });*/
+
+  readonly escalaActiva = computed(() => {
+    return CalculadorPrecio.determinarEscalaActiva(
+      this.subtotalNominal(), 
+      this.configFacade.escalas()
+    );
   });
 
   // Un array de items que ya tiene el precio final calculado para la vista

@@ -10,6 +10,23 @@ import { UpdateComboActivoUseCase } from '../../../../aplication/use-cases/Updat
 // Si usás Result/ok en tu proyecto, mejor.
 // Si no, devolvé lo que tus usecases realmente devuelven.
 import { ok } from '../../../../shared/Result';
+import { signal } from '@angular/core';
+import { ProductFacade } from '../../facades/product.facade';
+import { ConfigFacade } from '../../facades/Config.facade';
+
+const productFacadeMock = {
+  items: signal([]),
+  loading: signal(false),
+  marcasDisponibles: signal([]),
+  loadProducts: jasmine.createSpy('loadProducts'),
+  deleteProduct: jasmine.createSpy('deleteProduct')
+};
+
+const configFacadeMock = {
+  loading: signal(false),
+  marcasDestacadas: signal([]),
+  config: () => ({ minimoGeneral: 0, escalas: [], marcasDestacadas: [] })
+};
 
 describe('AdminProductos', () => {
   let component: AdminProductos;
@@ -39,6 +56,8 @@ describe('AdminProductos', () => {
           provide: UpdateComboActivoUseCase,
           useValue: { execute: jasmine.createSpy().and.resolveTo(ok(undefined)) },
         },
+        { provide: ProductFacade, useValue: productFacadeMock },
+        { provide: ConfigFacade, useValue: configFacadeMock }
       ],
     }).compileComponents();
 
