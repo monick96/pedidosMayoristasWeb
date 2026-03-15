@@ -1,0 +1,77 @@
+<div class="card-list">
+  
+  <div class="img-wrapper" (click)="abrirLightbox($event)">
+    @if (item.unidadesPorCaja) {
+      <div class="box-badge">
+        <span class="box-icon"></span> {{ item.unidadesPorCaja }}
+      </div>
+    }
+
+
+    @if (item.images && item.images.length > 0) {
+      <img [src]="item.images[0].small || item.images[0].url" 
+           [alt]="item.descripcion" 
+           class="thumb zoomable"
+           [class.img-out-of-stock]="!item.estaDisponible"
+           >    
+    }
+    
+  </div>
+
+  <div class="info-wrapper">
+    <span class="brand">{{ item.marcaId }}</span>
+    <div class="header-row">
+      @if (item.esNovedad) { <span class="badge badge-new">NUEVO</span> }
+      @if (item.tienePromo) { <span class="badge badge-promo">OFERTA</span> }
+    </div>
+    <h3 class="title text-clamp-2">{{ item.descripcion }}</h3>
+    @if (item.sabor) { <p class="flavor text-ellipsis">{{ item.sabor }}</p> }
+  </div>
+
+  <div class="action-wrapper">
+    @if (item.preciosPorEscala) {
+
+        <app-visor-precios 
+              [precios]="item.preciosPorEscala" 
+              [nivelActivo]="cartFacade.escalaActiva().nivel">
+        </app-visor-precios>
+
+      }@else {
+
+        <div class="prices">
+
+          @if (item.tienePromo) {
+            <span class="price-old">{{ item.precioNormal | pesoArg }}</span>
+          }
+
+          <span class="price-final">{{ item.precioFinal | pesoArg }}</span>
+          
+        </div>
+      }
+    
+
+    <div class="controls">
+      @if (!item.estaDisponible) {
+
+        <button class="btn-primary add-btn" disabled>
+          Sin Stock
+        </button>
+
+      }@else if (cantidadEnCarrito() === 0) {
+
+        <button class="btn-primary btn-add-mini" (click)="$event.stopPropagation(); cartFacade.addToCart(item)">
+          +
+        </button>
+
+      } @else {
+        <app-qty-selector 
+          [cantidad]="cantidadEnCarrito()"
+          (onDecrease)="cartFacade.decreaseQuantity(item.codigo)"
+          (onIncrease)="cartFacade.addToCart(item)"
+          (onChange)="cartFacade.setQuantity(item.codigo, $event)">
+        </app-qty-selector>
+      }
+    </div>
+  </div>
+
+</div>

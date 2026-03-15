@@ -1,4 +1,8 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# files
+src/apiSheet/*
+src/environments/*
+src/presentation/app/admin-dashboard/*
+
 # Firebase
 .firebase/*
 firebase-debug.log*
@@ -27,6 +31,7 @@ yarn-error.log
 *.sublime-workspace
 repomix-output.xml
 .repomixignore
+src/environment/
 
 # Visual Studio Code
 .vscode/*

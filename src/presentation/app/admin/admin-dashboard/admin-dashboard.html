@@ -1,0 +1,211 @@
+<div class="minimal-container">
+  
+  <header class="minimal-header">
+    <div class="header-titles">
+      <h1>Configuración</h1>
+    </div>
+    <button class="btn-save" (click)="guardarConfiguracion()" [disabled]="estaCargando()">
+      {{ estaCargando() ? 'Guardando...' : 'Guardar Cambios' }}
+    </button>
+  </header>
+
+  <section class="settings-section">
+    <h2>Estado de la Tienda (Botón de mantenimiento)</h2>
+    
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Tienda Disponible</label>
+        <span>Si lo apagas, los clientes verán un cartel de "Mantenimiento" y no podrán comprar.</span>
+      </div>
+      <div class="setting-input-group" style="border: none; background: transparent; justify-content: flex-start;">
+        <label class="switch">
+          <input type="checkbox" 
+                 [ngModel]="tiendaAbierta()" 
+                 (ngModelChange)="tiendaAbierta.set($event)">
+          <span class="slider round"></span>
+          
+        </label>
+        <span style="color: #888; font-size: 0.95rem; font-weight: 500; margin-left: 0.4rem;">
+            {{ tiendaAbierta() ? '(Disponible)' : '(En mantenimiento)' }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="settings-section">
+    <h2>Contacto y Pedidos</h2>
+    
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Número de WhatsApp</label>
+        <span>Ej: 549112345678 (Código de país + área + número sin el 15).</span>
+      </div>
+      <div class="setting-input-group">
+        <span class="currency-symbol icon-whatsapp"></span>
+        <input type="text" 
+               [ngModel]="telefonoWhatsapp()" 
+               (ngModelChange)="telefonoWhatsapp.set($event)" 
+               placeholder="549..."
+               class="minimal-input ">
+      </div>
+    </div>
+  </section>
+
+  <section class="settings-section">
+    <h2>Mínimos de Compra</h2>
+    
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Mínimo General/{{ escala1_nombre() }}</label>
+        <span>Aplica para pedidos que NO contienen combos.</span>
+      </div>
+      <div class="setting-input-group">
+        <span class="currency-symbol">Desde $</span>
+        <input type="text" 
+               [value]="formatearNumero(minimoGeneral())" 
+               (blur)="actualizarValor($event, minimoGeneral)" 
+               class="minimal-input shortInput">
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Mínimo con Combos</label>
+        <span>Aplica si el cliente agrega al menos 1 combo al carrito.</span>
+      </div>
+      <div class="setting-input-group">
+        <span class="currency-symbol">Desde $</span>
+        <input type="text" 
+               [value]="formatearNumero(minimoConCombos())" 
+               (blur)="actualizarValor($event, minimoConCombos)" 
+               class="minimal-input shortInput">
+      </div>
+    </div>
+  </section>
+
+  <section class="settings-section">
+    <h2>Escalas de Precio</h2>
+    
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 1 (mínimo general)</label>
+        <span>Es el precio por defecto.</span>
+      </div>
+      <div class="setting-input-group">
+        <span class="currency-symbol">Nombre: </span>
+        <input type="text" 
+               [ngModel]="escala1_nombre()" 
+               (ngModelChange)="escala1_nombre.set($event)" 
+               placeholder="Ej: Precio Base"
+               class="minimal-input shortInput">
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 2</label>
+        <span>Segunda escala de precios.</span>
+      </div>
+      <div class="setting-inputs-multiple">
+        <div class="setting-input-group">
+          <span class="currency-symbol">Nombre: </span>
+          <input type="text" 
+                 [ngModel]="escala2_nombre()" 
+                 (ngModelChange)="escala2_nombre.set($event)" 
+                 placeholder="Nombre Nivel 2"
+                 class="minimal-input">
+        </div>
+        <div class="setting-input-group highlight-group">
+          <span class="currency-symbol">Desde $</span>
+          <input type="text" 
+                 [value]="formatearNumero(escala2_minimo())" 
+                 (blur)="actualizarValor($event, escala2_minimo)" 
+                 class="minimal-input text-right">
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 3</label>
+        <span>Tercera escala de precios</span>
+      </div>
+      <div class="setting-inputs-multiple">
+        
+        <div class="setting-input-group">
+          <span class="currency-symbol">Nombre: </span>
+          <input type="text" 
+                 [ngModel]="escala3_nombre()" 
+                 (ngModelChange)="escala3_nombre.set($event)" 
+                 placeholder="Nombre Nivel 3"
+                 class="minimal-input">
+        </div>
+        <div class="setting-input-group highlight-group">
+          <span class="currency-symbol">Desde $</span>
+          <input type="text" 
+                 [value]="formatearNumero(escala3_minimo())" 
+                 (blur)="actualizarValor($event, escala3_minimo)" 
+                 class="minimal-input text-right">
+        </div>
+      </div>
+    </div>
+
+     <div class="setting-row">
+      <div class="setting-info">
+        <label>Nivel 4</label>
+        <span>Cuarta escala de precios</span>
+      </div>
+      <div class="setting-inputs-multiple">
+        
+        <div class="setting-input-group">
+          <span class="currency-symbol">Nombre: </span>
+          <input type="text" 
+                 [ngModel]="escala4_nombre()" 
+                 (ngModelChange)="escala4_nombre.set($event)" 
+                 placeholder="Nombre Nivel 4"
+                 class="minimal-input">
+        </div>
+        <div class="setting-input-group highlight-group">
+          <span class="currency-symbol">Desde $</span>
+          <input type="text" 
+                 [value]="formatearNumero(escala4_minimo())" 
+                 (blur)="actualizarValor($event, escala4_minimo)" 
+                 class="minimal-input text-right">
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="settings-section">
+    <h2>Filtro de Marcas</h2>
+    
+    <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+      
+      <div class="setting-info" style="width: 100%;">
+        <label>Marcas Destacadas</label>
+        <span>Toca las marcas que quieres mostrar como botones principales. Las que dejes apagadas se agruparán automáticamente en "Otros".</span>
+      </div>
+
+      <div class="admin-brands-container">
+        
+        @if (productFacade.loading()) {
+          <span style="color: #999; font-size: 0.9rem;">Cargando marcas disponibles...</span>
+        }
+
+        @for (marca of productFacade.marcasDisponibles(); track marca) {
+          <button 
+            type="button"
+            class="chip" 
+            [class.active]="marcasDestacadasSeleccionadas().includes(marca)"
+            (click)="toggleMarcaDestacada(marca)">
+            {{ marca }}
+          </button>
+        }
+        
+      </div>
+      
+    </div>
+  </section>
+
+</div>

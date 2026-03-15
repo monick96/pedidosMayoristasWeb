@@ -1,0 +1,13 @@
+<div class="qty-selector-container flex-center" (click)="$event.stopPropagation()">
+  <button class="btn-restar" (click)="onDecrease.emit()">−</button>
+  
+  <input 
+    type="number" 
+    [value]="cantidad" 
+    (change)="manejarInput($event)"
+    (keyup.enter)="manejarInput($event)"
+    min="0"
+    class="qty-input">
+    
+  <button class="btn-sumar" (click)="onIncrease.emit()">+</button>
+</div>

@@ -2,6 +2,8 @@ import { Producto } from "../entities/Producto";
 import { MayoristaPrecio } from "../value-objects/PrecioMayorista";
 import { CalculadorPrecioProducto } from "./CalculadorPrecioProducto";
 
+//el negocio hasta ahora nunca uso numeros negativos para decuentos o porcentajes
+
 describe('CalculadorPrecioProducto', () => {
 
     it('calcularPrecioFinal debería aplicar el descuento del producto si existe no el porcentaje en precioMayorista', () => {
@@ -130,7 +132,7 @@ describe('CalculadorPrecioProducto', () => {
       expect(resultado).toBe(260);
     });
 
-    it('debe manejar correctamente porcentajes negativos (descuentos)', () => {
+    it('debe manejar correctamente porcentajes negativos (descuentos), debe ignorarlos y tomar el de mayorista correspondiente', () => {
       // Arrange
       const producto = crearProductoMock({
         precioBase: 100,
@@ -149,8 +151,8 @@ describe('CalculadorPrecioProducto', () => {
       );
       
       // Assert
-      // 100 + (100 * -10 / 100) = 90
-      expect(resultado).toBe(90);
+      // 100 + (100 * 20 / 100) = 90
+      expect(resultado).toBe(120);
     });
 
     it('debe calcular correctamente con precios decimales', () => {
@@ -312,7 +314,7 @@ describe('CalculadorPrecioProducto', () => {
       expect(resultado).toBe(false);
     });
 
-    it('debe retornar true incluso con descuentos negativos', () => {
+    it('debe retornar false con descuentos negativos', () => {
       // Arrange
       const producto = crearProductoMock({
         porcentajeDescuento: -5
@@ -322,7 +324,7 @@ describe('CalculadorPrecioProducto', () => {
       const resultado = CalculadorPrecioProducto.tienePromocion(producto);
       
       // Assert
-      expect(resultado).toBe(true);
+      expect(resultado).toBe(false);
     });
   });
 

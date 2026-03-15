@@ -1,1 +1,15 @@
-<router-outlet />
+
+@if (isAdminRoute() || configFacade.tiendaAbierta()) {
+  <router-outlet />
+  <app-side-cart/>
+  <app-cart-widget />
+} 
+@else {
+  <div class="maintenance-screen">
+    <h1>🚧</h1>
+    <h2>Tienda en Mantenimiento</h2>
+    <p>Estamos actualizando nuestra web para brindarte un mejor servicio. Por favor, vuelve a intentar mas tarde.</p>
+  </div>
+}
+
+<app-alert-service-component></app-alert-service-component>

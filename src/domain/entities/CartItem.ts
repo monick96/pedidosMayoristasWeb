@@ -7,7 +7,10 @@ export interface CartItem {
   imagen: string;
   precioUnitario: number;
   cantidad: number;
+  sabor?: string;
   observacion?: string; //para notas en pedidos mayoristas, si no hay stock cambiar por otro sabor o algo asi
+  preciosPorEscala?: { nivel: string; precio: number }[]; 
+  tienePromocion?: boolean; //para mostrar lista precios por escala solo si no hay promocion
 }
 
 // Casos de uso típicos

@@ -1,0 +1,155 @@
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-gray);
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color:var(--bg-black);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(151, 151, 151, 0.24);
+}
+
+.sidebar-header h2 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--primary-mustard); }
+
+.badge-admin {
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.sidebar-nav { flex: 1; padding: 20px 0; }
+.sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+
+.sidebar-nav a {
+  display: block;
+  padding: 12px 20px;
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.sidebar-nav a:hover:not(.disabled) {
+  background-color: rgba(255, 255, 255, 0.199);
+  color: white;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary-mustard);
+  color: black;
+  font-weight: bold;
+  border-left: 4px solid white;
+}
+
+.sidebar-nav a.disabled { opacity: 0.4; cursor: not-allowed; }
+
+.sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+.btn-return { color: var(--primary-mustard); text-decoration: none; font-size: 0.9rem; }
+.btn-return:hover { text-decoration: underline; }
+
+.admin-main-content {
+  flex: 1;
+  margin-left: 280px; /* Deja espacio para el sidebar fijo */
+  padding: 0; /* El padding lo maneja cada componente interno */
+  width: calc(100% - 280px);
+}
+
+
+
+/* ============================================
+   ADMIN LAYOUT - RESPONSIVE MÓVIL (MEJORADO)
+   ============================================ */
+@media (max-width: 768px) {
+  .admin-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* dezplegamos la caja del sidebar para reordenar sus partes libremente */
+  .admin-sidebar {
+    display: contents;
+  }
+
+  /* El título queda arriba pero desaparece al scrollear hacia abajo (da más espacio visual) */
+  .sidebar-header {
+    order: 1;
+    background-color: var(--bg-black);
+    padding: 15px;
+  }
+
+  /*El menú de navegación se vuelve STICKY y siempre visible */
+  .sidebar-nav {
+    order: 2;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color:var(--bg-black);
+    padding: 0;
+    /*box-shadow: 0 4px 10px rgba(0,0,0,0.2);*/
+  }
+
+  /* El contenido principal (Tabla/Config) fluye en el medio */
+  .admin-main-content {
+    order: 3;
+    flex: 1;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Mandamos los botones volver a la tienda y cerrar cesion  al FINAL de la página */
+  .sidebar-footer {
+    order: 4;
+    background-color:var(--bg-black); 
+    
+    flex-direction: row !important; /* Los ponemos uno al lado del otro */
+    justify-content: space-around !important;
+    align-items: center;
+    padding: 20px 10px !important;
+    margin-top: auto; /* Si la página es muy corta, esto los empuja al fondo de la pantalla */
+    border-top: none;
+  }
+
+  /* Les damos forma de botón  para móviles */
+  .sidebar-footer .btn-return {
+    /*background-color: rgba(255,255,255,0.05) !important;*/
+    padding: 12px 20px !important;
+    border-radius: 8px;
+    text-align: center !important;
+    font-weight: 600;
+  }
+
+  /* Estilo del menú horizontal de pestañas */
+  .sidebar-nav ul {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .sidebar-nav ul::-webkit-scrollbar { display: none; }
+
+  .sidebar-nav a {
+    padding: 14px 20px;
+    border-left: none;
+    border-bottom: 4px solid transparent;
+  }
+
+  .sidebar-nav a.active {
+    border-left: none;
+    border-bottom: 4px solid var(--primary-mustard);
+  }
+}

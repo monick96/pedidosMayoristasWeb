@@ -1,0 +1,190 @@
+import { ProductoRepositoryPort } from "../../../aplication/ports/ProductoRepositorioPort";
+import { APP_CONFIG, STORAGE_KEYS } from "../../../constantes/constantes";
+import { Producto } from "../../../domain/entities/Producto";
+import { environment } from "../../../environments/environment.development";
+import { fail, ok, Result } from "../../../shared/Result";
+import { Firestore, collection, getDocs, query, where, doc, updateDoc, serverTimestamp } from '@angular/fire/firestore';
+
+export class ProductoFirebaseRepository implements ProductoRepositoryPort {
+  
+  // Pedimos la conexión a la base de datos
+  constructor(private firestore: Firestore) {}
+
+  async getAll(): Promise<Result<Producto[]>> {
+    try {
+      const CACHE_KEY = STORAGE_KEYS.PRODUCTOS_CACHE;
+      const FECHA_KEY = STORAGE_KEYS.PRODUCTOS_FECHA;
+
+      //AGREGAMOS EL VERSIONADO DE CACHÉ
+      const VERSION_KEY = STORAGE_KEYS.PRODUCTOS_VERSION;
+      const CURRENT_VERSION = APP_CONFIG.CATALOGO_VERSION; // <-Subir este número (ej: '1.0.1') cuando queramos forzar a todos a borrar su caché
+
+      const versionGuardada = localStorage.getItem(VERSION_KEY);
+
+      // Si la versión del navegador es vieja o no existe, destruimos la caché
+      if (versionGuardada !== CURRENT_VERSION) {
+        console.log("Nueva versión detectada. Limpiando caché antigua...");
+        localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem(FECHA_KEY);
+        localStorage.setItem(VERSION_KEY, CURRENT_VERSION); // Guardamos la versión nueva
+      }
+      
+      //Leemos lo que tenemos guardado en el navegador del cliente
+      const cacheGuardada = localStorage.getItem(CACHE_KEY);
+      const ultimaFechaString = localStorage.getItem(FECHA_KEY);
+      
+      let productos: Producto[] = cacheGuardada ? JSON.parse(cacheGuardada) : [];
+      const productosRef = collection(this.firestore, environment.firebase.coleccionProductos);
+      let consultaFirebase;
+
+      //Armamos la consulta inteligente
+      if (productos.length > 0 && ultimaFechaString) {
+        // Si ya tenemos caché, pedimos SOLO los productos modificados después de esa fecha
+        const fecha = new Date(parseInt(ultimaFechaString));
+        consultaFirebase = query(productosRef, where('fechaActualizacion', '>', fecha));
+
+      } else {
+        // Si es la primera vez que el cliente entra, traemos TODO (Las primeras 537 lecturas)
+        consultaFirebase = query(productosRef);
+      }
+
+      //Ejecutamos la consulta a Firebase
+      const querySnapshot = await getDocs(consultaFirebase);
+
+      //Si hay documentos nuevos o modificados, actualizamos nuestra caché
+      if (!querySnapshot.empty) {
+        console.log(`Se descargaron ${querySnapshot.size} productos actualizados de Firebase.`);
+
+        let maxFechaServer = ultimaFechaString ? parseInt(ultimaFechaString) : 0;
+        
+        const productosModificados = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+
+          //Extraemos la fecha del servidor que guardó Java (si existe)
+          if (data['fechaActualizacion']) {
+            // toDate() convierte el Timestamp de Firebase a un Date de Javascript
+            const fechaDocMs = data['fechaActualizacion'].toDate().getTime();
+
+            if (fechaDocMs > maxFechaServer) {
+              maxFechaServer = fechaDocMs;
+            }
+
+          }
+
+          return {
+            codigo: doc.id,
+            marcaId: data['marcaId'],
+            sabor: data['sabor'],
+            descripcion: data['descripcion'],
+            precioBase: data['precioBase'],
+            porcentajePrecioSugerido: data['porcentajePrecioSugerido'],
+            porcentajeDescuento: data['porcentajeDescuento'],
+            pesoGramos: data['pesoGramos'],
+            pesoKg: data['pesoKg'],
+            esNovedad: data['esNovedad'] || false,
+            vencimientoNovedadMs: data['vencimientoNovedadMs'] || null,
+            estaDisponible: data['estaDisponible'],
+            unidadesPorCaja: data['unidadesPorCaja'] || 0,
+            preciosMayorista: data['preciosMayorista'] || [],
+            images: data['images'] || [],
+            activo: data['activo']!== false // Si no existe el campo, asumimos que es true
+          } as Producto;
+        });
+
+        if (productos.length === 0) {
+          // Si no había caché, los modificados son el catálogo entero
+          productos = productosModificados;
+
+        } else {
+          // Si había caché, buscamos el producto viejo y lo reemplazamos por el nuevo
+          productosModificados.forEach(prodNuevo => {
+
+            const index = productos.findIndex(p => p.codigo === prodNuevo.codigo);
+
+            if (index !== -1) {
+              productos[index] = prodNuevo; // Actualiza el existente
+            } else {
+              productos.push(prodNuevo);    // Agrega si es totalmente nuevo
+            }
+
+          });
+
+        }
+
+        //Guardamos en el navegador para la próxima visita
+        localStorage.setItem(CACHE_KEY, JSON.stringify(productos));
+
+        //Guardamos la hora del SERVIDOR, no la del celular para usarla en el próximo query
+        localStorage.setItem(FECHA_KEY, maxFechaServer.toString());
+        
+      } else {
+
+        console.log("No hubo cambios en Firebase. Usando 100% la caché local (Costo 0 lecturas).");
+
+      }
+
+      // Devolvemos la lista final al Facade
+      return ok(productos);
+      
+    } catch (error) {
+      console.error("Error leyendo Firebase:", error);
+      return fail(new Error("No se pudieron cargar los productos de la base de datos"));
+    }
+  }
+
+  async updateActivo(codigo: string, activo: boolean): Promise<Result<void>> {
+    try {
+
+      const docRef = doc(this.firestore, environment.firebase.coleccionProductos, codigo);
+
+      await updateDoc(docRef, {
+        activo: activo,
+        //Actualizamos la fecha para que la caché de los clientes descargue el cambio
+        fechaActualizacion: serverTimestamp() 
+      });
+
+      return ok(undefined);
+
+    } catch (error) {
+
+      console.error("Error actualizando estado en Firebase:", error);
+      return fail(error as Error);
+
+    }
+    
+  }
+
+  async updateUnidadesPorCaja(codigo: string, unidades: number): Promise<Result<void>> {
+    try {
+      const docRef = doc(this.firestore, environment.firebase.coleccionProductos, codigo);
+      await updateDoc(docRef, {
+        unidadesPorCaja: unidades,
+        fechaActualizacion: serverTimestamp() //para la caché
+      });
+      return ok(undefined);
+    } catch (error) {
+      console.error("Error actualizando unidades en Firebase:", error);
+      return fail(error as Error);
+    }
+  }
+
+  async updateNovedad(codigo: string, esNovedad: boolean): Promise<Result<void>> {
+    try {
+      const docRef = doc(this.firestore, environment.firebase.coleccionProductos, codigo);
+      
+      // Si activan la novedad, calculamos Hoy + 30 días en milisegundos. Si la apagan, lo dejamos en null.
+      //const msEn30Dias = 30 * 24 * 60 * 60 * 1000;
+      const msEn30Dias = APP_CONFIG.NOVEDAD_DURATION_MS; 
+      const vencimiento = esNovedad ? Date.now() + msEn30Dias : null;
+
+      await updateDoc(docRef, {
+        vencimientoNovedadMs: vencimiento,
+        fechaActualizacion: serverTimestamp()
+      });
+      return ok(undefined);
+    } catch (error) {
+      return fail(error as Error);
+    }
+  }
+
+}

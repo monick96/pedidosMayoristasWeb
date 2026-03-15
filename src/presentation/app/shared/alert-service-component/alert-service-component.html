@@ -1,0 +1,21 @@
+@if (alert().show) {
+    <div class="alert-overlay">
+        <div class="alert-box">
+            
+            @if (alert().type === 'warning') { <div class="alert-icon warning">⚠️</div> }
+            @if (alert().type === 'confirm') { <div class="alert-icon confirm">❓</div> }
+            @if (alert().type === 'success') { <div class="alert-icon success">✅</div> }
+
+            <p class="alert-message">{{ alert().message }}</p>
+
+            <div class="alert-actions">
+                @if (alert().type === 'confirm') {
+                    <button class="btn-cancel" (click)="alert().onCancel?.()">Cancelar</button>
+                    <button class="btn-confirm" (click)="alert().onConfirm?.()">Sí, seguro</button>
+                } @else {
+                    <button class="btn-confirm full-width" (click)="service.close()">Entendido</button>
+                }
+            </div>
+        </div>
+    </div>
+}

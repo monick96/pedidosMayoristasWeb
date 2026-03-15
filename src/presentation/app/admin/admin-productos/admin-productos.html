@@ -1,0 +1,111 @@
+<div class="minimal-container admin-table-container">
+  <header class="minimal-header">
+    <div class="header-titles">
+      <h1>Gestión de Productos</h1>
+      <!-- <p>Activa o desactiva productos rápidamente de tu tienda</p> -->
+    </div>
+  </header>
+
+  <section class="settings-section">
+    <div class="search-wrapper">
+      <span class="search-icon"></span>
+      <input type="text" class="admin-search-input" placeholder="Buscar por código, nombre o marca..." (input)="buscar($event)">
+    </div>
+  </section>
+
+  <section class="table-section">
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>IMG</th>
+            <th>CÓDIGO</th>
+            <th>PRODUCTO</th>
+            <th>PRECIOS</th>
+            <th class="text-center">U/CAJA</th> 
+            <th class="text-center">VISIBLE</th>
+            <th class="text-center">NOVEDAD (30D)</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of productosPaginados(); track item.codigo) {
+            <tr [class.row-inactive]="item.activo === false">
+              <td>
+                <img [src]="item.images?.[0]?.small || item.images?.[0]?.url" class="table-img">
+              </td>
+              <td><span class="badge-code">{{ item.codigo }}</span></td>
+              <td>
+                <div class="table-desc">
+                  <strong>{{ item.descripcion }}</strong>
+                  @if (productFacade.esProducto(item)) {
+                    @if (item.sabor) { 
+                      <span class="table-sabor">{{ item.sabor }}</span> 
+                    }
+                  }
+                </div>
+              </td>
+              <!-- <td class="table-price">{{ item.precioFinal | pesoArg }}</td> -->
+          
+              <td class="table-price">
+                @if (productFacade.esProducto(item) && item.preciosPorEscala) {
+                   <div class="admin-price-stack">
+                      @for (escala of item.preciosPorEscala; track escala.nivel; let i = $index) {
+                         <span class="admin-price-item">
+                           <small>M{{ i + 1 }}:</small> {{ escala.precio | pesoArg }}
+                         </span>
+                      }
+                   </div>
+                } 
+                @else {
+                   <div class="admin-price-stack">
+                     <span class="admin-price-item"><small>Total:</small> {{ item.precioFinal | pesoArg }}</span>
+                   </div>
+                }
+              </td>
+
+              <td class="text-center">
+                @if (productFacade.esProducto(item)) {
+                    <input type="number" 
+                        class="mini-input text-center" 
+                        [value]="item.unidadesPorCaja || 0" 
+                        (change)="cambiarUnidades(item.codigo, $event)"
+                        min="0">
+                } @else {
+                    <span style="color: #ccc;">-</span>
+                }
+              </td>
+
+              <td class="text-center">
+                <label class="switch">
+                  <input type="checkbox" [checked]="item.activo" (change)="cambiarEstado(item, $event)">
+                  <span class="slider round"></span>
+                </label>
+              </td>
+
+              <td class="text-center">
+                <label class="switch novelty-switch">
+                  <input type="checkbox" [checked]="item.esNovedad" (change)="cambiarNovedad(item, $event)">
+                  <span class="slider round"></span>
+                </label>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      
+      @if (productosFiltrados().length === 0) {
+        <div class="empty-state">
+          <p>No se encontraron productos.</p>
+        </div>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+        <div class="pagination-controls">
+          <button class="page-btn" (click)="prevPage()" [disabled]="currentPage() === 1">❮ Anterior</button>
+          <span class="page-info">Página {{ currentPage() }} de {{ totalPages() }}</span>
+          <button class="page-btn" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Siguiente ❯</button>
+        </div>
+    }
+  </section>
+</div>

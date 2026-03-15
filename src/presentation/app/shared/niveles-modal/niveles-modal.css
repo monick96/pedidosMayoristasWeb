@@ -1,0 +1,218 @@
+/* ===== BOTÓN TRIGGER ===== */
+.niveles-btn {
+  display: flex;
+  align-items: center;
+  /* gap: 0.4rem; */
+  /* padding: 0.2rem 0.2rem; */
+  background: transparent;
+  /* border: 1px solid var(--primary-mustard);
+  border-radius: var(--radius-pill); */
+  /* color: var(--secondary-black); */
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  border: none;
+}
+.niveles-btn .niveles-label{
+  text-decoration: underline;
+}
+
+.niveles-icon {
+  font-size: 0.8rem;
+}
+
+/* ===== OVERLAY ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ===== MODAL ===== */
+.modal {
+  background: var(--bg-white);
+  border-radius: var(--radius-std);
+  border-top: 4px solid var(--primary-mustard);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: slideUp 0.2s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.4rem;
+  background: var(--secondary-black);
+  color: var(--primary-mustard);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--primary-mustard);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.modal-close:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* ===== BODY ===== */
+.modal-body {
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.seccion-titulo {
+  margin: 0 0 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+}
+
+/* ===== MÍNIMOS ===== */
+.minimos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.minimo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem;
+  background: var(--bg-gray);
+  border-radius: var(--radius-std);
+  border: 2px solid transparent;
+}
+
+.minimo-card.destacado {
+  border-color: var(--primary-mustard);
+  background: #FFF8E1;
+}
+
+.minimo-label {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.minimo-valor {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--secondary-black);
+}
+
+/* ===== ESCALAS ===== */
+.escalas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.escala-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg-gray);
+  border-radius: var(--radius-std);
+  border-left: 4px solid var(--primary-mustard);
+}
+
+.escala-row.ultima {
+  border-left-color: var(--secondary-black);
+  background: #1A1A1A08;
+}
+
+.escala-flecha {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  padding: 0.15rem 0;
+}
+
+.nivel-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: var(--primary-mustard);
+  color: var(--secondary-black);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.escala-row.ultima .nivel-badge {
+  background: var(--secondary-black);
+  color: var(--primary-mustard);
+}
+
+.escala-desc {
+  font-size: 0.88rem;
+  color: var(--text-main);
+}
+
+/* ===== NOTA ===== */
+.modal-nota {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  text-align: center;
+  padding-top: 0.2rem;
+  border-top: 1px solid var(--bg-gray);
+  padding-top: 0.8rem;
+}
+
+/* En mobile solo mostramos el ícono */
+@media (max-width: 480px) {
+  .niveles-icon {
+    display: none;
+  }
+  .niveles-label {
+    /* display: none; */
+    font-size: 0.62rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+}

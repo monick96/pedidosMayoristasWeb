@@ -1,0 +1,47 @@
+.qty-selector-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 32px; /* Altura base, puedes ajustarla */
+  background: white;
+}
+
+button {
+  width: 32px;
+  height: 100%;
+  background: #f9f9f9;
+  border: none;
+  color: var(--primary-mustard);
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.qty-input {
+  width: 40px;
+  height: 100%;
+  border: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #333;
+  padding: 0;
+  outline: none;
+}
+
+.qty-input:focus {
+  background-color: #fcfcfc;
+}
+
+/* Magia CSS para ocultar las flechitas por defecto que traen los inputs de tipo number */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.qty-input[type=number] {
+  -moz-appearance: textfield;
+}

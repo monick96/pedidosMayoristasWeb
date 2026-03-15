@@ -1,0 +1,9 @@
+<div class="visor-precios-container">
+  @for (escala of preciosUnicos(); track escala.nivel) {
+    <span 
+      class="precio-item" 
+      [ngClass]="{ 'activo': escala.precio === getPrecioActivo(), 'inactivo': escala.precio !== getPrecioActivo() }">
+      {{ escala.precio | pesoArg }}
+    </span>
+  }
+</div>

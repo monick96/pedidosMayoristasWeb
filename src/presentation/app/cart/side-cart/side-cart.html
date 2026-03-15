@@ -1,0 +1,171 @@
+<div class="sidebar-overlay" 
+     [class.visible]="facade.isOpen()" 
+     (click)="facade.closeSidebar()">
+</div>
+
+<aside class="sidebar" [class.open]="facade.isOpen()">
+  
+  <div class="sidebar-header">
+    <h2>Mi Pedido ({{ facade.count() }})</h2>
+    @if (facade.items().length > 0) {
+        <button class="clear-cart-btn" (click)="facade.clearCart()">Vaciar</button>
+    }
+    <button class="close-btn" (click)="facade.closeSidebar()">✕</button>
+  </div>
+
+  <div class="sidebar-body">
+    
+    <div class="rule-text">
+      <app-niveles-modal />
+      <strong>Mínimo requerido: {{ facade.minimoRequerido() | pesoArg}}</strong>       
+    </div>
+
+    @if (facade.items().length === 0) {
+      <div class="empty-state flex-center">
+        <p>Tu carrito está vacío</p>
+        <button class="action-btn" (click)="facade.closeSidebar()">Ir a comprar</button>
+      </div>
+    } @else {
+      <div class="items-list">
+        @for (item of facade.itemsConPrecio(); track item.productoId) {
+          <!-- <div class="cart-item">
+           
+            <img [src]="item.imagen" [alt]="item.nombre">
+            
+
+            <div class="item-details">
+              
+              <h4>{{ item.nombre }}</h4>
+
+              @if (item.sabor) {
+                <span class="item-flavor">{{ item.sabor }}</span>
+              }
+
+              @if (item.preciosPorEscala) {
+                <app-visor-precios 
+                      [precios]="item.preciosPorEscala" 
+                      [nivelActivo]="facade.escalaActiva().nivel">
+                </app-visor-precios>
+              }@else {
+                <span class="unit-price">{{ item.precioEfectivo | pesoArg }}</span>
+              }
+              
+            </div>
+
+            <div class="item-total">
+              {{ item.subtotalItem| pesoArg }}
+
+            </div>
+
+            <app-qty-selector 
+              [cantidad]="item.cantidad"
+              (onDecrease)="facade.decreaseQuantity(item.productoId)"
+              (onIncrease)="facade.incrementQuantity(item.productoId)"
+              (onChange)="facade.setQuantity(item.productoId, $event)">
+            </app-qty-selector>
+
+            <button class="delete-item-btn " (click)="facade.removeItem(item.productoId)" 
+                    title="Eliminar producto"> 
+            </button>
+
+          </div> -->
+          <div class="cart-item" [class.item-unavailable]="!item.estaDisponible">
+           
+            <img [src]="item.imagen" [alt]="item.nombre">
+            
+            <div class="item-details">
+              <h4>
+                {{ item.nombre }}
+  
+              </h4>
+
+              @if (item.sabor) { <span class="item-flavor">{{ item.sabor }}</span> }
+
+              @if (item.preciosPorEscala) {
+                <app-visor-precios [precios]="item.preciosPorEscala" [nivelActivo]="facade.escalaActiva().nivel"></app-visor-precios>
+              }@else {
+                <span class="unit-price">{{ item.precioEfectivo | pesoArg }}</span>
+              }
+            </div>
+
+            <div class="item-total">{{ item.subtotalItem| pesoArg }}</div>
+
+            @if (item.estaDisponible) {
+              <app-qty-selector 
+                [cantidad]="item.cantidad"
+                (onDecrease)="facade.decreaseQuantity(item.productoId)"
+                (onIncrease)="facade.incrementQuantity(item.productoId)"
+                (onChange)="facade.setQuantity(item.productoId, $event)">
+              </app-qty-selector>
+            } @else {
+              <div class="unavailable-text">No disponible</div>
+            }
+
+            <button class="delete-item-btn" (click)="facade.removeItem(item.productoId)" title="Eliminar producto"></button>
+
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (facade.items().length > 0) {
+    <div class="sidebar-footer">
+      
+      <div class="business-rules-panel">
+        
+        @if (facade.faltaParaMinimo() > 0) {
+          <div class="rule-alert warning">
+            <span class="rule-icon">⚠️</span>
+            <div class="rule-text">
+              <span>Te faltan {{ facade.faltaParaMinimo() | pesoArg }} para poder comprar.</span>
+            </div>
+          </div>
+        } @else {
+          <div class="rule-alert success">
+            <span class="rule-icon">✅</span>
+            <div class="rule-text">
+              <strong>¡Mínimo de compra alcanzado!</strong>
+              <span>Ya puedes confirmar tu pedido.</span>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      @if (facade.hayProductosAgotados()) {
+        <div class="rule-alert" style="background: #fef2f2; border-left-color: #ef4444; margin-bottom: 10px;">
+          <span class="rule-icon"></span>
+          <div class="rule-text">
+            <strong style="color: #b91c1c;">Hay productos sin stock</strong>
+            <span>Elimínalos de la lista para poder enviar tu pedido.</span>
+          </div>
+        </div>
+      }
+
+      <div class="total-row">
+        <span>Total a Pagar:</span>
+        <div class="total-amount-wrapper">
+          <span class="total-amount">{{ facade.total() | pesoArg }}</span>
+          <span class="shipping-note">* No incluye costo de envío</span>
+        </div>
+      </div>
+
+      <div class="customer-info">
+        <input 
+          type="text" 
+          placeholder="Tu Nombre / Local *" 
+          [value]="facade.clienteNombre()" 
+          (input)="updateNombre($event)"
+          class="customer-input"
+        >
+      </div>
+      
+      <button class="checkout-btn" 
+              [disabled]="facade.faltaParaMinimo() > 0 || !facade.clienteNombre().trim() || facade.hayProductosAgotados()"
+              (click)="generarPedidoWhatsapp()">
+        Confirmar Pedido por WhatsApp
+      </button>
+    </div>
+  }
+</aside>

@@ -1,134 +1,78 @@
-# PedidosWebMayorista
-### Estado readme: borrador
-## a) Descripción general del proyecto
+# PedidosWebMayorista (B2B E-commerce System)
 
-PedidosWebMayorista es una SPA desarrollada con Angular (TypeScript) pensada y diseñada como MVP para la gestión de pedidos mayoristas. Permite a usuarios registrarse, navegar catálogo de productos y combos (con mínimos de compra), ver precios por defecto, armar un carrito y crear pedidos que quedan almacenados en Firestore. Estos orders seran retomados desde una app de escritorio del comerciante; leerá la colección `orders` directamente desde el mismo proyecto Firebase para procesar pedidos y notificar al dueño.
+## a. Descripción general del proyecto
+PedidosWebMayorista es una Single Page Application (SPA) desarrollada en Angular. Nace como un software a medida solicitado por un comercio real y activo para resolver y digitalizar su proceso de ventas B2B (Business to Business).
 
-Estado del proyecto: desarrollo en producción. Este trabajo corresponde a una funcionalidad solicitada por un comercio real con el que colaboro. La aplicación de escritorio del comerciante ya está desarrollada y en uso, aunque actualmente no dispone aún de la capacidad para leer y procesar la colección `orders` de este proyecto Firebase. La integración (lectura en tiempo real de `orders`, gestion de estados y notificaciones) está pensada como parte del alcance futuro.
+El sistema se divide en dos grandes módulos:
+1. **Catálogo Público y Checkout:** Permite a los clientes navegar por productos y combos, visualizando precios dinámicos que se ajustan automáticamente según el volumen de compra. Al finalizar, el pedido superando las reglas de negocio (mínimos de compra) se formatea y envía sin vía WhatsApp.
+2. **Panel de Administración (Backoffice):** Un entorno privado y seguro donde el propietario del negocio puede gestionar en tiempo real el stock, la visibilidad del catálogo, las novedades y la configuración de las reglas de precios.
 
-## b) Stack tecnológico utilizado
-- Lenguajes: TypeScript, HTML, CSS
-- Frontend: Angular (proyecto generado con Angular CLI; versión 20.x en package.json)
-- Arquitectura: Clean Architecture (Domain, Application, Infrastructure, Presentation, Cmposition, Shared)
-- Persistencia y hosting: Firebase (Firestore, Auth, Hosting) con plan Spark (gratuito) por que aun es un MVP
+*Nota: Este proyecto fue diseñado como un MVP. Su arquitectura está preparada para que, en un futuro, la colección de pedidos en la base de datos sea consumida directamente por un sistema de escritorio propietario.*
 
-## c) Información sobre instalación y ejecución
+---
 
-Requisitos previos:
-- Git
-- Node.js (recomendado 18.x)
-- npm (o algun otro gestor de dependencias node)
+## b. Stack tecnológico y Arquitectura
 
-Clonar repo:
-```
-git clone https://github.com/monick96/web-app-mayorista-pedidos-va.git
-cd web-app-mayorista-pedidos-va
-```
+* **Frontend:** Angular (v20.x), TypeScript, HTML5, CSS.
 
-Instalar dependencias (con npm):
-```
-npm i
-```
+* **Manejo de Estado:** Angular Signals.
 
-Levantar el server:
-```
-ng serve
-```
+* **Persistencia y Backend as a Service:** Firebase (Firestore para base de datos NoSQL, Firebase Auth para seguridad del Admin, Firebase Hosting).
 
-## d) Estructura del proyecto
-```
+### Arquitectura y Patrones de Diseño 
+El proyecto está diseñado bajo los principios de **Clean Architecture** y principios **SOLID** para garantizar su escalabilidad y mantenibilidad:
+* **Separación por Capas:** División entre `Domain` (reglas de negocio puras), `Application` (casos de uso), `Infrastructure` (conexión a Firebase) y `Presentation` (UI en Angular).
+
+* **Patrón Facade:** Implementado en el frontend (`CartFacade`, `ProductFacade`, `ConfigFacade`) para actuar como "Directores de Orquesta", aislando por completo a los componentes visuales de la lógica de negocio compleja.
+
+* **Inyección de Dependencias (Composition Root):** Uso de factorías para inyectar repositorios, facilitando el testing aislado (Mocking) y previniendo el acoplamiento a la base de datos.
+
+* **Estrategia de Caché :** Implementación de un sistema de versionado en `localStorage` (`CATALOGO_VERSION`). Esto permite que la app cargue rapido y reduce los costos de lectura en Firebase, invalidando la caché solo cuando se detectan actualizaciones del servidor o cambios de versión forzados.
+---
+
+## c. Funcionalidades principales
+
+### Experiencia del Cliente (B2B)
+* **Catálogo Reactivo:** Visualización rápida de productos y combos con filtros multicriterio (por texto, marca, ofertas, novedades) procesados en tiempo real en el cliente.
+
+* **Motor de Precios Dinámicos:** metodos que calculan la escala de precio correspondiente (Niveles 1 al 4) en base al subtotal del carrito, incentivando la compra por volumen.
+
+* **Validación Estricta de Negocio:** El sistema calcula mínimos de compra dinámicos (que varían si el usuario incluye "Combos" en su pedido) y bloquea el checkout si detecta productos agotados.
+
+* **WhatsApp Checkout:** Generación automática de una orden de compra detallada, enviada directamente al WhatsApp del comercio, lista para ser procesada.
+
+### Gestión del Negocio
+* **Seguridad (Auth & Guards):** Acceso restringido mediante Firebase Authentication y Angular Route Guards.
+
+* **Dashboard de Configuración:** Interfaz para modificar en tiempo real el estado de la tienda (Modo Mantenimiento), teléfono de contacto, mínimos de compra y nombres/montos de las escalas de precios mayoristas.
+
+* **Gestión de Catálogo (Toggle Rápido):** Tabla administrativa para activar/desactivar productos, marcar novedades (con caducidad automática de 30 días) y ajustar unidades por caja sin necesidad de recargar la página.
+
+---
+
+## d. Estructura del proyecto
+El código fuente sigue una organización basada en dominios y responsabilidades (Clean Architecture):
+
+```text
 src/
-├─ main.ts                       # bootstrap de Angular
-├─ index.html
-├─ styles.css
-├─ environments/
-│  ├─ environment.ts
-│  └─ environment.prod.ts
-├─ presentation/                  # Capa UI (Angular)
-│  ├─ app/
-│  │  ├─ app.ts
-│  │  ├─ app.html
-│  │  ├─ app.css
-│  │  ├─ app.routes.ts
-│  │  └─ app.config.ts
-│  ├─ pages/
-│  │  ├─ catalog/
-│  │  ├─ product/
-│  │  ├─ cart/
-│  │  ├─ checkout/
-│  │  ├─ auth/                    # login / register / profile
-│  │  └─ not-authorized/          # pantalla para usuarios pendientes
-│  ├─ components/                 # botones, product-card, combo-card, price-badge...
-│  └─ services/                   # adaptadores Angular que usan use-cases
-├─ domain/                        # Lógica pura (no depende de Angular)
-│  ├─ entities/
-│  │  ├─ Producto.ts
-│  │  ├─ Combo.ts
-│  │  └─ Order.ts
-│  ├─ value-objects/
-│  └─ errors/
-├─ application/                   # Casos de uso y puertos (interfaces)
-│  ├─ use-cases/
-│  │  ├─ CalculatePrice.ts
-│  │  ├─ CreateOrder.ts
-│  │  └─ ListProducts.ts
-│  └─ ports/
-│     ├─ repositories/
-│     │  ├─ IProductRepository.ts
-│     │  └─ IOrderRepository.ts
-│     └─ notifiers/
-│        └─ INotifier.ts
-├─ infrastructure/                # Implementaciones concretas (Firestore, Firebase Auth)
-│  └─ firebase/
-│     ├─ productRepository.firestore.ts
-│     ├─ orderRepository.firestore.ts
-│     └─ auth.adapter.ts
-├─ shared/
-│  └─ Result.ts                   # helper Result<T,E>
-├─ assets/
-├─ docs/                          # ERD, diagramas, ejemplos, guías para desktop
-├─ seed/                          # seeds JSON para poblar Firestore local
-tests/                            # e2e / integration tests (opcional)
-firebase.json
-firestore.rules
-package.json
-README.md
+├─ aplication/          # Casos de uso (ej. GetProductosUseCase) y Puertos (Interfaces)
+├─ composition/         # Factories para la Inyección de dependencias
+├─ constantes/          # Variables globales (Keys de storage, configuración de caché)
+├─ domain/              # Lógica de negocio pura (Entidades, Value Objects, Calculadoras)
+├─ infrastructure/      # Implementaciones de BD (FirebaseRepositories) y Mappers
+├─ shared/              # Utilidades transversales a toda la app (Patrón Result)
+└─ presentation/        # Capa de Interfaz de Usuario (Angular)
+   ├─ app/admin/        # Componentes del Backoffice (Login, Dashboard, Tabla de Productos)
+   ├─ app/cart/         # Lógica visual del carrito lateral y widget flotante
+   ├─ app/facades/      # Servicios Facade que manejan el estado con Angular Signals
+   ├─ app/products/     # Componentes de UI (Listas, Tarjetas, Buscador)
+   └─ app/shared/       # Componentes y utilidades reutilizables (Modales, Alertas, Pipes)
 ```
+---
+## URL DESPLIEGUE
+* ruta pública:  https://web-mayorista-3a54c.web.app/productos/productos
 
-## e) Funcionalidades principales
-- Registro e inicio de sesión de usuarios (Firebase Auth)
+* ruta admin: https://web-mayorista-3a54c.web.app/productos/admin  (environment y claves en slides)
 
-    - Descripción: registro con email/password; al registrarse se crea users/{uid} con authorized: true (MVP).
-    - Criterio de aceptación: usuario puede registrarse y acceder a catálogo con precios por defecto.
-    - Implementación: Presentation (UI) + Infrastructure (auth.adapter) + users doc create.
-- Listado y detalle de productos (Catálogo)
-
-    - Descripción: ver lista paginada, búsqueda básica, filtro por marca/categoría, ver detalle con imágenes.
-    - Criterio de aceptación: muestra defaultPrice y botón "Añadir al carrito".
-    - Implementación: domain Produto, application ListProducts, infra productRepository.firestore, presentation components/pages.
-
-- Listado de Combos 
-
-    - Descripción: combos compuestos por items con minPurchaseQty. En MVP los combos se muestran y validan en frontend.
-    - Criterio de aceptación: UI muestra combos; al añadir al carrito valida minPurchaseQty.
-    - Implementación: domain Combo, validation en use-case y UI.
-
-- Carrito y checkout (crear pedido)
-
-    - Descripción: cliente arma carrito, calcula totales (CalculatePrice) y crea orders/{orderId} en Firestore con snapshot detalla.
-    - Criterio de aceptación: nuevo documento order con items unitPrice/lineTotal, subtotal y total, status "pending".
-    - Implementación: application CreateOrder + orderRepository.firestore.
-
-- Precios por defecto y cálculo básico (CalculatePrice)
-
-    - Descripción: mostrar precio por defecto (product.precioBase).
-    - Criterio de aceptación: cálculo consistente, precios guardados en order snapshot.
-    - Implementación: use-case CalculatePrice en application layer.
-
-- Persistencia en Firestore (orders consumibles por app desktop)
-
-    - Descripción: la desktop leerá orders directamente del mismo proyecto Firebase.
-    - Criterio de aceptación: orders contienen toda la info necesaria para procesar pedidos (schemaVersion incluido).
-    - Implementación: order document schema definido y versionado.
 
 

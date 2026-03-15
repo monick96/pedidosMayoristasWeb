@@ -1,13 +1,15 @@
-import { Component, ChangeDetectionStrategy, Input, inject } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
-import { ProductoVM } from '../models/productoVm';
-import { ProductoListadoVM } from '../models/productoListadoVm';
-import { ProductFacade } from '../product.facade';
-import { CartFacade } from '../../cart/cart.facade';
+import { Component, ChangeDetectionStrategy, Input, inject, computed } from '@angular/core';
+import { ProductoVM } from '../../models/productoVm';
+import { ProductFacade } from '../../facades/product.facade';
+import { CartFacade } from '../../facades/cart.facade';
+import { PesoArgPipe } from '../../shared/pipes/pesos-ar';
+import { VisorPrecios } from '../../shared/visor-precios/visor-precios';
+import { QtySelector } from '../../shared/qty-selector/qty-selector';
+import { CarruselDirective } from '../../shared/directives/carrusel-directive';
 
 @Component({
   selector: 'app-card-producto',
-  imports: [CurrencyPipe],
+  imports: [PesoArgPipe, VisorPrecios, QtySelector, CarruselDirective],
   templateUrl: './card-producto.html',
   styleUrl: './card-producto.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,11 +20,15 @@ export class CardProducto {
   
   // Inyectamos el facade para usar sus métodos de galería
   facade = inject(ProductFacade);
+  
   cartFacade = inject(CartFacade);
 
-  agregarAlCarrito(event: Event) {
-    event.stopPropagation(); // para que no abra el Lightbox al hacer click en el botón
-    this.cartFacade.addToCart(this.item);
-  }
   
+
+  // Si cambia el carrito, este número se actualiza.
+  readonly cantidadEnCarrito = computed(() => {
+    return this.cartFacade.cantidadesMap()[this.item.codigo] || 0;
+  }); 
+
+
 }

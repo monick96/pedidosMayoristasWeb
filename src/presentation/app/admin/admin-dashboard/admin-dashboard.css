@@ -1,0 +1,239 @@
+.minimal-container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  color: var(--secondary-black);
+}
+
+/* --- HEADER --- */
+.minimal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.header-titles h1 {
+  font-size: 1.8rem;
+  margin: 0 0 0.3rem 0;
+  font-weight: 800;
+}
+
+.header-titles p {
+  color: var(--text-light);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.btn-save {
+  background-color: var(--secondary-black);
+  color: var(--primary-mustard);
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.btn-save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- SECCIONES --- */
+.settings-section {
+  margin-bottom: 3rem;
+}
+
+.settings-section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+/* --- FILAS DE CONFIGURACIÓN --- */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Centra verticalmente */
+  padding: 1.2rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 2rem; /* Espacio de seguridad entre el texto y los inputs */
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  flex: 1 1 auto; /* Ocupa el espacio izquierdo disponible */
+  display: flex;
+  flex-direction: column;
+}
+
+.setting-info label {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--secondary-black);
+}
+
+.setting-info span {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 0.3rem;
+  line-height: 1.4;
+}
+
+/* --- INPUTS (ALINEACIÓN PERFECTA ESTILO TABLA) --- */
+
+/* 1. Obligamos a que TODA la columna de inputs mida exactamente 380px */
+.setting-row > .setting-input-group,
+.setting-row > .setting-inputs-multiple {
+  flex: 0 0 400px; 
+  width: 400px;
+}
+
+
+/* 2. El contenedor de los dobles reparte esos 380px */
+.setting-inputs-multiple {
+  display: flex;
+  gap: 12px;
+}
+
+/* 3. Estilo de la "Caja" del input */
+.setting-input-group {
+  flex: 1; /* Se divide equitativamente si hay dos */
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  min-width: 0; /* TRUCO VITAL: Evita que el input rompa la caja si el texto es largo */
+}
+
+.setting-input-group:focus-within {
+  border-color: var(--primary-mustard);
+  box-shadow: 0 0 0 3px rgba(225, 176, 0, 0.1);
+}
+
+.highlight-group {
+  background: #fdfdfd;
+}
+
+/* 4. Textos fijos ("$", "Desde $") */
+.currency-symbol {
+  color: #999;
+  font-weight: 600;
+  margin-right: 0.5rem;
+  white-space: nowrap; /* Evita que "Desde" y "$" se separen en dos renglones */
+  flex-shrink: 0; /* Evita que el input lo aplaste */
+  font-size: 0.95rem;
+}
+
+/* 5. El campo donde escribes */
+.minimal-input {
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--secondary-black);
+  outline: none;
+  width: 100%;
+  min-width: 0; /* Vital para que no empuje el layout */
+}
+
+.minimal-input::placeholder {
+  color: #ccc;
+  font-weight: 400;
+}
+
+
+/* Utilidades de texto */
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+/* Magia para quitar las flechitas feas de los input number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.admin-brands-container {
+  display: flex;
+  flex-wrap: wrap; /* Si no entran, bajan a la siguiente línea */
+  gap: 10px;
+  width: 100%;
+}
+
+/* Reutilizamos el estilo "chip" que ya tienes en tus estilos globales o lo pegamos aquí */
+.admin-brands-container .chip {
+  padding: 8px 16px;
+  border-radius: var(--radius-std);
+  border: 1px solid #ddd;
+  background: white;
+  white-space: nowrap;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-main);
+}
+
+.admin-brands-container .chip.active {
+  background: var(--secondary-black);
+  color: var(--bg-white);
+  border-color: var(--secondary-black);
+}
+
+/* ============================================
+   ADMIN DASHBOARD - RESPONSIVE MÓVIL
+   ============================================ */
+@media (max-width: 768px) {
+  .minimal-container { padding: 1.5rem 1rem; }
+
+  .minimal-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .btn-save { width: 100%; padding: 12px; }
+  
+  .setting-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1.5rem 0;
+  }
+
+  /* Liberamos el ancho fijo de 400px para que use el 100% de la pantalla */
+  .setting-row > .setting-input-group,
+  .setting-row > .setting-inputs-multiple {
+    flex: unset;
+    width: 100%;
+  }
+
+  .setting-inputs-multiple {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .text-right { text-align: left; }
+}

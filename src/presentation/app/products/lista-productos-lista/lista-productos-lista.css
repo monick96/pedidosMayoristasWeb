@@ -1,0 +1,254 @@
+.card-list {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+  gap: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-left: 4px solid var(--primary-mustard); /* Detalle lateral */
+}
+
+.card-list:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transform: translateX(5px);
+}
+
+/* --- IMAGEN --- */
+.img-wrapper {
+  flex: 0 0 90px; /* Tamaño fijo */
+  height: 90px;
+  cursor: zoom-in;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* --- INFO --- */
+.info-wrapper {
+  flex: 1; /* Ocupa el espacio sobrante */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Tipografía de Título */
+.title {
+  font-size: 1rem; /* Usamos rem para que escale */
+  color: var(--secondary-black);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.brand {
+  font-size: 0.8rem; /* rem escala mejor */
+  color: #888;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.flavor {
+  margin: 0;
+  white-space: nowrap;        /* Evita que salte a la segunda línea */
+  overflow: hidden;           /* Oculta lo que sobra */
+  text-overflow: ellipsis;    /* Agrega los "..." al final */
+  width: 100%;
+}
+
+.header-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* --- ACCIONES --- */
+.action-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  min-width: 90px;
+}
+
+/* Ajuste específico para el botón PEQUEÑO */
+.btn-add-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  padding-bottom: 3px;
+}
+
+/* ============================================
+   AJUSTE DEL BADGE DE CAJA (Solo para Modo Lista)
+   ============================================ */
+.box-badge {
+  --box-badge-left: -2px;
+  --box-badge-gap: 2px;
+}
+
+/* ============================================
+   AJUSTES PARA EL VISOR DE PRECIOS EN LA LISTA
+   ============================================ */
+.action-wrapper app-visor-precios {
+  --visor-dir: column;
+  --visor-align: center;
+  --visor-gap: 4px;
+
+  --visor-size: 0.95rem;
+  --visor-size-activo: 1.2rem;
+}
+
+
+/* ============================================
+   RESPONSIVE MÓVIL (max-width: 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  
+  .card-list {
+    /* Más espacio interno (padding) como la referencia */
+    padding: 16px 12px; 
+    gap: 12px;
+    align-items: flex-start; /* Alineamos arriba */
+  }
+
+  /* 1. IMAGEN: Más grande */
+  .img-wrapper {
+    flex: 0 0 70px; 
+    height: 70px;
+    border: none; 
+    position: relative;
+  }
+
+  /* 2. INFO: Ocupa el espacio central */
+  .info-wrapper {
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .title {
+    font-size: 0.95rem; /* Letra más grande */
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  /* Movemos los badges DEBAJO del título como en la referencia */
+  .header-row {
+    margin-top: 2px;
+  }
+
+  /* 3. PRECIO Y ACCIONES: Columna derecha */
+  .action-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    min-height: 75px; /* Forzamos altura para separar precio de botones */
+    min-width: 85px; /* Aseguramos ancho para que no se rompa el precio */
+  }
+
+  .prices {
+    text-align: right;
+    display: flex;
+    flex-direction: column; /* Precio viejo arriba del nuevo */
+    align-items: flex-end;
+  }
+
+  /* El botón de Agregar (+) cuando es 0 */
+  .btn-add-mini {
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE MÓVIL (Pantallas < 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  
+  .card-list {
+    padding: 12px 10px; 
+    gap: 10px;
+    align-items: center; /* Centrado vertical mejor */
+  }
+
+  /* Imagen: un poco más grande para que se vea */
+  .img-wrapper {
+    flex: 0 0 70px; 
+    height: 70px;
+  }
+
+  /* Títulos: TAMAÑOS CORREGIDOS (no 0.60rem, es ilegible) */
+  .title {
+    font-size: 0.75rem; /* Legible en móvil pequeño */
+    font-weight: 600;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .brand {
+    font-size: 0.65rem; /* Legible */
+    color: #666;
+  }
+
+  .action-wrapper {
+    min-width: 70px; 
+    min-height: 60px;
+    gap: 6px;
+  }
+
+  .brand {
+    font-size: 0.80rem;
+  }
+
+  .price-final {
+    font-size: 1rem; 
+  }
+
+  .price-old {
+    font-size: 0.8rem;
+  }
+
+   /* Badges: más grandes para poder leerlos */
+  .badge-new, .badge-promo {
+    padding: 2px 6px; 
+    font-size: 0.45rem; 
+    border-radius: 4px;
+  }
+
+  .btn-add-mini {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .box-badge {
+    /* Lo miniaturizamos */
+    --box-badge-size: 0.6rem;
+    --box-badge-pad: 1px 4px;
+  }
+
+  /* Achicamos el ícono de la cajita proporcionalmente */
+  .box-badge::before {
+   --box-badge-before-with: 11px;
+   --box-badge-before-height: 11px;
+  }
+}
+
+/****nuevo****/
+

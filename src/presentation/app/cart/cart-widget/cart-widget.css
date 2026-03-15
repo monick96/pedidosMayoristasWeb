@@ -1,0 +1,89 @@
+
+/* === ESTILO BASE=== */
+.cart-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;      /* Ancho fijo */
+    height: 60px;     /* Alto fijo igual al ancho para ser círculo */
+    padding: 0;       /* sin padding para centrar perfecto */
+    
+    border-radius: 50%;
+    background-color: var(--secondary-black);
+    color: var(--primary-mustard);
+    border: 2px solid var(--primary-mustard);
+    
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4); /* Sombra más profunda */
+    z-index: 1000;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote */
+}
+
+.cart-fab:hover { 
+    transform: scale(1.1) rotate(-5deg); /* Pequeño gesto divertido al pasar mouse */
+    box-shadow: 0 8px 25px rgba(225, 176, 0, 0.3); /* Resplandor mostaza */
+}
+
+.cart-fab:active {
+    transform: scale(0.95);
+}
+
+/* === EL CONTADOR (Badge) === */
+.badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    
+    background-color: #ef4444; /* Rojo moderno (Tailwind red-500) */
+    color: white;
+    
+    /* Tamaño y Texto */
+    height: 22px;
+    min-width: 22px; /* Crece si hay 2 dígitos */
+    padding: 0 4px;  /* Espacio lateral para números grandes */
+    font-size: 0.75rem; /* 12px aprox */
+    font-weight: 800;
+    
+    /* Forma */
+    border-radius: 12px; /* Forma de píldora */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /*  Borde del color del botón para efecto "recorte" */
+    border: 2px solid var(--secondary-black); 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* ============================================
+    RESPONSIVE MÓVIL (Pantallas < 768px)
+    ============================================ */
+@media (max-width: 768px) {
+    .cart-fab {
+    /* Más pequeño y menos invasivo */
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    
+    /* Ajuste de posición */
+    bottom: 20px;
+    right: 20px;
+    
+    border-width: 1.5px; /* Borde más fino */
+    }
+    
+    .badge {
+    /* Badge proporcionalmente más chico */
+    height: 18px;
+    min-width: 18px;
+    font-size: 0.65rem;
+    top: -2px;
+    right: -2px;
+    border-width: 1.5px;
+    }
+}
