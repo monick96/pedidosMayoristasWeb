@@ -35,7 +35,7 @@ El proyecto está diseñado bajo los principios de **Clean Architecture** y prin
 ### Experiencia del Cliente (B2B)
 * **Catálogo Reactivo:** Visualización rápida de productos y combos con filtros multicriterio (por texto, marca, ofertas, novedades) procesados en tiempo real en el cliente.
 
-* **Motor de Precios Dinámicos:** metodos que calculan la escala de precio correspondiente (Niveles 1 al 4) en base al subtotal del carrito, incentivando la compra por volumen.
+* **Motor de Precios Dinámicos:** metodos que calculan la escala de precio correspondiente (Niveles 1 al 3) en base al subtotal del carrito, incentivando la compra por volumen.
 
 * **Validación Estricta de Negocio:** El sistema calcula mínimos de compra dinámicos (que varían si el usuario incluye "Combos" en su pedido) y bloquea el checkout si detecta productos agotados.
 
