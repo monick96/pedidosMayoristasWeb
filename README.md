@@ -7,7 +7,7 @@ El sistema se divide en dos grandes módulos:
 1. **Catálogo Público y Checkout:** Permite a los clientes navegar por productos y combos, visualizando precios dinámicos que se ajustan automáticamente según el volumen de compra. Al finalizar, el pedido superando las reglas de negocio (mínimos de compra) se formatea y envía sin vía WhatsApp.
 2. **Panel de Administración (Backoffice):** Un entorno privado y seguro donde el propietario del negocio puede gestionar en tiempo real el stock, la visibilidad del catálogo, las novedades y la configuración de las reglas de precios.
 
-*Nota: Este proyecto fue diseñado como un MVP. Su arquitectura está preparada para que, en un futuro, la colección de pedidos en la base de datos sea consumida directamente por un sistema de escritorio propietario.*
+*Nota: Este proyecto fue diseñado como un MVP. Su arquitectura está pensada para que, en un futuro, se cree una colección de pedidos en la base de datos y sea consumida directamente por un sistema de escritorio propietario.*
 
 ---
 
@@ -68,6 +68,41 @@ src/
    ├─ app/products/     # Componentes de UI (Listas, Tarjetas, Buscador)
    └─ app/shared/       # Componentes y utilidades reutilizables (Modales, Alertas, Pipes)
 ```
+---
+## e. Instalación y ejecución local
+
+1. Requisitos previos
+
+    * Node.js (versión 18.x o superior recomendada).
+
+    * Angular CLI (versión 20.x). Puedes instalarlo globalmente con:
+
+    ``` Bash
+    npm install -g @angular/cli
+    ```
+2. Clonar el repositorio
+Clona el proyecto en tu máquina local y accede al directorio:
+
+    ``` Bash
+    git clone https://github.com/monick96/pedidosMayoristasWeb.git
+
+    cd PedidosWebMayorista
+    ```
+3. Instalar dependencias
+Instala todas las librerías y paquetes necesarios definidos en el package.json:
+
+    ```Bash
+    npm install
+    ```
+4. Configurar las variables de entorno (Firebase)
+Dado que el proyecto utiliza Firebase para su backend y autenticación, necesitas configurar las credenciales locales.
+(Nota: Las claves de acceso y configuración de Firebase se encuentran en los slides de presentación del proyecto).
+
+5. Iniciar el servidor de desarrollo
+
+    ```Bash
+    ng serve
+    ```
 ---
 ## URL DESPLIEGUE
 * ruta pública:  https://web-mayorista-3a54c.web.app/productos/productos
